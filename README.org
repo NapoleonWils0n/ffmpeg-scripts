@@ -1,104 +1,107 @@
-# ffmpeg scripts
+#+STARTUP: content
+#+OPTIONS: num:nil author:nil
+
+* ffmpeg scripts
 
 A collection of ffmpeg shell scripts
 
-* combine-clips
-* fade-audio
-* fade-clip
-* fade-video
-* fade-video-audio
-* loudnorm
-* normalize
-* subadd
-* waveform
++ combine-clips
++ fade-audio
++ fade-clip
++ fade-video
++ fade-video-audio
++ loudnorm
++ normalize
++ subadd
++ waveform
 
-## combine-clips
+** combine-clips
 
 combine video and audio files into new clip
 
-* script usage
++ script usage
 
-```
+#+BEGIN_SRC sh
 combine-clip -v video.(mp4|mov|mkv|m4v) -a audio.(m4a|aac|wav|mp3)
-```
+#+END_SRC
 
-## fade-audio
+** fade-audio
 
 cross fade audio between two clips  
 and fade the the first clip in and the second clip out
 
-* script usage
++ script usage
 
-```
+#+BEGIN_SRC sh
 fade-audio -i clip-1.(mp4|mkv|mov|m4v) -i clip-2.(mp4|mkv|mov|m4v)
-```
+#+END_SRC
 
-## fade-clip
+** fade-clip
 
 fade video and audio in and out
 
-* script usage
++ script usage
 
-```
+#+BEGIN_SRC sh
 fade-clip -i video.(mp4|mkv|mov|m4v)
-```
+#+END_SRC
 
-## fade-video
+** fade-video
 
 cross fade video between two clips
 
-* script usage
++ script usage
 
-```
+#+BEGIN_SRC sh
 fade-video -i clip-1.(mp4|mkv|mov|m4v) -i clip-2.(mp4|mkv|mov|m4v)
-```
+#+END_SRC
 
-## fade-video-audio
+** fade-video-audio
 
 cross fade clips audio and video between two clips
 
-* script usage
++ script usage
 
-```
+#+BEGIN_SRC sh
 fade-video-audio -i clip-1.(mp4|mkv|mov|m4v) -i clip-2.(mp4|mkv|mov|m4v)
-```
+#+END_SRC
 
-## loudnorm
+** loudnorm
 
 ffmpeg loudnorm 
 
-* script usage
++ script usage
 
-```
+#+BEGIN_SRC sh
 loudnorm -i infile.(mkv|mp4|mov|m4v|m4a|aac|wav|mp3)
-```
+#+END_SRC
 
-## normalize
+** normalize
 
 normalize audio levels
 
-* script usage
++ script usage
 
-```
+#+BEGIN_SRC sh
 normalize -i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
-```
+#+END_SRC
 
-## subadd
+** subadd
 
 add subtitles to a video file
 
-* script usage
++ script usage
 
-```
+#+BEGIN_SRC sh
 subadd -v video.(mp4|mov|mkv|m4v) -s subtitle.srt
-```
+#+END_SRC
 
-## waveform
+** waveform
 
 create a waveform from an audio or video file and save as a png
 
-* script usage
++ script usage
 
-```
+#+BEGIN_SRC sh
 waveform -i infile.(mp4|mkv|mov|m4v|wav|aac|m4a|mp3)
-```
+#+END_SRC
