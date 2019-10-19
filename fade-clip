@@ -1,0 +1,57 @@
+#!/bin/sh
+# fade video and audio in and out
+
+# script usage
+script_usage=$(printf "%s\n%s\n" "$(basename "$0") -i video.(mp4|mkv|mov|m4v)")
+
+# check arguments
+if [ $# -eq 2 ]; then
+   {
+   [ "$1" = '-i' ] && \
+   [ -f "$2" ]
+   } || { printf "%s\n" "$script_usage" && exit; }
+else
+   { printf "%s\n" "$script_usage" && exit; }
+fi
+
+# infile, infile name and file extension
+video="$2"
+video_nopath="${video##*/}"
+video_name="${video_nopath%.*}"
+video_ext="${video##*.}"
+
+# outfile file recording destination
+videofile="$HOME/Desktop/${video_name}-fade-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+
+# ffmpeg record function
+record () {
+    printf "%s\n" "+ Getting video duration" && \
+    video_dur=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$video" | cut -d\. -f1)
+    vid_offset=$(printf "%s\n" "${video_dur}-1" | bc -l)
+    printf "%s\n" "+ Converting video" && \
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -i "$video" \
+    -filter_complex \
+    " [0:a] afade=t=in:st=0:d=1,afade=t=out:st='$vid_offset':d=1[fa]; \
+      [0:v] fade=t=in:st=0:d=1,fade=t=out:st='$vid_offset':d=1[fv]
+    " \
+    -c:a aac \
+    -c:v libx264 -preset fast \
+    -profile:v high \
+    -crf 18 -coder 1 \
+    -pix_fmt yuv420p \
+    -map "[fv]" -map "[fa]" \
+    -movflags +faststart \
+    -f mp4 \
+    "$videofile"
+}
+
+
+# run the ffmpeg function based on the file extension
+case "$video_ext" in
+  # m4a audio
+  mp4|mkv|mov|m4v) record "$video";;
+  *) { printf "%s\n" "$script_usage" && exit; };;
+esac

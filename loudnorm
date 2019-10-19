@@ -1,0 +1,39 @@
+#!/bin/sh
+
+# ffmpeg loudnorm
+
+# script usage
+script_usage=$(printf "%s\n" "$(basename "$0") -i infile.(mkv|mp4|mov|m4v|m4a|aac|wav|mp3)")
+
+# check arguments passed to script
+if [ $# -eq 2 ]; then
+   # group commands
+   {
+   [ "$1" = '-i' ] && \
+   [ -f "$2" ]
+   } || { printf "%s\n" "$script_usage" && exit; }
+else
+   { printf "%s\n" "$script_usage" && exit; }
+fi
+
+# infile = audio or video file
+infile="$2" 
+
+# infile file extension
+infile_ext="${infile##*.}"
+
+# ffmpeg loudnorm get stats from file
+normalize () {
+ffmpeg \
+-hide_banner \
+-i "$infile" \
+-af "loudnorm=I=-16:dual_mono=true:TP=-1.5:LRA=11:print_format=summary" \
+-f null -
+}
+
+# run the audio or video function based on the file extension
+case "$infile_ext" in
+  mkv|mp4|mov|m4v|m4a|aac|wav|mp3) normalize "$infile";;
+  *) printf "%s\n" 'These arent the Droids your looking for';;
+esac
+

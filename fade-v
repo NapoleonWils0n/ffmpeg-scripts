@@ -1,0 +1,69 @@
+#!/bin/sh
+
+# ffmpeg cross fade clips
+
+# script usage
+script_usage=$(printf "%s\n%s\n" "$(basename "$0") -i clip-1.mp4 -i clip-2.mp4")
+
+# video file destination
+videofile="$HOME/Desktop/fade-va-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+
+# check arguments passed to script
+if [ $# -eq 4 ]; then
+    {
+    [ "$1" = '-i' ] && \
+    [ -f "$2" ] && \
+    [ "$3" = '-i' ] && \
+    [ -f "$4" ]
+    } || { printf "%s\n" "$script_usage" && exit; }
+else
+   { printf "%s\n" "$script_usage" && exit; }
+fi
+
+# variable names for files passed to script
+clip1="$2"
+clip2="$4"
+
+# video files extension
+clip1_ext="${clip1##*.}"
+clip2_ext="${clip2##*.}"
+
+# check video file extension
+case "$clip1_ext" in
+  # mkv mp4 mov m4v video
+  mkv|mp4|mov|m4v);;
+  *) { printf "%s\n" "$script_usage" && exit; };;
+esac
+
+case "$clip2_ext" in
+  # mkv mp4 mov m4v video
+  mkv|mp4|mov|m4v);;
+  *) { printf "%s\n" "$script_usage" && exit; };;
+esac
+
+# clip durations for fades
+clip1_dur=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$clip1" | cut -d\. -f1)
+clip2_dur=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$clip2" | cut -d\. -f1)
+
+# clip1 use the bc command to remove 1 second from length of clip for cross fade
+clip1_offset=$(printf "%s\n" "${clip1_dur}-1" | bc -l)
+clip2_offset=$(printf "%s\n" "${clip2_dur}-1" | bc -l)
+
+# ffmpeg command
+ffmpeg \
+-i "$clip1" -i "$clip2" \
+-an -filter_complex \
+"   [0:v]trim=start=0:end='$clip1_offset',setpts=PTS-STARTPTS[firstclip];
+    [1:v]trim=start=1,setpts=PTS-STARTPTS[secondclip];
+    [0:v]trim=start='$clip1_offset':end='$clip1_dur',setpts=PTS-STARTPTS[fadeoutsrc];
+    [1:v]trim=start=0:end=1,setpts=PTS-STARTPTS[fadeinsrc];
+    [fadeinsrc]format=pix_fmts=yuva420p,      
+                fade=t=in:st=0:d=1:alpha=1[fadein];
+    [fadeoutsrc]format=pix_fmts=yuva420p,
+                fade=t=out:st=0:d=1:alpha=1[fadeout];
+    [fadein]fifo[fadeinfifo];
+    [fadeout]fifo[fadeoutfifo];
+    [fadeoutfifo][fadeinfifo]overlay[crossfade];
+    [firstclip][crossfade][secondclip]concat=n=3[output]
+" \
+-map "[output]" "$videofile"

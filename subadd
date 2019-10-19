@@ -1,0 +1,58 @@
+#!/bin/sh
+
+# add subtitles to a video file
+
+# script usage
+script_usage=$(printf "%s\n%s\n" "$(basename "$0") -v video.(mp4|mov|mkv|m4v) -s subtitle.srt")
+
+# check arguments
+if [ $# -eq 4 ]; then
+   {
+   [ "$1" = '-v' ] && \
+   [ -f "$2" ] && \
+   [ "$3" = '-s' ] && \
+   [ -f "$4" ]
+   } || { printf "%s\n" "$script_usage" && exit; }
+else
+   { printf "%s\n" "$script_usage" && exit; }
+fi
+
+# infile, infile name and file extension
+video="$2"
+subs="$4"
+subs_ext="${audio##*.}"
+video_nopath="${video##*/}"
+video_name="${video_nopath%.*}"
+video_ext="${video##*.}"
+
+# outfile file recording destination
+videofile="$HOME/Desktop/${video_name}-subs-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+
+# audio is aac, copy audio stream
+addsubs () {
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -i "$video" \
+    -f srt \
+    -i "$subs" \
+    -c:a copy \
+    -c:v copy \
+    -c:s mov_text -metadata:s:s:0 \
+    language=eng \
+    -movflags +faststart \
+    -f mp4 \
+    "$videofile"
+}
+
+# check video file extension
+case "$video_ext" in
+  mkv|mp4|mov|m4v);;
+  *) { printf "%s\n" "$script_usage" && exit; };;
+esac
+
+# run the ffmpeg function based on the audio file extension
+case "$subs_ext" in
+  srt) addsubs "$video" "$subs";;
+  *) { printf "%s\n" "$script_usage" && exit; };;
+esac

@@ -1,0 +1,61 @@
+#!/bin/sh
+
+# ffmpeg fadein fadeout clips
+
+# script usage
+script_usage=$(printf "%s\n%s\n" "$(basename "$0") -i clip-1.(mp4|mkv|mov|m4v) -i clip-2.(mp4|mkv|mov|m4v)")
+
+# video file destination
+videofile="$HOME/Desktop/fade-a-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+
+# check arguments passed to script
+if [ $# -eq 4 ]; then
+    {
+    [ "$1" = '-i' ] && \
+    [ -f "$2" ] && \
+    [ "$3" = '-i' ] && \
+    [ -f "$4" ]
+    } || { printf "%s\n" "$script_usage" && exit; }
+else
+   { printf "%s\n" "$script_usage" && exit; }
+fi
+
+# variable names for files passed to script
+clip1="$2"
+clip2="$4"
+
+# video files extension
+clip1_ext="${clip1##*.}"
+clip2_ext="${clip2##*.}"
+
+# check video file extension
+case "$clip1_ext" in
+  # mkv mp4 mov m4v video
+  mkv|mp4|mov|m4v);;
+  *) { printf "%s\n" "$script_usage" && exit; };;
+esac
+
+case "$clip2_ext" in
+  # mkv mp4 mov m4v video
+  mkv|mp4|mov|m4v);;
+  *) { printf "%s\n" "$script_usage" && exit; };;
+esac
+
+# clip durations for fades
+clip1_dur=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$clip1" | cut -d\. -f1)
+clip2_dur=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$clip2" | cut -d\. -f1)
+
+# clip1 use the bc command to remove 1 second from length of clip for cross fade
+clip1_offset=$(printf "%s\n" "${clip1_dur}-1" | bc -l)
+clip2_offset=$(printf "%s\n" "${clip2_dur}-1" | bc -l)
+
+# ffmpeg command
+ffmpeg \
+-i "$clip1" -i "$clip2" \
+-filter_complex \
+"   [0:v][1:v]concat=n=2[output]; 
+    [0:a] afade=t=in:st=0:d=1 [fadein];
+    [1:a] afade=t=out:st='$clip2_offset':d=1 [fadeout];
+    [fadein][fadeout] acrossfade=d=1:o=0 [audio]
+" \
+-map "[output]" -map "[audio]" "$videofile"
