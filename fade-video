@@ -3,7 +3,7 @@
 # ffmpeg cross fade clips
 
 # script usage
-script_usage=$(printf "%s\n%s\n" "$(basename "$0") -i clip-1.mp4 -i clip-2.mp4")
+script_usage=$(printf "%s\n%s\n" "$(basename "$0") -i clip-1.(mp4|mkv|mov|m4v) -i clip-2.(mp4|mkv|mov|m4v)")
 
 # video file destination
 videofile="$HOME/Desktop/fade-va-$(date +"%Y-%m-%d-%H-%M-%S").mp4"

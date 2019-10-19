@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# ffmpeg cross fade clips
+# cross fade clips audio and video between two clips
 
 # script usage
 script_usage=$(printf "%s\n%s\n" "$(basename "$0") -i clip-1.(mp4|mkv|mov|m4v) -i clip-2.(mp4|mkv|mov|m4v)")
