@@ -1,8 +1,9 @@
 #+STARTUP: content
 #+OPTIONS: num:nil author:nil
 
-* Extracting audio
-** Extracting audio from video 
+* ffmpeg tips
+** Extracting audio
+*** Extracting audio from video 
 
 Extracting audio from a video file
 
@@ -11,7 +12,7 @@ ffmpeg -i infile.mp4 \
 -f wav outfile.wav
 #+END_SRC
 
-** Batch extracting audio from video 
+*** Batch extracting audio from video 
 
 Batch extract audio from video with find
 
@@ -20,7 +21,7 @@ find . -type f -name "*.[mp4kv]*" -exec sh -c \
 'ffmpeg -i "$0" -f wav "${0%.*}.wav"' "{}" \;
 #+END_SRC
 
-* Trim video
+** Trim video
 
 Trim a video clip with a new start and end point
 
@@ -34,7 +35,7 @@ ffmpeg \
 -movflags +faststart -f mp4 outfile.mp4
 #+END_SRC
 
-* Extract frame as image
+** Extract frame as image
   
 Find all mp4 or mkv files and extract a frame as a png image
 
@@ -43,7 +44,7 @@ find . -type f -name "*.[mp4kv]*" -exec sh -c \
 'ffmpeg -i "$1" -ss 00:00:05 -q:v 2 -f image2 -vframes 1 "${1%.*}.png" -hide_banner' sh {} \;
 #+END_SRC
 
-* Convert mkv to mp4
+** Convert mkv to mp4
 
 Convert a mkv video to a mp4 file
 to import into your video editor like Final Cut Pro
@@ -55,8 +56,8 @@ ffmpeg -i infile.mkv \
 outfile.mp4
 #+END_SRC
 
-* Convert audio
-** Convert wav to m4a
+** Convert audio
+*** Convert wav to m4a
 
 Find wav files and convert to m4a
 
@@ -65,7 +66,7 @@ find . -type f -name "*.wav" -exec sh -c \
 'ffmpeg -i "$0" -map 0:0 -c:a aac -b:a 320k "${0%.*}.m4a"' "{}" \;
 #+END_SRC
 
-** Convert wav to mp3
+*** Convert wav to mp3
 
 Find wav files and convert to mp3
 
@@ -74,7 +75,7 @@ find . -type f -name "*.wav" -exec sh -c \
 'ffmpeg -i "$0" -map 0:0 -c:a libmp3lame -b:a 320k "${0%.*}.mp3"' "{}" \;
 #+END_SRC
 
-* ffmpeg concat clips
+** ffmpeg concat clips
   
 create a list of all the mp4s in the current directory  
 
@@ -94,11 +95,11 @@ use subshell to generate a list of the mp4s in the current directory
 ffmpeg -f concat -i <( for f in *.mp4; do echo "file '$(pwd)/$f'"; done ) outfile.mp4
 #+END_SRC
 
-* Closed captions
+** Closed captions
 
 Extracting, adding and deleting closed captions from videos
 
-** youtube_dl download subtitles
+*** youtube_dl download subtitles
 
 youtube_dl download subtitles from video
 
@@ -112,7 +113,7 @@ youtube-dl batch download subtitles from a text file with youtube urls
 youtube-dl --write-sub --sub-lang en --skip-download -a links.txt
 #+END_SRC
 
-*** convert closed captions to srt
+**** convert closed captions to srt
 
 convert scc closed captions to srt subtitles,
 and remove text formatting and font tags
@@ -135,7 +136,7 @@ find . -type f -name "*.vtt" -exec sh -c 'ffmpeg -i "$0" \
 -c:s text "${0%.*}.srt"' "{}" \;
 #+END_SRC
 
-*** ffmpeg add subtitles to video
+**** ffmpeg add subtitles to video
 
 #+BEGIN_SRC sh
 ffmpeg -i infile.mp4 \
@@ -147,7 +148,7 @@ language=eng \
 outfile.mp4
 #+END_SRC
 
-*** remove close captions
+**** remove close captions
 
 remove close captions from video without re encode
 
@@ -159,7 +160,7 @@ ffmpeg -i infile.mp4 \
 outfile.mp4
 #+END_SRC
 
-** ccextractor
+*** ccextractor
 
 Closed caption extractor for MPEG and H264 files
 
@@ -169,13 +170,13 @@ Extract closed captions from video and save as a srt file
 ccextractor infile.mp4
 #+END_SRC
 
-*** Linux ccextractor install 
+**** Linux ccextractor install 
 
 #+BEGIN_SRC sh
 sudo apt install ccextractor
 #+END_SRC
 
-*** Freebsd ccextractor install
+**** Freebsd ccextractor install
 
 Freebsd ccextractor install
 
