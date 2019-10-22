@@ -1,0 +1,38 @@
+#!/bin/sh
+
+# ffplay ebu meter
+
+# script usage
+script_usage=$(printf "%s\n" "$(basename "$0") -i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)")
+
+# check arguments passed to script
+if [ $# -eq 2 ]; then
+   {
+   [ "$1" = '-i' ] && \
+   [ -f "$2" ]
+   } || { printf "%s\n" "$script_usage" && exit; }
+else
+   { printf "%s\n" "$script_usage" && exit; }
+fi
+
+# infile, infile name and file extension
+infile="$2"
+infile_ext="${infile##*.}"
+
+# audio function
+ebu () {
+ffplay -hide_banner \
+-f lavfi -i \
+"amovie=${infile},
+ebur128=video=1:
+meter=18:
+dualmono=true:
+target=-16:
+size=1280x720 [out0][out1]"
+}
+
+# run the audio or video function based on the file extension
+case "$infile_ext" in
+  mp4|mkv|mov|m4v|aac|m4a|wav|mp3) ebu "$infile";;
+  *) { printf "%s\n" "$script_usage" && exit; };;
+esac
