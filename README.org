@@ -6,6 +6,7 @@
 A collection of ffmpeg shell scripts
 
 + combine-clips
++ ebu-meter
 + fade-audio
 + fade-clip
 + fade-video
@@ -23,6 +24,16 @@ combine video and audio files into new clip
 
 #+BEGIN_SRC sh
 combine-clip -v video.(mp4|mov|mkv|m4v) -a audio.(m4a|aac|wav|mp3)
+#+END_SRC
+
+** ebu-meter
+
+ffplay ebu meter
+
++ script usage
+
+#+BEGIN_SRC sh
+ebu-meter -i infile.(mp4|mov|mkv|m4v|m4a|aac|wav|mp3)
 #+END_SRC
 
 ** fade-audio
