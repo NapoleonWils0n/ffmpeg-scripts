@@ -71,7 +71,7 @@ print_format=summary [audio]" \
 "$normalized_file"
 }
 
-# audio function
+# video function
 video () {
 ffmpeg \
 -hide_banner \
