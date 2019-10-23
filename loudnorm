@@ -26,7 +26,6 @@ infile_ext="${infile##*.}"
 normalize () {
     ffmpeg \
     -hide_banner \
-    -stats -v panic \
     -i "$infile" \
     -af "loudnorm=I=-16:dual_mono=true:TP=-1.5:LRA=11:print_format=summary" \
     -f null -

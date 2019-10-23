@@ -28,7 +28,6 @@ outfile="$HOME/Desktop/${infile_name}-waveform-$(date +"%Y-%m-%d-%H-%M-%S").png"
 wform () {
     ffmpeg \
     -hide_banner \
-    -stats -v panic \
     -i "$infile" \
     -filter_complex "aformat=channel_layouts=mono,showwavespic=s=1000x200" \
     -frames:v 1 "$outfile"

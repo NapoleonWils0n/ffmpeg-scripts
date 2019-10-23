@@ -32,7 +32,6 @@ videofile="$HOME/Desktop/${video_name}-subs-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
 addsubs () {
     ffmpeg \
     -hide_banner \
-    -stats -v panic \
     -i "$video" \
     -f srt \
     -i "$subs" \

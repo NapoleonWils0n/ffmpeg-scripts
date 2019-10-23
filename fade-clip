@@ -31,7 +31,6 @@ record () {
     vid_offset=$(printf "%s\n" "${video_dur}-1" | bc -l)
     ffmpeg \
     -hide_banner \
-    -stats -v panic \
     -i "$video" \
     -filter_complex \
     " [0:a] afade=t=in:st=0:d=1,afade=t=out:st='$vid_offset':d=1[fa]; \
