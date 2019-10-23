@@ -7,10 +7,8 @@ A collection of ffmpeg shell scripts
 
 + combine-clips
 + ebu-meter
-+ fade-audio
 + fade-clip
-+ fade-video
-+ fade-video-audio
++ xfade-clip
 + loudnorm
 + normalize
 + subadd
@@ -36,17 +34,6 @@ ffplay ebu meter
 ebu-meter -i infile.(mp4|mov|mkv|m4v|m4a|aac|wav|mp3)
 #+END_SRC
 
-** fade-audio
-
-cross fade audio between two clips  
-and fade the the first clip in and the second clip out
-
-+ script usage
-
-#+BEGIN_SRC sh
-fade-audio -i clip-1.(mp4|mkv|mov|m4v) -i clip-2.(mp4|mkv|mov|m4v)
-#+END_SRC
-
 ** fade-clip
 
 fade video and audio in and out
@@ -57,24 +44,14 @@ fade video and audio in and out
 fade-clip -i video.(mp4|mkv|mov|m4v)
 #+END_SRC
 
-** fade-video
-
-cross fade video between two clips
-
-+ script usage
-
-#+BEGIN_SRC sh
-fade-video -i clip-1.(mp4|mkv|mov|m4v) -i clip-2.(mp4|mkv|mov|m4v)
-#+END_SRC
-
-** fade-video-audio
+** xfade-clip
 
 cross fade clips audio and video between two clips
 
 + script usage
 
 #+BEGIN_SRC sh
-fade-video-audio -i clip-1.(mp4|mkv|mov|m4v) -i clip-2.(mp4|mkv|mov|m4v)
+xfade-clip -i clip-1.(mp4|mkv|mov|m4v) -i clip-2.(mp4|mkv|mov|m4v)
 #+END_SRC
 
 ** loudnorm
