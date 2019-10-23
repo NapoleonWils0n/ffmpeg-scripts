@@ -21,14 +21,14 @@ infile_ext="${infile##*.}"
 
 # audio function
 ebu () {
-ffplay -hide_banner \
--f lavfi -i \
-"amovie=${infile},
-ebur128=video=1:
-meter=18:
-dualmono=true:
-target=-16:
-size=1280x720 [out0][out1]"
+    ffplay -hide_banner \
+    -f lavfi -i \
+    "amovie=${infile},
+    ebur128=video=1:
+    meter=18:
+    dualmono=true:
+    target=-16:
+    size=1280x720 [out0][out1]"
 }
 
 # run the audio or video function based on the file extension
