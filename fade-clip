@@ -29,7 +29,6 @@ record () {
     printf "%s\n" "+ Getting video duration" && \
     video_dur=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$video" | cut -d\. -f1)
     vid_offset=$(printf "%s\n" "${video_dur}-1" | bc -l)
-    printf "%s\n" "+ Converting video" && \
     ffmpeg \
     -hide_banner \
     -stats -v panic \
