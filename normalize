@@ -51,6 +51,7 @@ offset=$(printf "%s\n" "$normalize" | awk -F' ' '/Target Offset:/ {print $3}')
 audio () {
     ffmpeg \
     -hide_banner \
+    -stats -v panic \
     -i "$infile" \
     -filter_complex \
     "loudnorm=I=-16:
@@ -75,6 +76,7 @@ audio () {
 video () {
     ffmpeg \
     -hide_banner \
+    -stats -v panic \
     -i "$infile" \
     -c:v copy \
     -filter_complex \

@@ -32,6 +32,7 @@ audio_ext="${audio##*.}"
 record_copy () {
     ffmpeg \
     -hide_banner \
+    -stats -v panic \
     -i "$video" \
     -i "$audio" \
     -c:a copy \
@@ -47,6 +48,7 @@ record_copy () {
 record_aac () {
     ffmpeg \
     -hide_banner \
+    -stats -v panic \
     -i "$video" \
     -i "$audio" \
     -c:a aac \
