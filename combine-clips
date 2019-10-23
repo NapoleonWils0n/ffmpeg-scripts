@@ -1,0 +1,77 @@
+#!/bin/sh
+
+# combine video and audio clip
+
+# script usage
+script_usage=$(printf "%s\n%s\n" "$(basename "$0") -v video.(mp4|mov|mkv|m4v) -a audio.(m4a|aac|wav|mp3)")
+
+# video file destination
+videofile="$HOME/Desktop/video-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+
+# check arguments
+if [ $# -eq 4 ]; then
+   {
+   [ "$1" = '-v' ] && \
+   [ -f "$2" ] && \
+   [ "$3" = '-a' ] && \
+   [ -f "$4" ]
+   } || { printf "%s\n" "$script_usage" && exit; }
+else
+   { printf "%s\n" "$script_usage" && exit; }
+fi
+
+# variables for audio and video files
+video="$2"
+audio="$4"
+
+# get video and audio file extension
+video_ext="${video##*.}"
+audio_ext="${audio##*.}"
+
+# audio is aac, copy audio stream
+record_copy () {
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -i "$video" \
+    -i "$audio" \
+    -c:a copy \
+    -c:v copy \
+    -map 0:v -map 1:a \
+    -pix_fmt yuv420p \
+    -movflags +faststart \
+    -f mp4 \
+    "$videofile"
+}
+
+# audio isnt aac, encode audio as aac
+record_aac () {
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -i "$video" \
+    -i "$audio" \
+    -c:a aac \
+    -c:v copy \
+    -map 0:v -map 1:a \
+    -pix_fmt yuv420p \
+    -movflags +faststart \
+    -f mp4 \
+    "$videofile"
+}
+
+# check video file extension
+case "$video_ext" in
+  # mkv mp4 mov m4v video
+  mkv|mp4|mov|m4v);;
+  *) { printf "%s\n" "$script_usage" && exit; };;
+esac
+
+# run the ffmpeg function based on the audio file extension
+case "$audio_ext" in
+  # m4a audio
+  m4a|aac) record_copy "$video" "$audio";;
+  # wav mp3 audio
+  wav|mp3) record_aac "$video" "$audio";;
+  *) { printf "%s\n" "$script_usage" && exit; };;
+esac

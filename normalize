@@ -1,0 +1,105 @@
+#!/bin/sh
+
+# normalize audio levels
+
+# script usage
+script_usage=$(printf "%s\n" "$(basename "$0") -i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)")
+
+# check arguments passed to script
+if [ $# -eq 2 ]; then
+   {
+   [ "$1" = '-i' ] && \
+   [ -f "$2" ]
+   } || { printf "%s\n" "$script_usage" && exit; }
+else
+   { printf "%s\n" "$script_usage" && exit; }
+fi
+
+# infile, infile name and file extension
+infile="$2"
+infile_nopath="${infile##*/}"
+infile_name="${infile_nopath%.*}"
+infile_ext="${infile##*.}"
+
+# outfile file recording destination
+normalized_file="$HOME/Desktop/${infile_name}-normalized-$(date +"%Y-%m-%d-%H-%M-%S").${infile_ext}"
+
+# check file extension
+case "$infile_ext" in
+  mp4|mkv|mov|m4v|aac|m4a|wav|mp3);;
+  *) { printf "%s\n" "$script_usage" && exit; };;
+esac
+
+# print analyzing file
+printf "%s\n" '+ Analyzing file with ffmpeg'
+
+# ffmpeg loudnorm get stats from file
+normalize=$(ffmpeg \
+-hide_banner \
+-i "$infile" \
+-af "loudnorm=I=-16:dual_mono=true:TP=-1.5:LRA=11:print_format=summary" \
+-f null - 2>&1 | tail -n 12)
+
+# use awk to extract the stats from the normalize command
+measured_I=$(printf "%s\n" "$normalize" | awk -F' ' '/Input Integrated:/ {print $3}')
+measured_TP=$(printf "%s\n" "$normalize" | awk -F' ' '/Input True Peak:/ {print $4}')
+measured_LRA=$(printf "%s\n" "$normalize" | awk -F' ' '/Input LRA:/ {print $3}')
+measured_thresh=$(printf "%s\n" "$normalize" | awk -F' ' '/Input Threshold:/ {print $3}')
+offset=$(printf "%s\n" "$normalize" | awk -F' ' '/Target Offset:/ {print $3}')
+
+# audio function
+audio () {
+ffmpeg \
+-hide_banner \
+-i "$infile" \
+-filter_complex \
+"loudnorm=I=-16:
+dual_mono=true:
+TP=-1.5:
+LRA=11:
+measured_I=${measured_I}:
+measured_LRA=${measured_LRA}:
+measured_TP=${measured_TP}:
+measured_thresh=${measured_thresh}:
+offset=${offset}:
+linear=true:
+print_format=summary [audio]" \
+-map "[audio]" \
+-pix_fmt yuv420p \
+-movflags +faststart \
+-f mp4 \
+"$normalized_file"
+}
+
+# audio function
+video () {
+ffmpeg \
+-hide_banner \
+-i "$infile" \
+-c:v copy \
+-filter_complex \
+"loudnorm=I=-16:
+dual_mono=true:
+TP=-1.5:
+LRA=11:
+measured_I=${measured_I}:
+measured_LRA=${measured_LRA}:
+measured_TP=${measured_TP}:
+measured_thresh=${measured_thresh}:
+offset=${offset}:
+linear=true:
+print_format=summary [audio]" \
+-map 0:v -map "[audio]" \
+-pix_fmt yuv420p \
+-movflags +faststart \
+-f mp4 \
+"$normalized_file"
+}
+
+# run the audio or video function based on the file extension
+case "$infile_ext" in
+  mp4|mkv|mov|m4v) video "$infile";;
+  aac|m4a|wav|mp3) audio "$infile";;
+  *) { printf "%s\n" "$script_usage" && exit; };;
+esac
+
