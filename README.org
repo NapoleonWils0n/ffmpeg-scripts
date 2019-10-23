@@ -8,7 +8,6 @@ A collection of ffmpeg shell scripts
 + combine-clips
 + ebu-meter
 + fade-clip
-+ xfade-clip
 + loudnorm
 + normalize
 + subtitle-add
@@ -42,16 +41,6 @@ fade video and audio in and out
 
 #+BEGIN_SRC sh
 fade-clip -i video.(mp4|mkv|mov|m4v)
-#+END_SRC
-
-** xfade-clip
-
-cross fade clips audio and video between two clips
-
-+ script usage
-
-#+BEGIN_SRC sh
-xfade-clip -i clip-1.(mp4|mkv|mov|m4v) -i clip-2.(mp4|mkv|mov|m4v)
 #+END_SRC
 
 ** loudnorm
