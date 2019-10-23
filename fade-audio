@@ -6,7 +6,7 @@
 script_usage=$(printf "%s\n%s\n" "$(basename "$0") -i clip-1.(mp4|mkv|mov|m4v) -i clip-2.(mp4|mkv|mov|m4v)")
 
 # video file destination
-videofile="$HOME/Desktop/fade-a-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+videofile="$HOME/Desktop/fade-audio-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
 
 # check arguments passed to script
 if [ $# -eq 4 ]; then
@@ -53,9 +53,9 @@ clip2_offset=$(printf "%s\n" "${clip2_dur}-1" | bc -l)
 ffmpeg \
 -i "$clip1" -i "$clip2" \
 -filter_complex \
-"   [0:v][1:v]concat=n=2[output]; 
+"   [0:v][1:v]concat=n=2[video]; 
     [0:a] afade=t=in:st=0:d=1 [fadein];
     [1:a] afade=t=out:st='$clip2_offset':d=1 [fadeout];
     [fadein][fadeout] acrossfade=d=1:o=0 [audio]
 " \
--map "[output]" -map "[audio]" "$videofile"
+-map "[video]" -map "[audio]" "$videofile"

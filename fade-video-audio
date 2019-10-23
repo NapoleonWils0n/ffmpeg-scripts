@@ -6,7 +6,7 @@
 script_usage=$(printf "%s\n%s\n" "$(basename "$0") -i clip-1.(mp4|mkv|mov|m4v) -i clip-2.(mp4|mkv|mov|m4v)")
 
 # video file destination
-videofile="$HOME/Desktop/fade-va-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+videofile="$HOME/Desktop/xfade-clip-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
 
 # check arguments passed to script
 if [ $# -eq 4 ]; then
@@ -64,12 +64,12 @@ ffmpeg \
     [fadein]fifo[fadeinfifo];
     [fadeout]fifo[fadeoutfifo];
     [fadeoutfifo][fadeinfifo]overlay[crossfade];
-    [firstclip][crossfade][secondclip]concat=n=3[output];
+    [firstclip][crossfade][secondclip]concat=n=3[video];
     [0:a] afade=t=in:st=0:d=1 [audiofadein];
     [1:a] afade=t=out:st='$clip2_offset':d=1 [audiofadeout];
     [audiofadein][audiofadeout] acrossfade=d=1 [audio]
 " \
-    -map "[output]" -map "[audio]" \
+    -map "[video]" -map "[audio]" \
     -pix_fmt yuv420p \
     -movflags +faststart \
     -f mp4 \
