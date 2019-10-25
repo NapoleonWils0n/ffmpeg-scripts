@@ -9,6 +9,7 @@ A collection of ffmpeg shell scripts
 + ebu-meter
 + fade-clip
 + fade-normalize
++ fade-title
 + loudnorm
 + normalize
 + subtitle-add
@@ -52,6 +53,17 @@ fade video and audio in and out and normalize
 
 #+BEGIN_SRC sh
 fade-normalize -i video.(mp4|mkv|mov|m4v)
+#+END_SRC
+
+** fade-title
+
+fade video and audio in and out, 
+normalize and create vide title from filename
+
++ script usage
+
+#+BEGIN_SRC sh
+fade-title -i video.(mp4|mkv|mov|m4v)
 #+END_SRC
 
 ** loudnorm
