@@ -13,6 +13,7 @@ A collection of ffmpeg shell scripts
 + loudnorm
 + normalize
 + subtitle-add
++ trim-clip
 + waveform
 
 ** combine-clips
@@ -94,6 +95,16 @@ add subtitles to a video file
 
 #+BEGIN_SRC sh
 subtitle-add -v video.(mp4|mov|mkv|m4v) -s subtitle.srt
+#+END_SRC
+
+** trim-clip
+
+trim video clip
+
++ script usage
+
+#+BEGIN_SRC sh
+trim-clip -ss 00:00:00 -i video.(mp4|mov|mkv|m4v) -t 00:00:00
 #+END_SRC
 
 ** waveform
