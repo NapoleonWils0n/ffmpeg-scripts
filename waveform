@@ -19,7 +19,10 @@ fi
 infile="$2"
 infile_nopath="${infile##*/}"
 infile_name="${infile_nopath%.*}"
-infile_ext="${infile##*.}"
+
+# save file extension as a lowercase variable for the case statement
+ext="${infile##*.}"
+infile_ext="$(printf "%s\n" "$ext" | tr '[:upper:]' '[:lower:]')"
 
 # outfile file recording destination
 outfile="$HOME/Desktop/${infile_name}-waveform-$(date +"%Y-%m-%d-%H-%M-%S").png"

@@ -17,13 +17,16 @@ else
    { printf "%s\n" "$script_usage" && exit; }
 fi
 
-# infile, infile name and file extension
+# infile, infile name
 video="$2"
 subs="$4"
-subs_ext="${audio##*.}"
+subs_ext="${subs##*.}"
 video_nopath="${video##*/}"
 video_name="${video_nopath%.*}"
-video_ext="${video##*.}"
+
+# save file extension as a lowercase variable for the case statement
+ext="${video##*.}"
+video_ext="$(printf "%s\n" "$ext" | tr '[:upper:]' '[:lower:]')"
 
 # outfile file recording destination
 videofile="$HOME/Desktop/${video_name}-subs-$(date +"%Y-%m-%d-%H-%M-%S").mp4"

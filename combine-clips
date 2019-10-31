@@ -25,8 +25,12 @@ video="$2"
 audio="$4"
 
 # get video and audio file extension
-video_ext="${video##*.}"
-audio_ext="${audio##*.}"
+v_ext="${video##*.}"
+a_ext="${audio##*.}"
+
+# save file extension as a lowercase variable for the case statement
+video_ext="$(printf "%s\n" "$v_ext" | tr '[:upper:]' '[:lower:]')"
+audio_ext="$(printf "%s\n" "$a_ext" | tr '[:upper:]' '[:lower:]')"
 
 # audio is aac, copy audio stream
 record_copy () {

@@ -15,9 +15,10 @@ else
    { printf "%s\n" "$script_usage" && exit; }
 fi
 
-# infile, infile name and file extension
+# save file extension as a lowercase variable for the case statement
 infile="$2"
-infile_ext="${infile##*.}"
+ext="${infile##*.}"
+infile_ext="$(printf "%s\n" "$ext" | tr '[:upper:]' '[:lower:]')"
 
 # audio function
 ebu () {

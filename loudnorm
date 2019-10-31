@@ -19,8 +19,9 @@ fi
 # infile = audio or video file
 infile="$2" 
 
-# infile file extension
-infile_ext="${infile##*.}"
+# save file extension as a lowercase variable for the case statement
+ext="${infile##*.}"
+infile_ext="$(printf "%s\n" "$ext" | tr '[:upper:]' '[:lower:]')"
 
 # ffmpeg loudnorm get stats from file
 normalize () {
