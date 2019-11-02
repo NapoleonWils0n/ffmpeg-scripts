@@ -3,16 +3,19 @@
 # create a waveform from an audio or video file and save as a png
 
 # script usage
-script_usage=$(printf "%s\n%s\n" "$(basename "$0") -i infile.(mp4|mkv|mov|m4v|wav|aac|m4a|mp3)")
+script_usage="$(basename "$0") -i infile.(mp4|mkv|mov|m4v|wav|aac|m4a|mp3)"
+
+# error messages
+HOME_ERR='HOME directory not set or null'
 
 # check arguments
 if [ $# -eq 2 ]; then
    {
    [ "$1" = '-i' ] && \
    [ -f "$2" ]
-   } || { printf "%s\n" "$script_usage" && exit; }
+   } || { echo "$script_usage" && exit; }
 else
-   { printf "%s\n" "$script_usage" && exit; }
+   { echo "$script_usage" && exit; }
 fi
 
 # variables
@@ -22,10 +25,10 @@ infile_name="${infile_nopath%.*}"
 
 # save file extension as a lowercase variable for the case statement
 ext="${infile##*.}"
-infile_ext="$(printf "%s\n" "$ext" | tr '[:upper:]' '[:lower:]')"
+infile_ext="$(echo "$ext" | tr '[:upper:]' '[:lower:]')"
 
 # outfile file recording destination
-outfile="$HOME/Desktop/${infile_name}-waveform-$(date +"%Y-%m-%d-%H-%M-%S").png"
+outfile="${HOME:?${HOME_ERR}}/Desktop/${infile_name}-waveform-$(date +"%Y-%m-%d-%H-%M-%S").png"
 
 # ffmpeg record function
 wform () {
@@ -37,9 +40,8 @@ wform () {
     -frames:v 1 "$outfile"
 }
 
-
 # run the ffmpeg function based on the file extension
 case "$infile_ext" in
   mp4|mkv|mov|m4v|wav|aac|m4a|mp3) wform "$infile";;
-  *) { printf "%s\n" "$script_usage" && exit; };;
+  *) { echo "$script_usage" && exit; };;
 esac

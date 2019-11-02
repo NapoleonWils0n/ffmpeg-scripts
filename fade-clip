@@ -3,16 +3,19 @@
 # fade video and audio in and out
 
 # script usage
-script_usage=$(printf "%s\n%s\n" "$(basename "$0") -i video.(mp4|mkv|mov|m4v)")
+script_usage="$(basename "$0") -i video.(mp4|mkv|mov|m4v)"
+
+# error messages
+HOME_ERR='HOME directory not set or null'
 
 # check arguments
 if [ $# -eq 2 ]; then
    {
    [ "$1" = '-i' ] && \
    [ -f "$2" ]
-   } || { printf "%s\n" "$script_usage" && exit; }
+   } || { echo "$script_usage" && exit; }
 else
-   { printf "%s\n" "$script_usage" && exit; }
+   { echo "$script_usage" && exit; }
 fi
 
 # infile, infile name
@@ -22,16 +25,16 @@ video_name="${video_nopath%.*}"
 
 # save file extension as a lowercase variable for the case statement
 ext="${video##*.}"
-video_ext="$(printf "%s\n" "$ext" | tr '[:upper:]' '[:lower:]')"
+video_ext="$(echo "$ext" | tr '[:upper:]' '[:lower:]')"
 
 # outfile file recording destination
-videofile="$HOME/Desktop/${video_name}-fade-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+videofile="${HOME:?${HOME_ERR}}/Desktop/${video_name}-fade-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
 
 # ffmpeg record function
 record () {
-    printf "%s\n" "+ Getting video duration" && \
+    echo '+ Getting video duration' && \
     video_dur=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$video" | cut -d\. -f1)
-    vid_offset=$(printf "%s\n" "${video_dur}-1" | bc -l)
+    vid_offset=$(echo "${video_dur}-1" | bc -l)
     ffmpeg \
     -hide_banner \
     -stats -v panic \
@@ -55,5 +58,5 @@ record () {
 case "$video_ext" in
   # m4a audio
   mp4|mkv|mov|m4v) record "$video";;
-  *) { printf "%s\n" "$script_usage" && exit; };;
+  *) { echo "$script_usage" && exit; };;
 esac

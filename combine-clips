@@ -3,10 +3,10 @@
 # combine video and audio clip
 
 # script usage
-script_usage=$(printf "%s\n%s\n" "$(basename "$0") -v video.(mp4|mov|mkv|m4v) -a audio.(m4a|aac|wav|mp3)")
+script_usage="$(basename "$0") -v video.(mp4|mov|mkv|m4v) -a audio.(m4a|aac|wav|mp3)"
 
-# video file destination
-videofile="$HOME/Desktop/video-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+# error messages
+HOME_ERR='HOME directory not set or null'
 
 # check arguments
 if [ $# -eq 4 ]; then
@@ -15,10 +15,13 @@ if [ $# -eq 4 ]; then
    [ -f "$2" ] && \
    [ "$3" = '-a' ] && \
    [ -f "$4" ]
-   } || { printf "%s\n" "$script_usage" && exit; }
+   } || { echo "$script_usage" && exit; }
 else
-   { printf "%s\n" "$script_usage" && exit; }
+   { echo "$script_usage" && exit; }
 fi
+
+# variables
+videofile="${HOME:?${HOME_ERR}}/Desktop/video-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
 
 # variables for audio and video files
 video="$2"
@@ -29,8 +32,8 @@ v_ext="${video##*.}"
 a_ext="${audio##*.}"
 
 # save file extension as a lowercase variable for the case statement
-video_ext="$(printf "%s\n" "$v_ext" | tr '[:upper:]' '[:lower:]')"
-audio_ext="$(printf "%s\n" "$a_ext" | tr '[:upper:]' '[:lower:]')"
+video_ext="$(echo "$v_ext" | tr '[:upper:]' '[:lower:]')"
+audio_ext="$(echo "$a_ext" | tr '[:upper:]' '[:lower:]')"
 
 # audio is aac, copy audio stream
 record_copy () {
@@ -68,7 +71,7 @@ record_aac () {
 case "$video_ext" in
   # mkv mp4 mov m4v video
   mkv|mp4|mov|m4v);;
-  *) { printf "%s\n" "$script_usage" && exit; };;
+  *) { echo "$script_usage" && exit; };;
 esac
 
 # run the ffmpeg function based on the audio file extension
@@ -77,5 +80,5 @@ case "$audio_ext" in
   m4a|aac) record_copy "$video" "$audio";;
   # wav mp3 audio
   wav|mp3) record_aac "$video" "$audio";;
-  *) { printf "%s\n" "$script_usage" && exit; };;
+  *) { echo "$script_usage" && exit; };;
 esac

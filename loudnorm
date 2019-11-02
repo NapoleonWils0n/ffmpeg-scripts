@@ -3,7 +3,7 @@
 # ffmpeg loudnorm
 
 # script usage
-script_usage=$(printf "%s\n" "$(basename "$0") -i infile.(mkv|mp4|mov|m4v|m4a|aac|wav|mp3)")
+script_usage="$(basename "$0") -i infile.(mkv|mp4|mov|m4v|m4a|aac|wav|mp3)"
 
 # check arguments passed to script
 if [ $# -eq 2 ]; then
@@ -11,9 +11,9 @@ if [ $# -eq 2 ]; then
    {
    [ "$1" = '-i' ] && \
    [ -f "$2" ]
-   } || { printf "%s\n" "$script_usage" && exit; }
+   } || { echo "$script_usage" && exit; }
 else
-   { printf "%s\n" "$script_usage" && exit; }
+   { echo "$script_usage" && exit; }
 fi
 
 # infile = audio or video file
@@ -21,7 +21,7 @@ infile="$2"
 
 # save file extension as a lowercase variable for the case statement
 ext="${infile##*.}"
-infile_ext="$(printf "%s\n" "$ext" | tr '[:upper:]' '[:lower:]')"
+infile_ext="$(echo "$ext" | tr '[:upper:]' '[:lower:]')"
 
 # ffmpeg loudnorm get stats from file
 normalize () {
@@ -35,5 +35,5 @@ normalize () {
 # run the audio or video function based on the file extension
 case "$infile_ext" in
   mkv|mp4|mov|m4v|m4a|aac|wav|mp3) normalize "$infile";;
-  *) printf "%s\n" 'These arent the Droids your looking for';;
+  *) { echo "$script_usage" && exit; };;
 esac

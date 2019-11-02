@@ -3,16 +3,19 @@
 # normalize audio levels
 
 # script usage
-script_usage=$(printf "%s\n" "$(basename "$0") -i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)")
+script_usage="$(basename "$0") -i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)"
+
+# error messages
+HOME_ERR='HOME directory not set or null'
 
 # check arguments passed to script
 if [ $# -eq 2 ]; then
    {
    [ "$1" = '-i' ] && \
    [ -f "$2" ]
-   } || { printf "%s\n" "$script_usage" && exit; }
+   } || { echo "$script_usage" && exit; }
 else
-   { printf "%s\n" "$script_usage" && exit; }
+   { echo "$script_usage" && exit; }
 fi
 
 # infile, infile name
@@ -22,19 +25,19 @@ infile_name="${infile_nopath%.*}"
 
 # save file extension as a lowercase variable for the case statement
 ext="${infile##*.}"
-infile_ext="$(printf "%s\n" "$ext" | tr '[:upper:]' '[:lower:]')"
+infile_ext="$(echo "$ext" | tr '[:upper:]' '[:lower:]')"
 
 # outfile file recording destination
-normalized_file="$HOME/Desktop/${infile_name}-normalized-$(date +"%Y-%m-%d-%H-%M-%S").${infile_ext}"
+normalized_file="${HOME:?${HOME_ERR}}/Desktop/${infile_name}-normalized-$(date +"%Y-%m-%d-%H-%M-%S").${infile_ext}"
 
 # check file extension
 case "$infile_ext" in
   mp4|mkv|mov|m4v|aac|m4a|wav|mp3);;
-  *) { printf "%s\n" "$script_usage" && exit; };;
+  *) { echo "$script_usage" && exit; };;
 esac
 
 # print analyzing file
-printf "%s\n" '+ Analyzing file with ffmpeg'
+echo '+ Analyzing file with ffmpeg'
 
 # ffmpeg loudnorm get stats from file
 normalize=$(ffmpeg \
@@ -44,11 +47,11 @@ normalize=$(ffmpeg \
 -f null - 2>&1 | tail -n 12)
 
 # use awk to extract the stats from the normalize command
-measured_I=$(printf "%s\n" "$normalize" | awk -F' ' '/Input Integrated:/ {print $3}')
-measured_TP=$(printf "%s\n" "$normalize" | awk -F' ' '/Input True Peak:/ {print $4}')
-measured_LRA=$(printf "%s\n" "$normalize" | awk -F' ' '/Input LRA:/ {print $3}')
-measured_thresh=$(printf "%s\n" "$normalize" | awk -F' ' '/Input Threshold:/ {print $3}')
-offset=$(printf "%s\n" "$normalize" | awk -F' ' '/Target Offset:/ {print $3}')
+measured_I=$(echo "$normalize" | awk -F' ' '/Input Integrated:/ {print $3}')
+measured_TP=$(echo "$normalize" | awk -F' ' '/Input True Peak:/ {print $4}')
+measured_LRA=$(echo "$normalize" | awk -F' ' '/Input LRA:/ {print $3}')
+measured_thresh=$(echo "$normalize" | awk -F' ' '/Input Threshold:/ {print $3}')
+offset=$(echo "$normalize" | awk -F' ' '/Target Offset:/ {print $3}')
 
 # audio function
 audio () {
@@ -105,5 +108,5 @@ video () {
 case "$infile_ext" in
   mp4|mkv|mov|m4v) video "$infile";;
   aac|m4a|wav|mp3) audio "$infile";;
-  *) { printf "%s\n" "$script_usage" && exit; };;
+  *) { echo "$script_usage" && exit; };;
 esac

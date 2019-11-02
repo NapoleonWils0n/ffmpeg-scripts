@@ -3,22 +3,22 @@
 # ffplay ebu meter
 
 # script usage
-script_usage=$(printf "%s\n" "$(basename "$0") -i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)")
+script_usage="$(basename "$0") -i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)"
 
 # check arguments passed to script
 if [ $# -eq 2 ]; then
    {
    [ "$1" = '-i' ] && \
    [ -f "$2" ]
-   } || { printf "%s\n" "$script_usage" && exit; }
+   } || { echo "$script_usage" && exit; }
 else
-   { printf "%s\n" "$script_usage" && exit; }
+   { echo "$script_usage" && exit; }
 fi
 
 # save file extension as a lowercase variable for the case statement
 infile="$2"
 ext="${infile##*.}"
-infile_ext="$(printf "%s\n" "$ext" | tr '[:upper:]' '[:lower:]')"
+infile_ext="$(echo "$ext" | tr '[:upper:]' '[:lower:]')"
 
 # audio function
 ebu () {
@@ -35,5 +35,5 @@ ebu () {
 # run the audio or video function based on the file extension
 case "$infile_ext" in
   mp4|mkv|mov|m4v|aac|m4a|wav|mp3) ebu "$infile";;
-  *) { printf "%s\n" "$script_usage" && exit; };;
+  *) { echo "$script_usage" && exit; };;
 esac

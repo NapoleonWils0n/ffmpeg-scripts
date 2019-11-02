@@ -3,7 +3,10 @@
 # add subtitles to a video file
 
 # script usage
-script_usage=$(printf "%s\n%s\n" "$(basename "$0") -v video.(mp4|mov|mkv|m4v) -s subtitle.srt")
+script_usage="$(basename "$0") -v video.(mp4|mov|mkv|m4v) -s subtitle.srt"
+
+# error messages
+HOME_ERR='HOME directory not set or null'
 
 # check arguments
 if [ $# -eq 4 ]; then
@@ -12,9 +15,9 @@ if [ $# -eq 4 ]; then
    [ -f "$2" ] && \
    [ "$3" = '-s' ] && \
    [ -f "$4" ]
-   } || { printf "%s\n" "$script_usage" && exit; }
+   } || { echo "$script_usage" && exit; }
 else
-   { printf "%s\n" "$script_usage" && exit; }
+   { echo "$script_usage" && exit; }
 fi
 
 # infile, infile name
@@ -26,10 +29,10 @@ video_name="${video_nopath%.*}"
 
 # save file extension as a lowercase variable for the case statement
 ext="${video##*.}"
-video_ext="$(printf "%s\n" "$ext" | tr '[:upper:]' '[:lower:]')"
+video_ext="$(echo "$ext" | tr '[:upper:]' '[:lower:]')"
 
 # outfile file recording destination
-videofile="$HOME/Desktop/${video_name}-subs-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+videofile="${HOME:?${HOME_ERR}}/Desktop/${video_name}-subs-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
 
 # audio is aac, copy audio stream
 addsubs () {
@@ -51,11 +54,11 @@ addsubs () {
 # check video file extension
 case "$video_ext" in
   mkv|mp4|mov|m4v);;
-  *) { printf "%s\n" "$script_usage" && exit; };;
+  *) { echo "$script_usage" && exit; };;
 esac
 
 # run the ffmpeg function based on the audio file extension
 case "$subs_ext" in
   srt) addsubs "$video" "$subs";;
-  *) { printf "%s\n" "$script_usage" && exit; };;
+  *) { echo "$script_usage" && exit; };;
 esac
