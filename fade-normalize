@@ -46,12 +46,14 @@ normalize=$(ffmpeg \
 -af "loudnorm=I=-16:dual_mono=true:TP=-1.5:LRA=11:print_format=summary" \
 -f null - 2>&1 | tail -n 12)
 
-# use awk to extract the stats from the normalize command
-measured_I=$(echo "$normalize" | awk -F' ' '/Input Integrated:/ {print $3}')
-measured_TP=$(echo "$normalize" | awk -F' ' '/Input True Peak:/ {print $4}')
-measured_LRA=$(echo "$normalize" | awk -F' ' '/Input LRA:/ {print $3}')
-measured_thresh=$(echo "$normalize" | awk -F' ' '/Input Threshold:/ {print $3}')
-offset=$(echo "$normalize" | awk -F' ' '/Target Offset:/ {print $3}')
+# read the output of normalize line by line and store in variables
+for line in "$normalize"; do
+    measured_I=$(echo "$line" | awk -F' ' '/Input Integrated:/ {print $3}')
+    measured_TP=$(echo "$line" | awk -F' ' '/Input True Peak:/ {print $4}')
+    measured_LRA=$(echo "$line" | awk -F' ' '/Input LRA:/ {print $3}')
+    measured_thresh=$(echo "$line" | awk -F' ' '/Input Threshold:/ {print $3}')
+    offset=$(echo "$line" | awk -F' ' '/Target Offset:/ {print $3}')
+done
 
 # video function
 video () {
