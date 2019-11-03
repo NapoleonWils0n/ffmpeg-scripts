@@ -75,13 +75,13 @@ record_aac () {
 
 # check video file extension
 case "$video_ext" in
-  ${mp4}|${mkv}|${mov}|${m4v});;
-  *) { echo "$script_usage" && exit; };;
+    ${mp4}|${mkv}|${mov}|${m4v});;
+    *) { echo "$script_usage" && exit; };;
 esac
 
 # run the ffmpeg function based on the audio file extension
 case "$audio_ext" in
-  ${m4a}|${aac}) record_copy "$video" "$audio";;
-  ${wav}|${mp3}) record_aac "$video" "$audio";;
-  *) { echo "$script_usage" && exit; };;
+    ${m4a}|${aac}) record_copy "$video" "$audio";;
+    ${wav}|${mp3}) record_aac "$video" "$audio";;
+    *) { echo "$script_usage" && exit; };;
 esac

@@ -63,6 +63,6 @@ trim () {
 
 # check video file extension
 case "$video_ext" in
-  ${mp4}|${mkv}|${mov}|${m4v}) trim "$video";;
-  *) { echo "$script_usage" && exit; };;
+    ${mp4}|${mkv}|${mov}|${m4v}) trim "$video";;
+    *) { echo "$script_usage" && exit; };;
 esac

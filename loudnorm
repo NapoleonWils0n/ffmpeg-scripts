@@ -41,13 +41,7 @@ normalize () {
 
 # run the audio or video function based on the file extension
 case "$infile_ext" in
-    ${mp4}| \
-    ${mkv}| \
-    ${mov}| \
-    ${m4v}| \
-    ${aac}| \
-    ${m4a}| \
-    ${wav}| \
-    ${mp3}) normalize "$infile";;
-  *) { echo "$script_usage" && exit; };;
+    ${mp4}|${mkv}|${mov}|${m4v}| \
+    ${aac}|${m4a}|${wav}|${mp3}) normalize "$infile";;
+    *) { echo "$script_usage" && exit; };;
 esac
