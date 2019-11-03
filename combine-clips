@@ -28,12 +28,18 @@ video="$2"
 audio="$4"
 
 # get video and audio file extension
-v_ext="${video##*.}"
-a_ext="${audio##*.}"
+video_ext="${video##*.}"
+audio_ext="${audio##*.}"
 
-# save file extension as a lowercase variable for the case statement
-video_ext="$(echo "$v_ext" | tr '[:upper:]' '[:lower:]')"
-audio_ext="$(echo "$a_ext" | tr '[:upper:]' '[:lower:]')"
+# file extension regular expressions for case statement
+mp4='[Mm][Pp]4'
+mkv='[Mm][Kk][Vv]'
+mov='[Mm][[Oo][Vv]'
+m4v='[Mm]4[Vv]'
+aac='[Aa][Aa][Cc]'
+m4a='[Mm]4[Aa]'
+wav='[Ww][Aa][Vv]'
+mp3='[Mm][Pp]3'
 
 # audio is aac, copy audio stream
 record_copy () {
@@ -69,16 +75,13 @@ record_aac () {
 
 # check video file extension
 case "$video_ext" in
-  # mkv mp4 mov m4v video
-  mkv|mp4|mov|m4v);;
+  ${mp4}|${mkv}|${mov}|${m4v});;
   *) { echo "$script_usage" && exit; };;
 esac
 
 # run the ffmpeg function based on the audio file extension
 case "$audio_ext" in
-  # m4a audio
-  m4a|aac) record_copy "$video" "$audio";;
-  # wav mp3 audio
-  wav|mp3) record_aac "$video" "$audio";;
+  ${m4a}|${aac}) record_copy "$video" "$audio";;
+  ${wav}|${mp3}) record_aac "$video" "$audio";;
   *) { echo "$script_usage" && exit; };;
 esac
