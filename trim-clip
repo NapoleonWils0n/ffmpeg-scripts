@@ -1,0 +1,62 @@
+#!/bin/sh
+
+# trim video clip
+
+# script usage
+script_usage="$(basename "$0") -ss 00:00:00 -i video.(mp4|mov|mkv|m4v) -t 00:00:00"
+
+# error messages
+HOME_ERR='HOME directory not set or null'
+
+# timecode - match 00:00:00
+timecode='^[0-9]\{2\}:[0-9]\{2\}:[0-9]\{2\}$'
+
+# check arguments
+if [ $# -eq 6 ]; then
+   {
+   [ "$1" = '-ss' ] && \
+   expr "$2" : "$timecode" 1>/dev/null && \
+   [ "$3" = '-i' ] && \
+   [ -f "$4" ] && \
+   [ "$5" = '-t' ] && \
+   expr "$6" : "$timecode" 1>/dev/null
+   } || { echo "$script_usage" && exit; }
+else
+   { echo "$script_usage" && exit; }
+fi
+
+# variables
+start="$2"
+video="$4"
+end="$6"
+
+# infile name
+infile_nopath="${video##*/}"
+infile_name="${infile_nopath%.*}"
+
+# get video extension
+video_ext="${video##*.}"
+
+# video file destination
+videofile="${HOME:?${HOME_ERR}}/Desktop/${infile_name}-trimmed-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+
+# trim clip
+trim () {
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -ss "$start" \
+    -i "$video" \
+    -t "$end" \
+    -c:a copy \
+    -c:v libx264 -profile:v high \
+    -pix_fmt yuv420p -movflags +faststart \
+    -f mp4 \
+    "$videofile"
+}
+
+# check video file extension
+case "$video_ext" in
+  [mM][kK][vV]|[mM][pP]4|[mM][oO][vV]|[mM]4[vV]) trim "$video";;
+  *) { echo "$script_usage" && exit; };;
+esac
