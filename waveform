@@ -50,13 +50,7 @@ wform () {
 }
 
 case "$infile_ext" in
-    ${mp4}| \
-    ${mkv}| \
-    ${mov}| \
-    ${m4v}| \
-    ${aac}| \
-    ${m4a}| \
-    ${wav}| \
-    ${mp3}) wform "$infile";;
+    ${mp4}|${mkv}|${mov}|${m4v}| \
+    ${aac}|${m4a}|${wav}|${mp3}) wform "$infile";;
   *) { echo "$script_usage" && exit; };;
 esac
