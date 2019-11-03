@@ -18,14 +18,17 @@ else
    { echo "$script_usage" && exit; }
 fi
 
-# infile, infile name
+# infile, infile name and extension
 video="$2"
 video_nopath="${video##*/}"
 video_name="${video_nopath%.*}"
+video_ext="${video##*.}"
 
-# save file extension as a lowercase variable for the case statement
-ext="${video##*.}"
-video_ext="$(echo "$ext" | tr '[:upper:]' '[:lower:]')"
+# file extension regular expressions for case statement
+mp4='[Mm][Pp]4'
+mkv='[Mm][Kk][Vv]'
+mov='[Mm][[Oo][Vv]'
+m4v='[Mm]4[Vv]'
 
 # outfile file recording destination
 videofile="${HOME:?${HOME_ERR}}/Desktop/${video_name}-fade-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
@@ -56,7 +59,6 @@ record () {
 
 # run the ffmpeg function based on the file extension
 case "$video_ext" in
-  # m4a audio
-  mp4|mkv|mov|m4v) record "$video";;
-  *) { echo "$script_usage" && exit; };;
+    ${mp4}|${mkv}|${mov}|${m4v}) record "$video";;
+    *) { echo "$script_usage" && exit; };;
 esac
