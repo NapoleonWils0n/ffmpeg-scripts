@@ -18,21 +18,35 @@ else
    { echo "$script_usage" && exit; }
 fi
 
-# infile, infile name
+# infile, infile name and extension
 infile="$2"
 infile_nopath="${infile##*/}"
 infile_name="${infile_nopath%.*}"
+infile_ext="${infile##*.}"
 
-# save file extension as a lowercase variable for the case statement
-ext="${infile##*.}"
-infile_ext="$(echo "$ext" | tr '[:upper:]' '[:lower:]')"
+# file extension regular expressions for case statement
+mp4='[Mm][Pp]4'
+mkv='[Mm][Kk][Vv]'
+mov='[Mm][[Oo][Vv]'
+m4v='[Mm]4[Vv]'
+aac='[Aa][Aa][Cc]'
+m4a='[Mm]4[Aa]'
+wav='[Ww][Aa][Vv]'
+mp3='[Mm][Pp]3'
 
 # outfile file recording destination
 normalized_file="${HOME:?${HOME_ERR}}/Desktop/${infile_name}-normalized-$(date +"%Y-%m-%d-%H-%M-%S").${infile_ext}"
 
 # check file extension
 case "$infile_ext" in
-  mp4|mkv|mov|m4v|aac|m4a|wav|mp3);;
+    ${mp4}| \
+    ${mkv}| \
+    ${mov}| \
+    ${m4v}| \
+    ${aac}| \
+    ${m4a}| \
+    ${wav}| \
+    ${mp3});;
   *) { echo "$script_usage" && exit; };;
 esac
 
@@ -108,7 +122,7 @@ video () {
 
 # run the audio or video function based on the file extension
 case "$infile_ext" in
-  mp4|mkv|mov|m4v) video "$infile";;
-  aac|m4a|wav|mp3) audio "$infile";;
+    ${mp4}|${mkv}|${mov}|${m4v}) video "$infile";;
+    ${aac}|${m4a}|${wav}|${mp3}) audio "$infile";;
   *) { echo "$script_usage" && exit; };;
 esac
