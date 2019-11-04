@@ -24,6 +24,21 @@ infile_nopath="${infile##*/}"
 infile_name="${infile_nopath%.*}"
 infile_ext="${infile##*.}"
 
+# file command check input file mime type
+filetype="$(file --mime-type -b $infile)"
+
+# video mimetypes
+mov_mime='video/quicktime'
+mkv_mime='video/x-matroska'
+mp4_mime='video/mp4'
+m4v_mime='video/x-m4v'
+
+# check the files mime type
+case "$filetype" in
+    ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime});;
+    *) { echo "$script_usage" && exit; };;
+esac
+
 # file extension regular expressions for case statement
 mp4='[Mm][Pp]4'
 mkv='[Mm][Kk][Vv]'

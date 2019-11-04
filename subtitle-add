@@ -28,6 +28,31 @@ video_nopath="${video##*/}"
 video_name="${video_nopath%.*}"
 video_ext="${video##*.}"
 
+# file command check input file mime type
+video_filetype="$(file --mime-type -b $video)"
+subs_filetype="$(file --mime-type -b $subs)"
+
+# video mimetypes
+mov_mime='video/quicktime'
+mkv_mime='video/x-matroska'
+mp4_mime='video/mp4'
+m4v_mime='video/x-m4v'
+
+# srt subtitles mime type
+srt_mime='text/plain'
+
+# check the video mime type
+case "$video_filetype" in
+    ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime});;
+    *) { echo "$script_usage" && exit; };;
+esac
+
+# check the subtitles mime type
+case "$subs_filetype" in
+    ${srt_mime});;
+    *) { echo "$script_usage" && exit; };;
+esac
+
 # file extension regular expressions for case statement
 mp4='[Mm][Pp]4'
 mkv='[Mm][Kk][Vv]'

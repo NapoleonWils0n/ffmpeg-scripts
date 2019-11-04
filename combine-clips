@@ -27,6 +27,31 @@ videofile="${HOME:?${HOME_ERR}}/Desktop/video-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
 video="$2"
 audio="$4"
 
+# file command check input file mime type
+video_filetype="$(file --mime-type -b $video)"
+audio_filetype="$(file --mime-type -b $audio)"
+
+# audio and video mimetypes
+mov_mime='video/quicktime'
+mkv_mime='video/x-matroska'
+mp4_mime='video/mp4'
+m4v_mime='video/x-m4v'
+wav_mime='audio/x-wav'
+audio_mime='audio/mpeg'
+aac_mime='audio/x-hx-aac-adts'
+
+# check the video mime type
+case "$video_filetype" in
+    ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime});;
+    *) { echo "$script_usage" && exit; };;
+esac
+
+# check the audio mime type
+case "$audio_filetype" in
+    ${wav_mime}|${audio_mime}|${aac_mime});;
+    *) { echo "$script_usage" && exit; };;
+esac
+
 # get video and audio file extension
 video_ext="${video##*.}"
 audio_ext="${audio##*.}"
