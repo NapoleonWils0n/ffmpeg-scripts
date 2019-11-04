@@ -18,19 +18,22 @@ else
    { echo "$script_usage" && exit; }
 fi
 
-# infile, infile name
+# infile, infile name and file extension
 infile="$2"
 infile_nopath="${infile##*/}"
 infile_name="${infile_nopath%.*}"
+infile_ext="${infile##*.}"
 
-# save file extension as a lowercase variable for the case statement
-ext="${infile##*.}"
-infile_ext="$(echo "$ext" | tr '[:upper:]' '[:lower:]')"
+# file extension regular expressions for case statement
+mp4='[Mm][Pp]4'
+mkv='[Mm][Kk][Vv]'
+mov='[Mm][[Oo][Vv]'
+m4v='[Mm]4[Vv]'
 
 # check the file extension
 case "$infile_ext" in
-  mp4|mkv|mov|m4v);;
-  *) { echo "$script_usage" && exit; };;
+    ${mp4}|${mkv}|${mov}|${m4v});;
+    *) { echo "$script_usage" && exit; };;
 esac
 
 # outfile file recording destination
@@ -147,6 +150,6 @@ video () {
 
 # run the audio or video function based on the file extension
 case "$infile_ext" in
-  mp4|mkv|mov|m4v) video "$infile";;
-  *) { echo "$script_usage" && exit; };;
+    ${mp4}|${mkv}|${mov}|${m4v}) video "$infile";;
+    *) { echo "$script_usage" && exit; };;
 esac
