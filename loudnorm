@@ -21,7 +21,7 @@ infile="$2"
 infile_ext="${infile##*.}"
 
 # file command check input file mime type
-filetype="$(file --mime-type -b $infile)"
+filetype="$(file --mime-type -b "$infile")"
 
 # audio and video mimetypes
 mov_mime='video/quicktime'

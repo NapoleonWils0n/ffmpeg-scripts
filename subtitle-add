@@ -29,8 +29,8 @@ video_name="${video_nopath%.*}"
 video_ext="${video##*.}"
 
 # file command check input file mime type
-video_filetype="$(file --mime-type -b $video)"
-subs_filetype="$(file --mime-type -b $subs)"
+video_filetype="$(file --mime-type -b "$video")"
+subs_filetype="$(file --mime-type -b "$subs")"
 
 # video mimetypes
 mov_mime='video/quicktime'

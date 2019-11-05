@@ -25,7 +25,7 @@ infile_name="${infile_nopath%.*}"
 infile_ext="${infile##*.}"
 
 # file command check input file mime type
-filetype="$(file --mime-type -b $infile)"
+filetype="$(file --mime-type -b "$infile")"
 
 # video mimetypes
 mov_mime='video/quicktime'
