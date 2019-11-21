@@ -27,8 +27,8 @@ infile=""
 while getopts ':i:h' opt
 do
   case ${opt} in
-      i) infile="${OPTARG}"
-	 [ -f "${infile}" ] || { echo "${infile} ${NOTFILE_ERR}" && usage; };;
+     i) infile="${OPTARG}"
+	[ -f "${infile}" ] || { echo "${infile} ${NOTFILE_ERR}" && usage; };;
      h) usage;;
      \?) echo "${INVALID_OPT_ERR} ${OPTARG}" 1>&2 && usage;;
      :) echo "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2 && usage;;
