@@ -40,7 +40,7 @@ done
 shift $((OPTIND-1))
 
 # check arguments
-if [ "$args" -eq 2 ]; then
+if [ "${args}" -eq 2 ]; then
    {
    [ "${firstarg}" = '-i' ] && \
    [ -f "${infile}" ]
@@ -63,14 +63,14 @@ wav='[Ww][Aa][Vv]'
 mp3='[Mm][Pp]3'
 
 # run the audio or video function based on the file extension
-case "$infile_ext" in
+case "${infile_ext}" in
     ${mp4}|${mkv}|${mov}|${m4v}| \
     ${aac}|${m4a}|${wav}|${mp3});;
     *) { echo "${infile} ${FILE_EXT_ERR}" && usage; };;
 esac
 
 # file command check input file mime type
-filetype="$(file --mime-type -b "$infile")"
+filetype="$(file --mime-type -b "${infile}")"
 
 # audio and video mimetypes
 mov_mime='video/quicktime'
@@ -91,7 +91,7 @@ normalize () {
 }
 
 # check the files mime type
-case "$filetype" in
+case "${filetype}" in
     ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime}| \
     ${wav_mime}|${audio_mime}|${aac_mime}) normalize "${infile}";;
     *) { echo "${infile} ${NOT_MEDIA_FILE_ERR}" && usage; };;

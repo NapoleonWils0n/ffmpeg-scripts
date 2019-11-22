@@ -40,7 +40,7 @@ done
 shift $((OPTIND-1))
 
 # check arguments
-if [ "$args" -eq 2 ]; then
+if [ "${args}" -eq 2 ]; then
    {
    [ "${firstarg}" = '-i' ] && \
    [ -f "${infile}" ]

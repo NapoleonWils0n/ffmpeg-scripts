@@ -41,7 +41,7 @@ done
 shift $((OPTIND-1))
 
 # check arguments
-if [ "$args" -eq 2 ]; then
+if [ "${args}" -eq 2 ]; then
    {
    [ "${firstarg}" = '-i' ] && \
    [ -f "${infile}" ]
@@ -62,7 +62,7 @@ mov='[Mm][[Oo][Vv]'
 m4v='[Mm]4[Vv]'
 
 # check the file extension before passing to the file command
-case "$infile_ext" in
+case "${infile_ext}" in
     ${mp4}|${mkv}|${mov}|${m4v});;
     *) { echo "${infile} ${FILE_EXT_ERR}" && usage; };;
 esac
@@ -104,7 +104,7 @@ mp4_mime='video/mp4'
 m4v_mime='video/x-m4v'
 
 # check the files mime type
-case "$filetype" in
+case "${filetype}" in
     ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime}) record "${infile}";;
     *) { echo "${infile} ${NOT_MEDIA_FILE_ERR}" && usage; };;
 esac
