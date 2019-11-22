@@ -1,0 +1,143 @@
+#!/bin/sh
+
+# combine video and audio clip
+
+# script usage
+usage()
+{
+  echo "$(basename "$0") -v infile.(mp4|mkv|mov|m4v) -a audio.(m4a|aac|wav|mp3)"
+  exit 2
+}
+
+# error messages
+HOME_ERR='HOME directory not set or null'
+NOTFILE_ERR='not a file'
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+ARGS_ERR='incorrect arguments passed to script'
+FILE_EXT_ERR='has the wrong file extension'
+NOT_MEDIA_FILE_ERR='is not a media file'
+
+# number of args passed to script, needs to be stored before getopts
+if [ $# -gt 0 ]; then
+    firstarg="$1"
+    thirdarg="$3"
+    args="$#"
+else
+   { echo "${WRONG_ARGS_ERR}" && usage; }
+fi
+
+# getopts and check if input a file
+while getopts ':v:a:h' opt
+do
+  case ${opt} in
+     v) video="${OPTARG}"
+	[ -f "${video}" ] || { echo "${video} ${NOTFILE_ERR}" && usage; };;
+     a) audio="${OPTARG}"
+	[ -f "${audio}" ] || { echo "${audio} ${NOTFILE_ERR}" && usage; };;
+     h) usage;;
+     \?) echo "${INVALID_OPT_ERR} ${OPTARG}" 1>&2 && usage;;
+     :) echo "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2 && usage;;
+  esac
+done
+shift $((OPTIND-1))
+
+# check arguments
+if [ "${args}" -eq 4 ]; then
+   {
+   [ "${firstarg}" = '-v' ] && \
+   [ -f "${video}" ] && \
+   [ "${thirdarg}" = '-a' ] && \
+   [ -f "${audio}" ]
+   } || { echo "${ARGS_ERR}" && usage; }
+else
+   { echo "${WRONG_ARGS_ERR}" && usage; }
+fi
+
+# variables
+videofile="${HOME:?${HOME_ERR}}/Desktop/video-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+
+# get video and audio file extension
+video_ext="${video##*.}"
+audio_ext="${audio##*.}"
+
+# file extension regular expressions for case statement
+mp4='[Mm][Pp]4'
+mkv='[Mm][Kk][Vv]'
+mov='[Mm][[Oo][Vv]'
+m4v='[Mm]4[Vv]'
+aac='[Aa][Aa][Cc]'
+m4a='[Mm]4[Aa]'
+wav='[Ww][Aa][Vv]'
+mp3='[Mm][Pp]3'
+
+# check video file extension
+case "${video_ext}" in
+    ${mp4}|${mkv}|${mov}|${m4v});;
+    *) { echo "${video} ${FILE_EXT_ERR}" && usage; };;
+esac
+
+# check audio file extension
+case "${audio_ext}" in
+    ${m4a}|${aac}|${wav}|${mp3});;
+    *) { echo "${audio} ${FILE_EXT_ERR}" && usage; };;
+esac
+
+# file command check input file mime type
+video_filetype="$(file --mime-type -b "${video}")"
+audio_filetype="$(file --mime-type -b "${audio}")"
+
+# audio and video mimetypes
+mov_mime='video/quicktime'
+mkv_mime='video/x-matroska'
+mp4_mime='video/mp4'
+m4v_mime='video/x-m4v'
+wav_mime='audio/x-wav'
+audio_mime='audio/mpeg'
+aac_mime='audio/x-hx-aac-adts'
+
+# audio is aac, copy audio stream
+record_copy () {
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -i "${video}" \
+    -i "${audio}" \
+    -c:a copy \
+    -c:v copy \
+    -map 0:v -map 1:a \
+    -pix_fmt yuv420p \
+    -movflags +faststart \
+    -f mp4 \
+    "${videofile}"
+}
+
+# audio isnt aac, encode audio as aac
+record_aac () {
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -i "${video}" \
+    -i "${audio}" \
+    -c:a aac \
+    -c:v copy \
+    -map 0:v -map 1:a \
+    -pix_fmt yuv420p \
+    -movflags +faststart \
+    -f mp4 \
+    "${videofile}"
+}
+
+# check the video mime type
+case "${video_filetype}" in
+    ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime});;
+    *) { echo "${video} ${NOT_MEDIA_FILE_ERR}" && usage; };;
+esac
+
+# run the ffmpeg function based on the audio file extension
+case "${audio_filetype}" in
+    ${aac_mime}) record_copy "${video}" "${audio}";;
+    ${wav_mime}|${audio_mime}) record_aac "${video}" "${audio}";;
+    *) { echo "${audio} ${NOT_MEDIA_FILE_ERR}" && usage; };;
+esac
