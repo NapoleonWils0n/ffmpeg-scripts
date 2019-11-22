@@ -57,9 +57,6 @@ infile_name="${infile_nopath%.*}"
 # save file extension as a lowercase variable for the case statement
 infile_ext="${infile##*.}"
 
-# file command check input file mime type
-filetype="$(file --mime-type -b "$infile")"
-
 # file extension regular expressions for case statement
 mp4='[Mm][Pp]4'
 mkv='[Mm][Kk][Vv]'
@@ -78,6 +75,9 @@ esac
 
 # outfile file recording destination
 outfile="${HOME:?${HOME_ERR}}/Desktop/${infile_name}-waveform-$(date +"%Y-%m-%d-%H-%M-%S").png"
+
+# file command check input file mime type
+filetype="$(file --mime-type -b "$infile")"
 
 # audio and video mimetypes
 mov_mime='video/quicktime'
