@@ -100,7 +100,7 @@ trim () {
     -ss "${start}" \
     -i "${infile}" \
     -t "${end}" \
-    -c:a copy \
+    -c:a aac \
     -c:v libx264 -profile:v high \
     -pix_fmt yuv420p -movflags +faststart \
     -f mp4 \
