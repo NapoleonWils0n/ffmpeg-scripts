@@ -43,8 +43,10 @@ fade video and audio in and out
 + script usage
 
 #+BEGIN_SRC sh
-fade-clip -i video.(mp4|mkv|mov|m4v)
+fade-clip -i video.(mp4|mkv|mov|m4v) -d (0.[0-9]|1)
 #+END_SRC
+
+-d = duration from 0.1 to 1
 
 ** fade-normalize
 
@@ -53,8 +55,10 @@ fade video and audio in and out and normalize
 + script usage
 
 #+BEGIN_SRC sh
-fade-normalize -i video.(mp4|mkv|mov|m4v)
+fade-normalize -i video.(mp4|mkv|mov|m4v) -d (0.[0-9]|1)
 #+END_SRC
+
+-d = duration from 0.1 to 1
 
 ** fade-title
 
@@ -64,8 +68,10 @@ normalize and create vide title from filename
 + script usage
 
 #+BEGIN_SRC sh
-fade-title -i video.(mp4|mkv|mov|m4v)
+fade-title -i video.(mp4|mkv|mov|m4v) -d (0.[0-9]|1)
 #+END_SRC
+
+-d = duration from 0.1 to 1
 
 ** loudnorm
 
@@ -116,3 +122,14 @@ create a waveform from an audio or video file and save as a png
 #+BEGIN_SRC sh
 waveform -i infile.(mp4|mkv|mov|m4v|wav|aac|m4a|mp3)
 #+END_SRC
+** xfade-clips
+
+cross fade 2 video clips with either a 1 or 2 second cross fade
+the videos must have the same codecs, size and frame rate
++ script usage
+
+#+BEGIN_SRC sh
+xfade-clips -a clip1.(mp4|mkv|mov|m4v) -b clip2.(mp4|mkv|mov|m4v) -d (1|2)
+#+END_SRC
+
+-d = duration either 1 to 2
