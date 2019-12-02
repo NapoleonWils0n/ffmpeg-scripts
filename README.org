@@ -73,6 +73,16 @@ fade-title -i video.(mp4|mkv|mov|m4v) -d (0.[0-9]|1)
 
 -d = duration from 0.1 to 1
 
+** kenburns
+
+convert image to video and apply ken burns style zoom into center
+
++ script usage
+
+#+BEGIN_SRC sh
+kenburns -i image.(png|jpg|jpeg) -d (000)
+#+END_SRC
+
 ** loudnorm
 
 ffmpeg loudnorm 
