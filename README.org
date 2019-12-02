@@ -83,6 +83,8 @@ convert image to video and apply ken burns style zoom into center
 kenburns -i image.(png|jpg|jpeg) -d (000)
 #+END_SRC
 
+-d = duration
+
 ** loudnorm
 
 ffmpeg loudnorm 
