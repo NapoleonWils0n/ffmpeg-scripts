@@ -104,7 +104,7 @@ case "${infile_ext}" in
 esac
 
 # outfile file recording destination
-outfile="${HOME:?${HOME_ERR}}/Desktop/${infile_name}-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+outfile="${HOME:?${HOME_ERR}}/Desktop/${infile_name}-zoompan-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
 
 # file command check input file mime type
 filetype="$(file --mime-type -b "${infile}")"
