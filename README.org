@@ -110,8 +110,12 @@ trim video clip
 + script usage
 
 #+BEGIN_SRC sh
-trim-clip -s 00:00:00 -i video.(mp4|mov|mkv|m4v) -t 00:00:00
+trim-clip -s 00:00:00 -i infile.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3) -t 00:00:00
 #+END_SRC
+
++ -i = infile.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3)
++ -s = start time
++ -t = number of seconds after start time
 
 ** waveform
 
