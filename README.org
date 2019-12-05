@@ -144,12 +144,10 @@ convert a image to video and apply ken burns style zoom into center
 zoompan -i infile.(png|jpg|jpeg) -d (000) -z (in|out) -p (tl|c|tc|tr|bl|br)"
 #+END_SRC
 
-zoompan -i infile.(png|jpg|jpeg) -d (000) z (in|out) -p (tl|c|tc|tr|bl|br)
-
--i = infile.(png|jpg|jpeg)
--d = duration : from 1-999
--z = zoom : in or out
--p = position : zoom to location listed below
++ -i = infile.(png|jpg|jpeg)
++ -d = duration : from 1-999
++ -z = zoom : in or out
++ -p = position : zoom to location listed below
 
 #+BEGIN_SRC sh
 +------------------------------+
