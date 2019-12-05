@@ -46,7 +46,8 @@ fade video and audio in and out
 fade-clip -i video.(mp4|mkv|mov|m4v) -d (0.[0-9]|1)
 #+END_SRC
 
--d = duration from 0.1 to 1
++ -i video.(mp4|mkv|mov|m4v)
++ -d = duration from 0.1 to 1
 
 ** fade-normalize
 
@@ -58,7 +59,7 @@ fade video and audio in and out and normalize
 fade-normalize -i video.(mp4|mkv|mov|m4v) -d (0.[0-9]|1)
 #+END_SRC
 
--d = duration from 0.1 to 1
++ -d = duration from 0.1 to 1
 
 ** fade-title
 
@@ -71,7 +72,8 @@ normalize and create vide title from filename
 fade-title -i video.(mp4|mkv|mov|m4v) -d (0.[0-9]|1)
 #+END_SRC
 
--d = duration from 0.1 to 1
++ -i video.(mp4|mkv|mov|m4v)
++ -d = duration from 0.1 to 1
 
 ** loudnorm
 
@@ -126,6 +128,7 @@ create a waveform from an audio or video file and save as a png
 #+BEGIN_SRC sh
 waveform -i infile.(mp4|mkv|mov|m4v|wav|aac|m4a|mp3)
 #+END_SRC
+
 ** xfade-clips
 
 cross fade 2 video clips with either a 1 or 2 second cross fade
@@ -136,7 +139,9 @@ the videos must have the same codecs, size and frame rate
 xfade-clips -a clip1.(mp4|mkv|mov|m4v) -b clip2.(mp4|mkv|mov|m4v) -d (1|2)
 #+END_SRC
 
--d = duration either 1 to 2
++ -a clip1.(mp4|mkv|mov|m4v)
++ -b clip2.(mp4|mkv|mov|m4v)
++ -d = duration either 1 to 2
 
 ** zoompan
 
