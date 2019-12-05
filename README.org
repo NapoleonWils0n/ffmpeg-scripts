@@ -151,10 +151,12 @@ zoompan -i infile.(png|jpg|jpeg) -d (000) z (in|out) -p (tl|c|tc|tr|bl|br)
 -z = zoom : in or out
 -p = position : zoom to location listed below
 
+#+BEGIN_SRC sh
 +------------------------------+
-++tl            tc            tr++
++tl            tc            tr+
 +                              +        
 +              c               +
 +                              +
-++bl                          br++
++bl                          br+
 +------------------------------+
+#+END_SRC
