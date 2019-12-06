@@ -137,7 +137,7 @@ video () {
     print_format=summary [audio];
     [0:v] fade=t=in:st=0:d=${dur},fade=t=out:st='${vid_offset}':d=${dur}[video]" \
     -map "[video]" -map "[audio]" \
-    -c:a aac \
+    -c:a aac -ar 44100 \
     -c:v libx264 -preset fast \
     -profile:v high \
     -crf 18 -coder 1 \

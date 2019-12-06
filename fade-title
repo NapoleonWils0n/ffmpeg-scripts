@@ -230,7 +230,7 @@ video () {
     :fontcolor_expr=fdfdfd%{eif\\\\: clip(255*(1*between(t\\, $DS + $FID\\, $DE - $FOD) + ((t - $DS)/$FID)*between(t\\, $DS\\, $DS + $FID) + (-(t - $DE)/$FOD)*between(t\\, $DE - $FOD\\, $DE) )\\, 0\\, 255) \\\\: x\\\\: 2 }, \
      format=yuv420p[video]" \
     -map "[video]" -map "[audio]" \
-    -c:a aac \
+    -c:a aac -ar 44100 \
     -c:v libx264 -preset fast \
     -profile:v high \
     -crf 18 -coder 1 \
