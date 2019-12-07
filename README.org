@@ -16,6 +16,16 @@ A collection of ffmpeg shell scripts
 + trim-clip
 + waveform
 
+** audio-silence
+
+audio-silence add silent audio to a video clip
+
++ script usage
+
+#+BEGIN_SRC sh
+audio-silence -i infile.(mp4|mkv|mov|m4v) -c (mono|stereo) -r (44100|48000)"
+#+END_SRC
+
 ** combine-clips
 
 combine video and audio files into new clip

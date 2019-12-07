@@ -5,7 +5,7 @@
 # script usage
 usage()
 {
-  echo "$(basename "$0") -i infile.(mp4|mkv|mov|m4v) -c (m|s) -r (44100|48000)"
+  echo "$(basename "$0") -i infile.(mp4|mkv|mov|m4v) -c (mono|stereo) -r (44100|48000)"
   exit 2
 }
 
