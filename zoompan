@@ -34,7 +34,7 @@ fi
 help ()
 {
 echo "\
-+ $(basename "$0") -i infile.(png|jpg|jpeg) -d (000) z (in|out) -p (tl|c|tc|tr|bl|br)
++ $(basename "$0") -i infile.(png|jpg|jpeg) -d (000) -z (in|out) -p (tl|c|tc|tr|bl|br)
 
 -i = infile.(png|jpg|jpeg)
 -d = duration : from 1-999
