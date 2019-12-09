@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# overlay clip over another video clip
+# overlay one video clip on top of another video clip
 
 # script usage
 usage()

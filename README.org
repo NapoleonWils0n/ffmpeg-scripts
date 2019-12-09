@@ -105,6 +105,18 @@ normalize audio levels
 normalize -i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
 #+END_SRC
 
+** overlay-clip
+
+overlay one video clip on top of another video clip
+
++ script usage
+
+#+BEGIN_SRC sh
+overlay-clip -i infile.(mp4|mkv|mov|m4v) -o infile.(mp4|mkv|mov|m4v) -p [0-999]"
+#+END_SRC
+
++ -p = position to overlay the clip from in seconds
+
 ** subtitle-add
 
 add subtitles to a video file
