@@ -1,0 +1,130 @@
+#!/bin/sh
+
+# overlay clip over another video clip
+
+# script usage
+usage()
+{
+  echo "$(basename "$0") -i infile.(mp4|mkv|mov|m4v) -o infile.(mp4|mkv|mov|m4v) -p [0-999]"
+  exit 2
+}
+
+# error messages
+HOME_ERR='HOME directory not set or null'
+NOTFILE_ERR='not a file'
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+ARGS_ERR='incorrect arguments passed to script'
+FILE_EXT_ERR='has the wrong file extension'
+NOT_MEDIA_FILE_ERR='is not a media file'
+
+# number of args passed to script, needs to be stored before getopts
+if [ $# -gt 0 ]; then
+    first_arg="$1"
+    third_arg="$3"
+    fifth_arg="$5"
+    args="$#"
+else
+   { echo "${WRONG_ARGS_ERR}" && usage; }
+fi
+
+# getopts and check if input a file
+while getopts ':i:o:p:h' opt
+do
+  case ${opt} in
+     i) video="${OPTARG}"
+	[ -f "${video}" ] || { echo "${video} ${NOTFILE_ERR}" && usage; };;
+     o) overlay="${OPTARG}"
+	[ -f "${overlay}" ] || { echo "${overlay} ${NOTFILE_ERR}" && usage; };;
+     p) position="${OPTARG}";;
+     h) usage;;
+     \?) echo "${INVALID_OPT_ERR} ${OPTARG}" 1>&2 && usage;;
+     :) echo "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2 && usage;;
+  esac
+done
+shift $((OPTIND-1))
+
+# position regex
+position_regex='^[0-9]\{1,3\}$'
+
+# check arguments
+if [ "${args}" -eq 6 ]; then
+   {
+   [ "${first_arg}" = '-i' ] && \
+   [ -f "${video}" ] && \
+   [ "${third_arg}" = '-o' ] && \
+   [ -f "${overlay}" ] && \
+   [ "${fifth_arg}" = '-p' ] && \
+   expr "${position}" : "${position_regex}" 1>/dev/null
+   } || { echo "${ARGS_ERR}" && usage; }
+else
+   { echo "${WRONG_ARGS_ERR}" && usage; }
+fi
+
+# video name extension and overlay video extensions
+video_nopath="${video##*/}"
+video_name="${video_nopath%.*}"
+video_ext="${video##*.}"
+overlay_ext="${overlay##*.}"
+
+# variables
+videofile="${HOME:?${HOME_ERR}}/Desktop/${video_name}-overlay-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+
+# file extension regular expressions for case statement
+mp4='[Mm][Pp]4'
+mkv='[Mm][Kk][Vv]'
+mov='[Mm][[Oo][Vv]'
+m4v='[Mm]4[Vv]'
+
+# check video and overlay file extensions
+case "${video_ext}" in
+    ${mp4}|${mkv}|${mov}|${m4v});;
+    *) { echo "${video} ${FILE_EXT_ERR}" && usage; };;
+esac
+
+case "${overlay_ext}" in
+    ${mp4}|${mkv}|${mov}|${m4v});;
+    *) { echo "${overlay} ${FILE_EXT_ERR}" && usage; };;
+esac
+
+# file command check input file mime type
+video_filetype="$(file --mime-type -b "${video}")"
+overlay_filetype="$(file --mime-type -b "${overlay}")"
+
+# audio and video mimetypes
+mov_mime='video/quicktime'
+mkv_mime='video/x-matroska'
+mp4_mime='video/mp4'
+m4v_mime='video/x-m4v'
+
+# overlay video function
+overlay_video () {
+  ffmpeg \
+  -hide_banner \
+  -stats -v panic \
+  -i "${video}" \
+  -i "${overlay}" \
+  -filter_complex \
+  "[0:0][1:0]overlay=enable='between(t\,${position},${duration})'[ov]" \
+  -shortest -map "[ov]" -map 0:1 \
+  -pix_fmt yuv420p \
+  -c:a copy -c:v libx264 -crf 18 \
+  -movflags +faststart \
+  "${videofile}"
+}
+
+# check the overlay mime type
+case "${overlay_filetype}" in
+    ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime});;
+    *) { echo "${overlay} ${NOT_MEDIA_FILE_ERR}" && usage; };;
+esac
+
+# get overlay videos duration with ffprobe
+duration="$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${overlay}" | cut -d\. -f1)"
+
+# check the video mime type and run overlay function
+case "${video_filetype}" in
+    ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime}) overlay_video "${video}" "${overlay}";;
+    *) { echo "${video} ${NOT_MEDIA_FILE_ERR}" && usage; };;
+esac
