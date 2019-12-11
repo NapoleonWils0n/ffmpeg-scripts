@@ -107,7 +107,7 @@ overlay_video () {
   -i "${overlay}" \
   -filter_complex \
   "[0:0][1:0]overlay=enable='between(t\,${position},${duration})'[ov]" \
-  -shortest -map "[ov]" -map 0:1 \
+  -map "[ov]" -map 0:1 \
   -pix_fmt yuv420p \
   -c:a copy -c:v libx264 -crf 18 \
   -movflags +faststart \
