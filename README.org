@@ -95,6 +95,16 @@ ffmpeg loudnorm
 loudnorm -i infile.(mkv|mp4|mov|m4v|m4a|aac|wav|mp3)
 #+END_SRC
 
+** img2video
+
+convert an image to a video file
+
++ script usage
+
+#+BEGIN_SRC sh
+img2video -i infile.(png|jpg|jpeg) -d (000)
+#+END_SRC
+
 ** normalize
 
 normalize audio levels
