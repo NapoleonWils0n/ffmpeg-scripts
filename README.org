@@ -46,6 +46,16 @@ ffplay ebu meter
 ebu-meter -i infile.(mp4|mov|mkv|m4v|m4a|aac|wav|mp3)
 #+END_SRC
 
+** extract-frame
+
+extract a frame from a video and save as a png image
+
++ script usage
+
+#+BEGIN_SRC sh
+extract-frame -i infile.(mp4|mov|mkv|m4v) -s 00:00:00
+#+END_SRC
+
 ** fade-clip
 
 fade video and audio in and out
