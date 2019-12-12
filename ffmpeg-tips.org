@@ -41,7 +41,7 @@ Find all mp4 or mkv files and extract a frame as a png image
 
 #+BEGIN_SRC sh
 find . -type f -name "*.[mp4kv]*" -exec sh -c \
-'ffmpeg -i "$1" -ss 00:00:05 -q:v 2 -f image2 -vframes 1 "${1%.*}.png" -hide_banner' sh {} \;
+'ffmpeg -ss 00:00:05 -i "$1" -q:v 2 -f image2 -vframes 1 "${1%.*}.png" -hide_banner' sh {} \;
 #+END_SRC
 
 ** Convert mkv to mp4
