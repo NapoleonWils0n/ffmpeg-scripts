@@ -1,0 +1,170 @@
+#!/bin/sh
+
+# code based on:
+# https://video.stackexchange.com/questions/16352/converting-gimp-curves-files-to-photoshop-acv-for-ffmpeg/20005#20005
+
+# correct a video clip by using a gimp curve
+# to adjust the levels and white balance
+# converted into a ffmpeg curves filter command
+
+# script usage
+usage()
+{
+  echo "$(basename "$0") -i infile.(mp4|mkv|mov|m4v) -t curve.txt"
+  exit 2
+}
+
+# error messages
+HOME_ERR='HOME directory not set or null'
+NOTFILE_ERR='not a file'
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+ARGS_ERR='incorrect arguments passed to script'
+FILE_EXT_ERR='has the wrong file extension'
+NOT_MEDIA_FILE_ERR='is not a media file'
+
+# number of args passed to script, needs to be stored before getopts
+if [ $# -gt 0 ]; then
+    firstarg="$1"
+    thirdarg="$3"
+    args="$#"
+else
+   { echo "${WRONG_ARGS_ERR}" && usage; }
+fi
+
+# getopts and check if input a file
+while getopts ':i:t:h' opt
+do
+  case ${opt} in
+     i) infile="${OPTARG}"
+	[ -f "${infile}" ] || { echo "${infile} ${NOTFILE_ERR}" && usage; };;
+     t) text="${OPTARG}"
+	[ -f "${text}" ] || { echo "${text} ${NOTFILE_ERR}" && usage; };;
+     h) usage;;
+     \?) echo "${INVALID_OPT_ERR} ${OPTARG}" 1>&2 && usage;;
+     :) echo "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2 && usage;;
+  esac
+done
+shift $((OPTIND-1))
+
+# check arguments
+if [ "${args}" -eq 4 ]; then
+   {
+   [ "${firstarg}" = '-i' ] && \
+   [ -f "${infile}" ] && \
+   [ "${thirdarg}" = '-t' ] && \
+   [ -f "${text}" ]
+   } || { echo "${ARGS_ERR}" && usage; }
+else
+   { echo "${WRONG_ARGS_ERR}" && usage; }
+fi
+
+# infile, infile name and extension
+infile_nopath="${infile##*/}"
+infile_name="${infile_nopath%.*}"
+infile_ext="${infile##*.}"
+
+# text, text name and extension
+#text_nopath="${text##*/}"
+#text_name="${text_nopath%.*}"
+text_ext="${text##*.}"
+
+# file extension regular expressions for case statement
+mp4='[Mm][Pp]4'
+mkv='[Mm][Kk][Vv]'
+mov='[Mm][[Oo][Vv]'
+m4v='[Mm]4[Vv]'
+
+# text file regular expressions for case statement
+txt='[Tt][Xx][Tt]'
+
+# check the text file extension before passing to the file command
+case "${text_ext}" in
+    ${txt});;
+    *) { echo "${infile} ${FILE_EXT_ERR}" && usage; };;
+esac
+
+# check the file extension before passing to the file command
+case "${infile_ext}" in
+    ${mp4}|${mkv}|${mov}|${m4v});;
+    *) { echo "${infile} ${FILE_EXT_ERR}" && usage; };;
+esac
+
+# outfile file recording destination
+videofile="${HOME:?${HOME_ERR}}/Desktop/${infile_name}-corrected-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+
+# correct video track
+correct_v () {
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -i "${infile}" \
+    -filter_complex \
+    "[0:v]${text_contents}[video]" \
+    -map "[video]" \
+    -c:v libx264 -preset fast \
+    -profile:v high \
+    -crf 18 -coder 1 \
+    -pix_fmt yuv420p \
+    -movflags +faststart \
+    -f mp4 \
+    "${videofile}"
+}
+
+# correct video and audio tracks
+correct_va () {
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -i "${infile}" \
+    -filter_complex \
+    "[0:v]${text_contents}[video]" \
+    -map "[video]" -map 0:a \
+    -c:a aac \
+    -c:v libx264 -preset fast \
+    -profile:v high \
+    -crf 18 -coder 1 \
+    -pix_fmt yuv420p \
+    -movflags +faststart \
+    -f mp4 \
+    "${videofile}"
+}
+
+# file command check input file mime type
+filetype="$(file --mime-type -b "${infile}")"
+textfile="$(file --mime-type -b "${text}")"
+
+# video mimetypes
+mov_mime='video/quicktime'
+mkv_mime='video/x-matroska'
+mp4_mime='video/mp4'
+m4v_mime='video/x-m4v'
+
+# text mimetype
+txt_mime='text/plain'
+
+# check the files mime type is a video
+case "${filetype}" in
+    ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime});;
+    *) { echo "${infile} ${NOT_MEDIA_FILE_ERR}" && usage; };;
+esac
+
+# check the text file mime type is a text
+case "${textfile}" in
+    ${txt_mime});;
+    *) { echo "${textfile} ${NOT_MEDIA_FILE_ERR}" && usage; };;
+esac
+
+# read the contents of the curve text file and store in a variable
+text_contents="$(while IFS= read -r line; do echo "${line}"; done < "${text}")"
+
+# check if video has an audio track
+audio_check="$(ffprobe -i "${infile}" -show_streams -select_streams a -loglevel error)"
+
+# check if audio_check is null which means the video doesnt have an audio track
+if [ -z "${audio_check}" ]; then
+   correct_v "${infile}" # fade video track
+else
+   correct_va "${infile}" # fade video and audio track
+fi
