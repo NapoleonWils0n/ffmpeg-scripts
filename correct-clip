@@ -4,8 +4,11 @@
 # https://video.stackexchange.com/questions/16352/converting-gimp-curves-files-to-photoshop-acv-for-ffmpeg/20005#20005
 
 # correct a video clip by using a gimp curve
-# to adjust the levels and white balance
 # converted into a ffmpeg curves filter command
+# to adjust the levels and white balance
+
+# requires a curve file created with the following script
+# https://github.com/NapoleonWils0n/curve2ffmpeg
 
 # script usage
 usage()

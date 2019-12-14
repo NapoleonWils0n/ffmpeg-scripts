@@ -36,6 +36,23 @@ combine video and audio files into new clip
 combine-clip -v video.(mp4|mov|mkv|m4v) -a audio.(m4a|aac|wav|mp3)
 #+END_SRC
 
+** correct-clip
+
++ code based on:
+[[https://video.stackexchange.com/questions/16352/converting-gimp-curves-files-to-photoshop-acv-for-ffmpeg/20005#20005][converting gimp curves files for ffmpeg]]
+
+correct a video clip by using a gimp curve converted into a ffmpeg curves filter command,
+to adjust the levels and white balance
+
++ requires a curve file created with the following script
+[[https://github.com/NapoleonWils0n/curve2ffmpeg][curve2ffmpeg]]
+
++ script usage
+
+#+BEGIN_SRC sh
+correct-clip -i infile.(mp4|mkv|mov|m4v) -t curve.txt
+#+END_SRC
+
 ** ebu-meter
 
 ffplay ebu meter
