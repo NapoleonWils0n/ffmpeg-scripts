@@ -94,7 +94,7 @@ txt='[Tt][Xx][Tt]'
 # check the text file extension before passing to the file command
 case "${text_ext}" in
     ${txt});;
-    *) { echo "${infile} ${FILE_EXT_ERR}" && usage; };;
+    *) { echo "${text} ${FILE_EXT_ERR}" && usage; };;
 esac
 
 # run the video function based on the file extension
