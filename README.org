@@ -113,14 +113,26 @@ fade-normalize -i video.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -c curve.txt
 fade video and audio in and out, 
 normalize and create vide title from filename
 
++ curves code based on:
+[[https://video.stackexchange.com/questions/16352/converting-gimp-curves-files-to-photoshop-acv-for-ffmpeg/20005#20005][converting gimp curves files for ffmpeg]]
+
+correct a video clip by using a gimp curve converted into a ffmpeg curves filter command,
+to adjust the levels and white balance
+
++ requires a curve file created with the following script
+[[https://github.com/NapoleonWils0n/curve2ffmpeg][curve2ffmpeg]]
+
 + script usage
 
 #+BEGIN_SRC sh
-fade-title -i video.(mp4|mkv|mov|m4v) -d (0.[0-9]|1)
+fade-title -i infile.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -s 000 -e 000 -c curve.txt
 #+END_SRC
 
 + -i video.(mp4|mkv|mov|m4v)
 + -d = duration from 0.1 to 1
++ -s = title start
++ -e = title end
++ -c = curve.txt
 
 ** loudnorm
 
