@@ -38,7 +38,7 @@ combine-clip -v video.(mp4|mov|mkv|m4v) -a audio.(m4a|aac|wav|mp3)
 
 ** correct-clip
 
-+ code based on:
++ curves code based on:
 [[https://video.stackexchange.com/questions/16352/converting-gimp-curves-files-to-photoshop-acv-for-ffmpeg/20005#20005][converting gimp curves files for ffmpeg]]
 
 correct a video clip by using a gimp curve converted into a ffmpeg curves filter command,
@@ -50,7 +50,7 @@ to adjust the levels and white balance
 + script usage
 
 #+BEGIN_SRC sh
-correct-clip -i infile.(mp4|mkv|mov|m4v) -t curve.txt
+correct-clip -i infile.(mp4|mkv|mov|m4v) -c curve.txt
 #+END_SRC
 
 ** ebu-meter
@@ -90,13 +90,23 @@ fade-clip -i video.(mp4|mkv|mov|m4v) -d (0.[0-9]|1)
 
 fade video and audio in and out and normalize
 
++ curves code based on:
+[[https://video.stackexchange.com/questions/16352/converting-gimp-curves-files-to-photoshop-acv-for-ffmpeg/20005#20005][converting gimp curves files for ffmpeg]]
+
+correct a video clip by using a gimp curve converted into a ffmpeg curves filter command,
+to adjust the levels and white balance
+
++ requires a curve file created with the following script
+[[https://github.com/NapoleonWils0n/curve2ffmpeg][curve2ffmpeg]]
+
 + script usage
 
 #+BEGIN_SRC sh
-fade-normalize -i video.(mp4|mkv|mov|m4v) -d (0.[0-9]|1)
+fade-normalize -i video.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -c curve.txt
 #+END_SRC
 
 + -d = duration from 0.1 to 1
++ -c curve.txt
 
 ** fade-title
 
