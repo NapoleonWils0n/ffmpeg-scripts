@@ -8,7 +8,6 @@ usage()
 }
 
 # error messages
-HOME_ERR='HOME directory not set or null'
 NOTFILE_ERR='not a file'
 INVALID_OPT_ERR='Invalid option:'
 REQ_ARG_ERR='requires an argument'
@@ -97,7 +96,7 @@ case "${subs_filetype}" in
 esac
 
 # outfile file recording destination
-videofile="${HOME:?${HOME_ERR}}/Desktop/${video_name}-subs-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+videofile="${video_name}-subs-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
 
 # audio is aac, copy audio stream
 addsubs () {

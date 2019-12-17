@@ -10,7 +10,6 @@ usage()
 }
 
 # error messages
-HOME_ERR='HOME directory not set or null'
 NOTFILE_ERR='not a file'
 INVALID_OPT_ERR='Invalid option:'
 REQ_ARG_ERR='requires an argument'
@@ -75,7 +74,7 @@ case "${infile_ext}" in
 esac
 
 # outfile file recording destination
-outfile="${HOME:?${HOME_ERR}}/Desktop/${infile_name}-frame-$(date +"%Y-%m-%d-%H-%M-%S").png"
+outfile="${infile_name}-frame-$(date +"%Y-%m-%d-%H-%M-%S").png"
 
 # file command check input file mime type
 filetype="$(file --mime-type -b "${infile}")"

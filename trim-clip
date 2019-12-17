@@ -10,7 +10,6 @@ usage()
 }
 
 # error messages
-HOME_ERR='HOME directory not set or null'
 NOTFILE_ERR='not a file'
 INVALID_OPT_ERR='Invalid option:'
 REQ_ARG_ERR='requires an argument'
@@ -98,10 +97,10 @@ audio_mime='audio/mpeg'
 aac_mime='audio/x-hx-aac-adts'
 
 # video file destination
-videofile="${HOME:?${HOME_ERR}}/Desktop/${infile_name}-trimmed-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+videofile="${infile_name}-trimmed-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
 
 # audio file destination
-audiofile="${HOME:?${HOME_ERR}}/Desktop/${infile_name}-trimmed-$(date +"%Y-%m-%d-%H-%M-%S").wav"
+audiofile="${infile_name}-trimmed-$(date +"%Y-%m-%d-%H-%M-%S").wav"
 
 # trim video clip
 trim_video () {

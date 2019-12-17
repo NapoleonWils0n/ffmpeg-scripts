@@ -10,7 +10,6 @@ usage()
 }
 
 # error messages
-HOME_ERR='HOME directory not set or null'
 NOTFILE_ERR='not a file'
 INVALID_OPT_ERR='Invalid option:'
 REQ_ARG_ERR='requires an argument'
@@ -80,7 +79,7 @@ case "${infile_ext}" in
 esac
 
 # outfile file recording destination
-videofile="${HOME:?${HOME_ERR}}/Desktop/${infile_name}-silence-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+videofile="${infile_name}-silence-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
 
 # file command check input file mime type
 filetype="$(file --mime-type -b "${infile}")"

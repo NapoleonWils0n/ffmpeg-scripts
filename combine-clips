@@ -10,7 +10,6 @@ usage()
 }
 
 # error messages
-HOME_ERR='HOME directory not set or null'
 NOTFILE_ERR='not a file'
 INVALID_OPT_ERR='Invalid option:'
 REQ_ARG_ERR='requires an argument'
@@ -55,8 +54,12 @@ else
    { echo "${WRONG_ARGS_ERR}" && usage; }
 fi
 
+# infile, infile name and extension
+video_nopath="${video##*/}"
+video_name="${video_nopath%.*}"
+
 # variables
-videofile="${HOME:?${HOME_ERR}}/Desktop/video-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+videofile="${video_name}-fade-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
 
 # get video and audio file extension
 video_ext="${video##*.}"

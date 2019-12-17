@@ -10,7 +10,6 @@ usage()
 }
 
 # error messages
-HOME_ERR='HOME directory not set or null'
 NOTFILE_ERR='not a file'
 INVALID_OPT_ERR='Invalid option:'
 REQ_ARG_ERR='requires an argument'
@@ -69,7 +68,7 @@ video_ext="${video##*.}"
 overlay_ext="${overlay##*.}"
 
 # variables
-videofile="${HOME:?${HOME_ERR}}/Desktop/${video_name}-overlay-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+videofile="${video_name}-overlay-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
 
 # file extension regular expressions for case statement
 mp4='[Mm][Pp]4'

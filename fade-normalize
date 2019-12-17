@@ -19,7 +19,6 @@ usage()
 }
 
 # error messages
-HOME_ERR='HOME directory not set or null'
 NOTFILE_ERR='not a file'
 INVALID_OPT_ERR='Invalid option:'
 REQ_ARG_ERR='requires an argument'
@@ -126,7 +125,7 @@ esac
 text_contents="$(while IFS= read -r line; do echo "${line}"; done < "${text}")"
 
 # outfile file recording destination
-normalized_file="${HOME:?${HOME_ERR}}/Desktop/${infile_name}-normalized-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+normalized_file="${infile_name}-normalized-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
 
 # print analyzing file
 echo '+ Analyzing file with ffmpeg'

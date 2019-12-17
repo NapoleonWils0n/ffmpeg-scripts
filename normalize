@@ -10,7 +10,6 @@ usage()
 }
 
 # error messages
-HOME_ERR='HOME directory not set or null'
 NOTFILE_ERR='not a file'
 INVALID_OPT_ERR='Invalid option:'
 REQ_ARG_ERR='requires an argument'
@@ -92,7 +91,7 @@ case "${filetype}" in
 esac
 
 # outfile file recording destination
-normalized_file="${HOME:?${HOME_ERR}}/Desktop/${infile_name}-normalized-$(date +"%Y-%m-%d-%H-%M-%S").${infile_ext}"
+normalized_file="${infile_name}-normalized-$(date +"%Y-%m-%d-%H-%M-%S").${infile_ext}"
 
 # print analyzing file
 echo '+ Analyzing file with ffmpeg'
