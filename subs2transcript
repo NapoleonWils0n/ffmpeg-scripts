@@ -1,0 +1,95 @@
+#!/bin/sh
+
+# convert subtitles to a transcript
+
+# script usage
+usage()
+{
+  echo "$(basename "$0") -i infile.(srt|vtt)"
+  exit 2
+}
+
+# error messages
+NOTFILE_ERR='not a file'
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+ARGS_ERR='incorrect arguments passed to script'
+FILE_EXT_ERR='has the wrong file extension'
+NOT_TEXT_FILE_ERR='is not a text file'
+
+# number of args passed to script, needs to be stored before getopts
+if [ $# -gt 0 ]; then
+    first_arg="$1"
+    args="$#"
+else
+   { echo "${WRONG_ARGS_ERR}" && usage; }
+fi
+
+# getopts and check if input a file
+while getopts ':i:h' opt
+do
+  case ${opt} in
+     i) infile="${OPTARG}"
+	[ -f "${infile}" ] || { echo "${infile} ${NOTFILE_ERR}" && usage; };;
+     h) usage;;
+     \?) echo "${INVALID_OPT_ERR} ${OPTARG}" 1>&2 && usage;;
+     :) echo "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2 && usage;;
+  esac
+done
+shift $((OPTIND-1))
+
+# check arguments
+if [ "${args}" -eq 2 ]; then
+   {
+   [ "${first_arg}" = '-i' ] && \
+   [ -f "${infile}" ]
+   } || { echo "${ARGS_ERR}" && usage; }
+else
+   { echo "${WRONG_ARGS_ERR}" && usage; }
+fi
+
+# infile, infile name and extension
+infile_nopath="${infile##*/}"
+infile_name="${infile_nopath%.*}"
+infile_ext="${infile##*.}"
+
+# text file regular expressions for case statement
+srt='[Ss][Rr][Tt]'
+vtt='[Vv][Tt][Tt]'
+
+# file command check input file mime type
+infile_check="$(file --mime-type -b "${infile}")"
+
+# text mimetype
+subs_mime='text/plain'
+
+# check the text file mime type is a text
+case "${infile_check}" in
+    ${subs_mime});;
+    *) { echo "${infile_check} ${NOT_TEXT_FILE_ERR}" && usage; };;
+esac
+
+# outfile file recording destination
+outfile="${infile_name}-transcript-$(date +"%Y-%m-%d-%H-%M-%S").txt"
+
+# srt subs
+srt_subs () {
+sed 's/^\([0-9:.[:space:]>-]\)*//;s/ \{1,\}/ /g;/^$/d' "${infile}" \
+| awk -v RS="." '!/^\n$/ { print $0 "." }' ORS='\n\n' \
+| fmt -sp -w 120 > "${outfile}"
+}
+
+# vtt subs
+vtt_subs () {
+sed '1,3d;s/^\([0-9:.[:space:]>-]\)*//;s/ \{1,\}/ /g;/^$/d' "${infile}" \
+| awk -v RS="." '!/^\n$/ { print $0 "." }' ORS='\n\n' \
+| fmt -sp -w 120 > "${outfile}"
+}
+
+# check the subtitle file extension before passing to the correct function
+case "${infile_ext}" in
+    ${srt}) srt_subs "${infile}";;
+    ${vtt}) vtt_subs "${infile}";;
+    *) { echo "${infile} ${FILE_EXT_ERR}" && usage; };;
+esac
