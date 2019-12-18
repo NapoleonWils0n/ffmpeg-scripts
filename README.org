@@ -186,6 +186,16 @@ add subtitles to a video file
 subtitle-add -i video.(mp4|mov|mkv|m4v) -s subtitle.srt
 #+END_SRC
 
+** subs2transcript
+
+convert a subtitle file to a text transcript
+
++ script usage
+
+#+BEGIN_SRC sh
+subs2transcript -i infile.(srt|vtt)
+#+END_SRC
+
 ** trim-clip
 
 trim video clip
