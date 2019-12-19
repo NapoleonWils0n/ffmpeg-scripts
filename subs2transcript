@@ -75,7 +75,7 @@ outfile="${infile_name}-transcript-$(date +"%Y-%m-%d-%H-%M-%S").txt"
 
 # srt subs
 srt_subs () {
-sed 's/^\([0-9:.[:space:]>-]\)*//;s/ \{1,\}/ /g;s/\.[[:space:]]/./g;/^$/d' "${infile}" \
+sed 's/^\([0-9:.,[:space:]>-]\)*//;s/ \{1,\}/ /g;s/\.[[:space:]]/./g;/^$/d' "${infile}" \
 | awk -v RS="." '!/^\n$/ { print $0 "." }' ORS='\n\n' \
 | fmt -sp -w 120 > "${outfile}"
 }
