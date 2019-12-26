@@ -28,11 +28,7 @@ NOT_MEDIA_FILE_ERR='is not a media file'
 
 # if script is run arguments pass and check the options with getopts,
 # else display script usage and exit
-if [ $# -gt 0 ]; then
-    :
-else
-   usage "${WRONG_ARGS_ERR}"
-fi
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
 
 # getopts check and validate options
 while getopts ':i:c:r:o:h' opt
@@ -52,7 +48,7 @@ do
 done
 shift $((OPTIND-1))
 
-# infile, infile name and extension
+# infile, infile
 infile_nopath="${infile##*/}"
 infile_name="${infile_nopath%.*}"
 
@@ -71,7 +67,7 @@ case "${filetype}" in
     *) usage "${infile} ${NOT_MEDIA_FILE_ERR}";;
 esac
 
-# defaults for variables
+# defaults for variables if not defined
 channel_default='mono'
 rate_default='44100'
 outfile_default="${infile_name}-silence-$(date +"%Y-%m-%d-%H-%M-%S").mp4"

@@ -13,7 +13,17 @@
 # script usage
 usage()
 {
-  echo "$(basename "$0") -i infile.(mp4|mkv|mov|m4v) -c curve.txt"
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+  echo "\
+# correct a video clip by using a gimp curve
+
+# requires a curve file created with the following script
+# https://github.com/NapoleonWils0n/curve2ffmpeg
+
+$(basename "$0") -i infile.(mp4|mkv|mov|m4v) -c curve.txt -o outfile.mp4
+
+-o outfile.mp4   :optional agument # if option not provided defaults to infile_name-corrected-date-time"
   exit 2
 }
 
@@ -22,28 +32,22 @@ NOTFILE_ERR='not a file'
 INVALID_OPT_ERR='Invalid option:'
 REQ_ARG_ERR='requires an argument'
 WRONG_ARGS_ERR='wrong number of arguments passed to script'
-ARGS_ERR='incorrect arguments passed to script'
-FILE_EXT_ERR='has the wrong file extension'
 NOT_MEDIA_FILE_ERR='is not a media file'
 NOT_TEXT_FILE_ERR='is not a text file'
 
-# number of args passed to script, needs to be stored before getopts
-if [ $# -gt 0 ]; then
-    firstarg="$1"
-    thirdarg="$3"
-    args="$#"
-else
-   { echo "${WRONG_ARGS_ERR}" && usage; }
-fi
+# if script is run arguments pass and check the options with getopts,
+# else display script usage and exit
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
 
-# getopts and check if input a file
-while getopts ':i:c:h' opt
+# getopts check and validate options
+while getopts ':i:c:o:h' opt
 do
   case ${opt} in
      i) infile="${OPTARG}"
 	[ -f "${infile}" ] || { echo "${infile} ${NOTFILE_ERR}" && usage; };;
      c) text="${OPTARG}"
 	[ -f "${text}" ] || { echo "${text} ${NOTFILE_ERR}" && usage; };;
+     o) outfile="${OPTARG}";;
      h) usage;;
      \?) echo "${INVALID_OPT_ERR} ${OPTARG}" 1>&2 && usage;;
      :) echo "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2 && usage;;
@@ -51,49 +55,12 @@ do
 done
 shift $((OPTIND-1))
 
-# check arguments
-if [ "${args}" -eq 4 ]; then
-   {
-   [ "${firstarg}" = '-i' ] && \
-   [ -f "${infile}" ] && \
-   [ "${thirdarg}" = '-c' ] && \
-   [ -f "${text}" ]
-   } || { echo "${ARGS_ERR}" && usage; }
-else
-   { echo "${WRONG_ARGS_ERR}" && usage; }
-fi
-
-# infile, infile name and extension
+# infile, infile name
 infile_nopath="${infile##*/}"
 infile_name="${infile_nopath%.*}"
-infile_ext="${infile##*.}"
 
-# text, text name and extension
-text_ext="${text##*.}"
-
-# file extension regular expressions for case statement
-mp4='[Mm][Pp]4'
-mkv='[Mm][Kk][Vv]'
-mov='[Mm][[Oo][Vv]'
-m4v='[Mm]4[Vv]'
-
-# text file regular expressions for case statement
-txt='[Tt][Xx][Tt]'
-
-# check the text file extension before passing to the file command
-case "${text_ext}" in
-    ${txt});;
-    *) { echo "${text} ${FILE_EXT_ERR}" && usage; };;
-esac
-
-# check the file extension before passing to the file command
-case "${infile_ext}" in
-    ${mp4}|${mkv}|${mov}|${m4v});;
-    *) { echo "${infile} ${FILE_EXT_ERR}" && usage; };;
-esac
-
-# outfile file recording destination
-videofile="${infile_name}-corrected-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+# defaults for variables
+outfile_default="${infile_name}-corrected-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
 
 # correct video track
 correct_v () {
@@ -110,7 +77,7 @@ correct_v () {
     -pix_fmt yuv420p \
     -movflags +faststart \
     -f mp4 \
-    "${videofile}"
+    "${outfile:=${outfile_default}}"
 }
 
 # correct video and audio tracks
@@ -129,7 +96,7 @@ correct_va () {
     -pix_fmt yuv420p \
     -movflags +faststart \
     -f mp4 \
-    "${videofile}"
+    "${outfile:=${outfile_default}}"
 }
 
 # file command check input file mime type
@@ -148,13 +115,13 @@ txt_mime='text/plain'
 # check the files mime type is a video
 case "${filetype}" in
     ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime});;
-    *) { echo "${infile} ${NOT_MEDIA_FILE_ERR}" && usage; };;
+    *) usage "${infile} ${NOT_MEDIA_FILE_ERR}";;
 esac
 
 # check the text file mime type is a text
 case "${textfile}" in
     ${txt_mime});;
-    *) { echo "${textfile} ${NOT_TEXT_FILE_ERR}" && usage; };;
+    *) usage "${textfile} ${NOT_TEXT_FILE_ERR}";;
 esac
 
 # read the contents of the curve text file and store in a variable
@@ -165,7 +132,7 @@ audio_check="$(ffprobe -i "${infile}" -show_streams -select_streams a -loglevel 
 
 # check if audio_check is null which means the video doesnt have an audio track
 if [ -z "${audio_check}" ]; then
-   correct_v "${infile}" # fade video track
+   correct_v "${infile}" # null value
 else
-   correct_va "${infile}" # fade video and audio track
+   correct_va "${infile}" # non null value
 fi
