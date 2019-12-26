@@ -5,8 +5,14 @@
 # script usage
 usage()
 {
-  echo "$(basename "$0") -i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)"
-  exit 2
+echo "\
+# create a waveform from an audio or video file and save as a png
+$(basename "$0") -i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3) -o outfile.png
+
+-i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
+-o outfile.png :optional agument # if option not provided defaults to infile_name-waveform-date-time
+"
+exit 2
 }
 
 # error messages
@@ -14,66 +20,32 @@ NOTFILE_ERR='not a file'
 INVALID_OPT_ERR='Invalid option:'
 REQ_ARG_ERR='requires an argument'
 WRONG_ARGS_ERR='wrong number of arguments passed to script'
-ARGS_ERR='incorrect arguments passed to script'
-FILE_EXT_ERR='has the wrong file extension'
 NOT_MEDIA_FILE_ERR='is not a media file'
 
-# number of args passed to script, needs to be stored before getopts
-if [ $# -gt 0 ]; then
-    firstarg="$1"
-    args="$#"
-else
-   { echo "${WRONG_ARGS_ERR}" && usage; }
-fi
+# if script is run arguments pass and check the options with getopts,
+# else display script usage and exit
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
 
-# getopts and check if input a file
-while getopts ':i:h' opt
+# getopts check and validate options
+while getopts ':i:o:h' opt
 do
   case ${opt} in
      i) infile="${OPTARG}"
-	[ -f "${infile}" ] || { echo "${infile} ${NOTFILE_ERR}" && usage; };;
+	[ -f "${infile}" ] || usage "${infile} ${NOTFILE_ERR}";;
+     o) outfile="${OPTARG}";;
      h) usage;;
-     \?) echo "${INVALID_OPT_ERR} ${OPTARG}" 1>&2 && usage;;
-     :) echo "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2 && usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
   esac
 done
 shift $((OPTIND-1))
-
-# check arguments
-if [ "${args}" -eq 2 ]; then
-   {
-   [ "${firstarg}" = '-i' ] && \
-   [ -f "${infile}" ]
-   } || { echo "${ARGS_ERR}" && usage; }
-else
-   { echo "${WRONG_ARGS_ERR}" && usage; }
-fi
 
 # variables
 infile_nopath="${infile##*/}"
 infile_name="${infile_nopath%.*}"
 
-# save file extension as a lowercase variable for the case statement
-infile_ext="${infile##*.}"
-
-# file extension regular expressions for case statement
-mp4='[Mm][Pp]4'
-mkv='[Mm][Kk][Vv]'
-mov='[Mm][[Oo][Vv]'
-m4v='[Mm]4[Vv]'
-aac='[Aa][Aa][Cc]'
-m4a='[Mm]4[Aa]'
-wav='[Ww][Aa][Vv]'
-mp3='[Mm][Pp]3'
-
-case "${infile_ext}" in
-    ${mp4}|${mkv}|${mov}|${m4v}| \
-    ${aac}|${m4a}|${wav}|${mp3});;
-    *) { echo "${infile} ${FILE_EXT_ERR}" && usage; };;
-esac
-
-# outfile file recording destination
-outfile="${infile_name}-waveform-$(date +"%Y-%m-%d-%H-%M-%S").png"
+# defaults for variables if not defined
+outfile_default="${infile_name}-waveform-$(date +"%Y-%m-%d-%H-%M-%S").png"
 
 # file command check input file mime type
 filetype="$(file --mime-type -b "${infile}")"
@@ -87,19 +59,21 @@ wav_mime='audio/x-wav'
 audio_mime='audio/mpeg'
 aac_mime='audio/x-hx-aac-adts'
 
-# ffmpeg record function
+# waveform function
 wform () {
     ffmpeg \
     -hide_banner \
     -stats -v panic \
     -i "${infile}" \
     -filter_complex "aformat=channel_layouts=mono,showwavespic=s=1000x200" \
-    -frames:v 1 "${outfile}"
+    -frames:v 1 \
+     -f apng \
+    "${outfile:=${outfile_default}}"
 }
 
 # check the files mime type
 case "${filetype}" in
     ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime}| \
     ${wav_mime}|${audio_mime}|${aac_mime}) wform "${infile}";;
-    *) { echo "${infile} ${NOT_MEDIA_FILE_ERR}" && usage; };;
+    *) usage "${infile} ${NOT_MEDIA_FILE_ERR}";;
 esac
