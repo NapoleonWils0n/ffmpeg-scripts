@@ -5,13 +5,13 @@
 # script usage
 usage()
 {
-  echo "\
+echo "\
 # fade video and audio in and out
 $(basename "$0") -i infile.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -o outfile.mp4
 
 -d (0.[0-9]|1) :optional agument # if option not provided defaults to 0.5
 -o outfile.mp4 :optional agument # if option not provided defaults to infile_name-fade-date-time"
-  exit 2
+exit 2
 }
 
 # error messages

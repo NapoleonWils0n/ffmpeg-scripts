@@ -15,7 +15,7 @@ usage()
 {
 # if argument passed to function echo it
 [ -z "${1}" ] || echo "! ${1}"
-  echo "\
+echo "\
 # correct a video clip by using a gimp curve
 
 # requires a curve file created with the following script
@@ -24,7 +24,7 @@ usage()
 $(basename "$0") -i infile.(mp4|mkv|mov|m4v) -c curve.txt -o outfile.mp4
 
 -o outfile.mp4   :optional agument # if option not provided defaults to infile_name-corrected-date-time"
-  exit 2
+exit 2
 }
 
 # error messages

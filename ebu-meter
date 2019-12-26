@@ -5,10 +5,10 @@
 # script usage
 usage()
 {
-  echo "\
+echo "\
 # ffplay ebu meter
 $(basename "$0") -i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)"
-  exit 2
+exit 2
 }
 
 # error messages

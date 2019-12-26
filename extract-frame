@@ -8,12 +8,12 @@ usage()
 # if argument passed to function echo it
 [ -z "${1}" ] || echo "! ${1}"
 # display help
-  echo "\
+echo "\
 # extract a frame froma a video as a png file
 $(basename "$0") -i infile.(mp4|mov|mkv|m4v) -s 00:00:00
 
 -s 00:00:00 :optional argument # if option not provided defaults to 00:00:00"
-  exit 2
+exit 2
 }
 
 # error messages
