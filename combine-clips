@@ -3,10 +3,19 @@
 # combine video and audio clip
 
 # script usage
-usage()
+usage ()
 {
-  echo "$(basename "$0") -v infile.(mp4|mkv|mov|m4v) -a audio.(m4a|aac|wav|mp3)"
-  exit 2
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+# combine video and audio clip
++ $(basename "$0") -v infile.(mp4|mkv|mov|m4v) -a audio.(m4a|aac|wav|mp3) -o outfile.mp4
+
+-v infile.(mp4|mkv|mov|m4v)
+-a audio.(m4a|aac|wav|mp3)
+-o outfile.mp4   :optional agument # if option not provided defaults to infile_name-silence-date-time"
+exit 2
 }
 
 # error messages
@@ -14,78 +23,35 @@ NOTFILE_ERR='not a file'
 INVALID_OPT_ERR='Invalid option:'
 REQ_ARG_ERR='requires an argument'
 WRONG_ARGS_ERR='wrong number of arguments passed to script'
-ARGS_ERR='incorrect arguments passed to script'
-FILE_EXT_ERR='has the wrong file extension'
 NOT_MEDIA_FILE_ERR='is not a media file'
 
-# number of args passed to script, needs to be stored before getopts
+# if script is run arguments pass and check the options with getopts,
+# else display script usage and exit
 if [ $# -gt 0 ]; then
-    firstarg="$1"
-    thirdarg="$3"
-    args="$#"
+    :
 else
-   { echo "${WRONG_ARGS_ERR}" && usage; }
+   usage "${WRONG_ARGS_ERR}"
 fi
 
 # getopts and check if input a file
-while getopts ':v:a:h' opt
+while getopts ':v:a:o:h' opt
 do
   case ${opt} in
      v) video="${OPTARG}"
-	[ -f "${video}" ] || { echo "${video} ${NOTFILE_ERR}" && usage; };;
+	[ -f "${video}" ] || usage "${video} ${NOTFILE_ERR}";;
      a) audio="${OPTARG}"
-	[ -f "${audio}" ] || { echo "${audio} ${NOTFILE_ERR}" && usage; };;
+	[ -f "${audio}" ] || usage "${audio} ${NOTFILE_ERR}";;
+     o) outfile="${OPTARG}";;
      h) usage;;
-     \?) echo "${INVALID_OPT_ERR} ${OPTARG}" 1>&2 && usage;;
-     :) echo "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2 && usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
   esac
 done
 shift $((OPTIND-1))
 
-# check arguments
-if [ "${args}" -eq 4 ]; then
-   {
-   [ "${firstarg}" = '-v' ] && \
-   [ -f "${video}" ] && \
-   [ "${thirdarg}" = '-a' ] && \
-   [ -f "${audio}" ]
-   } || { echo "${ARGS_ERR}" && usage; }
-else
-   { echo "${WRONG_ARGS_ERR}" && usage; }
-fi
-
 # infile, infile name and extension
 video_nopath="${video##*/}"
 video_name="${video_nopath%.*}"
-
-# variables
-videofile="${video_name}-fade-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
-
-# get video and audio file extension
-video_ext="${video##*.}"
-audio_ext="${audio##*.}"
-
-# file extension regular expressions for case statement
-mp4='[Mm][Pp]4'
-mkv='[Mm][Kk][Vv]'
-mov='[Mm][[Oo][Vv]'
-m4v='[Mm]4[Vv]'
-aac='[Aa][Aa][Cc]'
-m4a='[Mm]4[Aa]'
-wav='[Ww][Aa][Vv]'
-mp3='[Mm][Pp]3'
-
-# check video file extension
-case "${video_ext}" in
-    ${mp4}|${mkv}|${mov}|${m4v});;
-    *) { echo "${video} ${FILE_EXT_ERR}" && usage; };;
-esac
-
-# check audio file extension
-case "${audio_ext}" in
-    ${m4a}|${aac}|${wav}|${mp3});;
-    *) { echo "${audio} ${FILE_EXT_ERR}" && usage; };;
-esac
 
 # file command check input file mime type
 video_filetype="$(file --mime-type -b "${video}")"
@@ -100,6 +66,9 @@ wav_mime='audio/x-wav'
 audio_mime='audio/mpeg'
 aac_mime='audio/x-hx-aac-adts'
 
+# defaults for variables
+outfile_default="${video_name}-combined-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+
 # audio is aac, copy audio stream
 record_copy () {
     ffmpeg \
@@ -113,7 +82,7 @@ record_copy () {
     -pix_fmt yuv420p \
     -movflags +faststart \
     -f mp4 \
-    "${videofile}"
+    "${outfile:=${outfile_default}}"
 }
 
 # audio isnt aac, encode audio as aac
@@ -129,18 +98,18 @@ record_aac () {
     -pix_fmt yuv420p \
     -movflags +faststart \
     -f mp4 \
-    "${videofile}"
+    "${outfile:=${outfile_default}}"
 }
 
 # check the video mime type
 case "${video_filetype}" in
     ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime});;
-    *) { echo "${video} ${NOT_MEDIA_FILE_ERR}" && usage; };;
+    *) usage "${video} ${NOT_MEDIA_FILE_ERR}";;
 esac
 
 # run the ffmpeg function based on the audio file extension
 case "${audio_filetype}" in
     ${aac_mime}) record_copy "${video}" "${audio}";;
     ${wav_mime}|${audio_mime}) record_aac "${video}" "${audio}";;
-    *) { echo "${audio} ${NOT_MEDIA_FILE_ERR}" && usage; };;
+    *) usage "${audio} ${NOT_MEDIA_FILE_ERR}";;
 esac
