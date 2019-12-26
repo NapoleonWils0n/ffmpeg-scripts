@@ -5,7 +5,13 @@
 # script usage
 usage()
 {
-  echo "$(basename "$0") -i infile.(png|jpg|jpeg) -d (000)"
+  echo "\
+# image to video
+$(basename "$0") -i infile.(png|jpg|jpeg) -d (000) -o outfile.mp4
+
+-i infile.(mp4|mkv|mov|m4v)
+-d (000) : duration
+-o outfile.mp4   :optional agument # if option not provided defaults to infile_name-silence-date-time"
   exit 2
 }
 
@@ -14,66 +20,37 @@ NOTFILE_ERR='not a file'
 INVALID_OPT_ERR='Invalid option:'
 REQ_ARG_ERR='requires an argument'
 WRONG_ARGS_ERR='wrong number of arguments passed to script'
-ARGS_ERR='incorrect arguments passed to script'
-FILE_EXT_ERR='has the wrong file extension'
 NOT_MEDIA_FILE_ERR='is not a media file'
 
-# number of args passed to script, needs to be stored before getopts
-if [ $# -gt 0 ]; then
-    firstarg="$1"
-    thirdarg="$3"
-    args="$#"
-else
-   { echo "${WRONG_ARGS_ERR}" && usage; }
-fi
-
-# getopts and check if input a file
-while getopts ':i:d:h' opt
-do
-  case ${opt} in
-     i) infile="${OPTARG}"
-	[ -f "${infile}" ] || { echo "${infile} ${NOTFILE_ERR}" && usage; };;
-     d) dur="${OPTARG}";;
-     h) usage;;
-     \?) echo "${INVALID_OPT_ERR} ${OPTARG}" 1>&2 && usage;;
-     :) echo "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2 && usage;;
-  esac
-done
-shift $((OPTIND-1))
+# if script is run arguments pass and check the options with getopts,
+# else display script usage and exit
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
 
 # duration regex match 0.[1-9]
 dur_regex='^[0-9]\{1,3\}$'
 
-# check arguments
-if [ "${args}" -eq 4 ]; then
-   {
-   [ "${firstarg}" = '-i' ] && \
-   [ -f "${infile}" ] && \
-   [ "${thirdarg}" = '-d' ] && \
-   expr "${dur}" : "${dur_regex}" 1>/dev/null
-   } || { echo "${ARGS_ERR}" && usage; }
-else
-   { echo "${WRONG_ARGS_ERR}" && usage; }
-fi
+# getopts check and validate options
+while getopts ':i:d:o:h' opt
+do
+  case ${opt} in
+     i) infile="${OPTARG}"
+	[ -f "${infile}" ] || usage "${infile} ${NOTFILE_ERR}";;
+     d) dur="${OPTARG}"
+	expr "${dur}" : "${dur_regex}" 1>/dev/null;;
+     o) outfile="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
 
 # infile, infile name and extension
 infile_nopath="${infile##*/}"
 infile_name="${infile_nopath%.*}"
-infile_ext="${infile##*.}"
-
-# file extension regular expressions for case statement
-png='[Pp][Nn][Gg]'
-jpg='[Jj][Pp][Gg]'
-jpeg='[Jj][Pp][Ee][Gg]'
-
-# check the file extension before passing to the file command
-case "${infile_ext}" in
-    ${png}|${jpg}|${jpeg});;
-    *) { echo "${infile} ${FILE_EXT_ERR}" && usage; };;
-esac
 
 # outfile file recording destination
-outfile="${infile_name}-video-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+outfile_default="${infile_name}-video-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
 
 # file command check input file mime type
 filetype="$(file --mime-type -b "${infile}")"
@@ -92,11 +69,11 @@ imgtovid () {
   -c:v libx264 -crf 18 -profile:v high \
   -r 30 -pix_fmt yuv420p \
   -movflags +faststart -f mp4 \
-  "${outfile}"
+  "${outfile:=${outfile_default}}"
 }
 
 # check the files mime type is a image
 case "${filetype}" in
     ${png_mime}|${jpg_mime}) imgtovid "${infile}";;
-    *) { echo "${infile} ${NOT_MEDIA_FILE_ERR}" && usage; };;
+    *) usage "${infile} ${NOT_MEDIA_FILE_ERR}";;
 esac
