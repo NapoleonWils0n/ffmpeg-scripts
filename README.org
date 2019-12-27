@@ -23,6 +23,70 @@ A collection of ffmpeg shell scripts for basic editing tasks
 + zoompan
   
 ** install
+
+*** create a bin directory
+
+create a bin directory in your home to add the scripts to
+
+#+BEGIN_SRC sh
+mkdir -p ~/bin
+#+END_SRC
+
+edit your ~/.bashrc file if you are using the bash shell, 
+and add the following code to the file and save it
+
+#+BEGIN_SRC sh
+if [ -d "$HOME/bin" ]; then
+   PATH="$HOME/bin:$PATH"
+fi
+#+END_SRC
+
+edit your ~/.zshrc file if you are using the zsh shell,
+and add the following code to the file and save it
+
+#+BEGIN_SRC sh
+if [ -d "$HOME/bin" ]; then
+   PATH="$HOME/bin:$PATH"
+fi
+#+END_SRC
+
+source your ~/.bashrc if you are using the bash shell
+
+#+BEGIN_SRC sh
+source ~/.bashrc
+#+END_SRC
+
+source your ~/.zshrc if you are using the zsh shell
+
+#+BEGIN_SRC sh
+source ~/.zshrc
+#+END_SRC
+
+*** clone git repo
+
+create a git directory in you home folder to download the scripts into,
+or use any other location in your file system
+
+#+BEGIN_SRC sh
+mkdir -p ~/git
+#+END_SRC
+
+change directory in the git directory
+
+#+BEGIN_SRC sh
+cd ~/git
+#+END_SRC
+
+clone the git repository
+
+#+BEGIN_SRC sh
+git clone https://github.com/NapoleonWils0n/ffmpeg-scripts.git
+#+END_SRC
+
+update the scripts using git pull
+
+*** copy or symlink scripts
+
 ** audio-silence
 
 audio-silence add silent audio to a video clip
