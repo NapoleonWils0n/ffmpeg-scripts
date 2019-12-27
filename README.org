@@ -22,7 +22,7 @@ A collection of ffmpeg shell scripts for basic editing tasks
 + xfade-clips
 + zoompan
   
-** install
+** scripts install
 
 *** create a bin directory
 
@@ -101,6 +101,12 @@ example
 #+BEGIN_SRC sh
 ln -s ~/git/ffmpeg-scripts/trim-clip ~/bin
 #+END_SRC
+
+*** ffmpeg install
+
+**** linux ffmpeg install
+**** mac ffmpeg install
+**** freebsd ffmpeg install
 
 ** audio-silence
 
