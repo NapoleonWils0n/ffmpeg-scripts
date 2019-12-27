@@ -26,6 +26,12 @@ A collection of ffmpeg shell scripts for basic editing tasks
 
 audio-silence add silent audio to a video clip
 
+If the video doesnt have an audio track the script copies the video track,
+and adds a silent audio track to match the duration of the video and creates a new video clip.
+
+If the video has a video and audio track the script only copies the video track,
+and adds a silent audio track to match the duration of the video and creates a new video clip.
+
 + script usage
 
 #+BEGIN_SRC sh
