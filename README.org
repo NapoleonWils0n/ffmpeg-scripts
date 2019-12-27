@@ -85,7 +85,22 @@ git clone https://github.com/NapoleonWils0n/ffmpeg-scripts.git
 
 update the scripts using git pull
 
-*** copy or symlink scripts
+*** copy or symlink scripts into the bin directory
+
+you can now either copy the scripts into the ~/bin directory in your home,
+or create symbolic links from the scripts in the ~/git/ffmpeg-scripts directory to the ~/bin directory
+
+creating a symbolic link
+
+#+BEGIN_SRC sh
+ln -s path/to/source path/to/destination
+#+END_SRC
+
+example
+
+#+BEGIN_SRC sh
+ln -s ~/git/ffmpeg-scripts/trim-clip ~/bin
+#+END_SRC
 
 ** audio-silence
 
