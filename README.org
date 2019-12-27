@@ -21,7 +21,8 @@ A collection of ffmpeg shell scripts for basic editing tasks
 + waveform
 + xfade-clips
 + zoompan
-
+  
+** install
 ** audio-silence
 
 audio-silence add silent audio to a video clip
