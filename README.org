@@ -5,16 +5,22 @@
 
 A collection of ffmpeg shell scripts
 
++ audio-silence
 + combine-clips
++ correct-clip
 + ebu-meter
 + fade-clip
 + fade-normalize
 + fade-title
 + loudnorm
++ img2video
 + normalize
 + subtitle-add
++ sub2transcript
 + trim-clip
 + waveform
++ xfade-clips
++ zoompan
 
 ** audio-silence
 
