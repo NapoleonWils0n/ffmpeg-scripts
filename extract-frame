@@ -63,13 +63,14 @@ m4v_mime='video/x-m4v'
 
 # outfile file recording destination
 outfile_default="${infile_name}-frame-$(date +"%Y-%m-%d-%H-%M-%S").png"
+seconds_default='00:00:00'
 
 # image to video function
 extract () {
   ffmpeg \
   -hide_banner \
   -stats -v panic \
-  -ss "${seconds}" \
+  -ss "${seconds:=${seconds_default}}" \
   -i "${infile}" \
   -q:v 2 -f image2 \
   -vframes 1 \
