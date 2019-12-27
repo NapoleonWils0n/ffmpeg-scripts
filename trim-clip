@@ -9,8 +9,9 @@ usage()
 [ -z "${1}" ] || echo "! ${1}"
 # display help
 echo "\
-$(basename "$0") -s 00:00:00 -i infile.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3) -t 00:00:00 -o outfile.(mp4|wav)
+# trim video or audio clip
 
+$(basename "$0") -s 00:00:00 -i infile.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3) -t 00:00:00 -o outfile.(mp4|wav)
 -s 00:00:00 : start time
 -i infile.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3)
 -t 00:00:00 : number of seconds after start time

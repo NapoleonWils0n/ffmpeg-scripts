@@ -19,17 +19,16 @@ usage ()
 # display help
 echo "\
 # fade video, audio add title from video filename
-# correct a video clip by using a gimp curve
 
+# correct a video clip by using a gimp curve
 # requires a curve file created with the following script
 # https://github.com/NapoleonWils0n/curve2ffmpeg
 
 $(basename "$0") -i infile.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -s 000 -e 000 -c curve.txt -o outfile.mp4
-
 -i infile.(mp4|mkv|mov|m4v)
 -d (0.[0-9]|1) : from 0.1 to 0.9 or 1 :optional agument # if option not provided defaults to 0.5
--s 000 : from 000 to 999
--e 000 : from 000 to 999
+-s 000         : from 000 to 999
+-e 000         : from 000 to 999
 -c curve.txt
 -o outfile.mp4 :optional agument # if option not provided defaults to infile_name-title-date-time"
 exit 2

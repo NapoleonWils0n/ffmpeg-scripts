@@ -7,6 +7,7 @@ usage()
 {
 echo "\
 # convert subtitles to a transcript
+
 $(basename "$0") -i infile.(srt|vtt)"
 exit 2
 }

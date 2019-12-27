@@ -22,8 +22,9 @@ echo "\
 # https://github.com/NapoleonWils0n/curve2ffmpeg
 
 $(basename "$0") -i infile.(mp4|mkv|mov|m4v) -c curve.txt -o outfile.mp4
-
--o outfile.mp4   :optional agument # if option not provided defaults to infile_name-corrected-date-time"
+-i infile.(mp4|mkv|mov|m4v)
+-c curve.txt
+-o outfile.mp4 :optional agument # if option not provided defaults to infile_name-corrected-date-time"
 exit 2
 }
 

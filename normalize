@@ -7,8 +7,8 @@ usage()
 {
 echo "\
 # normalize audio levels
-$(basename "$0") -i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3) -o outfile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
 
+$(basename "$0") -i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3) -o outfile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
 -i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
 -o outfile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3) :optional agument 
 # if option not provided defaults to infile_name-silence-date-time-extension"

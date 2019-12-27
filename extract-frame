@@ -10,9 +10,11 @@ usage()
 # display help
 echo "\
 # extract a frame froma a video as a png file
-$(basename "$0") -i infile.(mp4|mov|mkv|m4v) -s 00:00:00
 
--s 00:00:00 :optional argument # if option not provided defaults to 00:00:00"
+$(basename "$0") -i infile.(mp4|mov|mkv|m4v) -s 00:00:00 -o outfile.png
+-i infile.(mp4|mov|mkv|m4v)
+-s 00:00:00    :optional argument # if option not provided defaults to 00:00:00
+-o outfile.png :optional agument # if option not provided defaults to infile_name-frame-date-time"
 exit 2
 }
 
