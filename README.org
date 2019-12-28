@@ -115,11 +115,25 @@ sudo apt install ffmpeg
 
 **** mac ffmpeg install
 
+open a terminal and run the following commands to install the xcode command line tools, homebrew and ffmpeg
+
 + xcode command line tools install
 
+#+BEGIN_SRC sh
+xcode-select --install
+#+END_SRC
+
 + homebrew install
+  
+#+BEGIN_SRC sh
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+#+END_SRC
 
 + ffmpeg install
+  
+#+BEGIN_SRC sh
+brew install ffmpeg
+#+END_SRC
  
 **** freebsd ffmpeg install
 
