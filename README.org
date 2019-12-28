@@ -3,7 +3,7 @@
 
 * ffmpeg scripts
 
-A collection of ffmpeg shell scripts for basic editing tasks
+A collection of ffmpeg posix shell scripts for basic editing tasks
 
 + audio-silence
 + combine-clips
