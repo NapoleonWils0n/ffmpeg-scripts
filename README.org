@@ -32,9 +32,7 @@ create a bin directory in your home to add the scripts to
 mkdir -p ~/bin
 #+END_SRC
 
-edit your ~/.bashrc file if you are using the bash shell, 
-or your ~/.zshrc file if you are using the zsh shell,
-and add the following code to the file and save it
+add the following code to your ~/.bashrc or ~/.zhrc file
 
 #+BEGIN_SRC sh
 if [ -d "$HOME/bin" ]; then
@@ -42,13 +40,13 @@ if [ -d "$HOME/bin" ]; then
 fi
 #+END_SRC
 
-source your ~/.bashrc if you are using the bash shell
++ source your ~/.bashrc if you are using the bash shell
 
 #+BEGIN_SRC sh
 source ~/.bashrc
 #+END_SRC
 
-source your ~/.zshrc if you are using the zsh shell
++ source your ~/.zshrc if you are using the zsh shell
 
 #+BEGIN_SRC sh
 source ~/.zshrc
@@ -159,7 +157,7 @@ and adds a silent audio track to match the duration of the video and creates a n
 + script usage
 
 #+BEGIN_SRC sh
-audio-silence -i infile.(mp4|mkv|mov|m4v) -c (mono|stereo) -r (44100|48000) -o outfile.mp4"
+audio-silence -i infile.(mp4|mkv|mov|m4v) -c (mono|stereo) -r (44100|48000) -o outfile.mp4
 #+END_SRC
 
 + -i infile.(mp4|mkv|mov|m4v)
