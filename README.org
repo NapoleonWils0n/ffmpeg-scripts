@@ -187,7 +187,7 @@ combine-clip -v video.(mp4|mov|mkv|m4v) -a audio.(m4a|aac|wav|mp3) -o outfile.mp
 
 + -v infile.(mp4|mkv|mov|m4v)
 + -a audio.(m4a|aac|wav|mp3)
-+ -o outfile.mp4 :optional agument # if option not provided defaults to infile_name-silence-date-time
++ -o outfile.mp4 :optional agument # if option not provided defaults to infile_name-combined-date-time
 
 ** correct-clip
 
