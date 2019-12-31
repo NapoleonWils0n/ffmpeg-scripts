@@ -33,15 +33,7 @@ mkdir -p ~/bin
 #+END_SRC
 
 edit your ~/.bashrc file if you are using the bash shell, 
-and add the following code to the file and save it
-
-#+BEGIN_SRC sh
-if [ -d "$HOME/bin" ]; then
-   PATH="$HOME/bin:$PATH"
-fi
-#+END_SRC
-
-edit your ~/.zshrc file if you are using the zsh shell,
+or your ~/.zshrc file if you are using the zsh shell,
 and add the following code to the file and save it
 
 #+BEGIN_SRC sh
