@@ -380,13 +380,13 @@ trim video clip
 + script usage
 
 #+BEGIN_SRC sh
-trim-clip -s 00:00:00 -i infile.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3) -t 00:00:00 -o outfile.mp4
+trim-clip -s 00:00:00 -i infile.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3) -t 00:00:00 -o outfile.(mp4|aac|mp3|wav)
 #+END_SRC
 
 + -s 00:00:00 : start time
 + -i infile.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3)
 + -t 00:00:00 : number of seconds after start time
-+ -o outfile.(mp4|wav) :optional agument # if option not provided defaults infile_name-trimmed-date-time.(mp4|wav)
++ -o outfile.(mp4|aac|mp3|wav) :optional agument # if option not provided defaults infile_name-trimmed-date-time.(mp4|aac|mp3|wav)
 
 ** waveform
 
