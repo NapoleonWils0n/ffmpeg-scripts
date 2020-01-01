@@ -331,7 +331,7 @@ overlay one video clip on top of another video clip
 + script usage
 
 #+BEGIN_SRC sh
-overlay-clip -i infile.(mp4|mkv|mov|m4v) -v infile.(mp4|mkv|mov|m4v) -p [0-999] -o oufile.mp4"
+overlay-clip -i infile.(mp4|mkv|mov|m4v) -v infile.(mp4|mkv|mov|m4v) -p [0-999] -o oufile.mp4
 #+END_SRC
 
 + -i infile.(mp4|mkv|mov|m4v) : bottom video
