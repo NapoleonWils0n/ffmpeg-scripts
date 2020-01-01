@@ -149,7 +149,7 @@ then follow the linux install instructions
 audio-silence add silent audio to a video clip
 
 If the video doesnt have an audio track the script copies the video track,
-and adds a silent audio track to match the duration of the video and creates a new video clip.
+and adds a silent audio track to match the duration of the video and creates a new video clip
 
 If the video has a video and audio track the script only copies the video track,
 and adds a silent audio track to match the duration of the video and creates a new video clip.
@@ -161,9 +161,9 @@ audio-silence -i infile.(mp4|mkv|mov|m4v) -c (mono|stereo) -r (44100|48000) -o o
 #+END_SRC
 
 + -i infile.(mp4|mkv|mov|m4v)
-+ -c (mono|stereo) :optional agument # if option not provided defaults to mono
-+ -r (44100|48000) :optional agument # if option not provided defaults to 44100
-+ -o outfile.mp4   :optional agument # if option not provided defaults to infile_name-silence-date-time
++ -c (mono|stereo) :optional agument # default is mono
++ -r (44100|48000) :optional agument # default is 44100
++ -o outfile.mp4   :optional agument # default is infile-name-silence-date-time
 
 ** combine-clips
 
@@ -177,7 +177,7 @@ combine-clip -v video.(mp4|mov|mkv|m4v) -a audio.(m4a|aac|wav|mp3) -o outfile.mp
 
 + -v infile.(mp4|mkv|mov|m4v)
 + -a audio.(m4a|aac|wav|mp3)
-+ -o outfile.mp4 :optional agument # if option not provided defaults to infile_name-combined-date-time
++ -o outfile.mp4 :optional agument # defaults is infile-name-combined-date-time
 
 ** correct-clip
 
@@ -198,7 +198,7 @@ correct-clip -i infile.(mp4|mkv|mov|m4v) -c curve.txt -o outfile.mp4
 
 + -i infile.(mp4|mkv|mov|m4v)
 + -c curve.txt
-+ -o outfile.mp4 :optional agument # if option not provided defaults to infile_name-corrected-date-time
++ -o outfile.mp4 :optional agument # default is infile-name-corrected-date-time
 
 ** ebu-meter
 
@@ -221,8 +221,8 @@ extract-frame -i infile.(mp4|mov|mkv|m4v) -s 00:00:00 -o outfile.mp4
 #+END_SRC
 
 + -i infile.(mp4|mov|mkv|m4v)
-+ -s 00:00:00    :optional argument # if option not provided defaults to 00:00:00
-+ -o outfile.png :optional agument # if option not provided defaults to infile_name-frame-date-time
++ -s 00:00:00    :optional argument # default is 00:00:00
++ -o outfile.png :optional agument # default is infile-name-frame-date-time
 
 ** fade-clip
 
@@ -235,8 +235,8 @@ fade-clip -i video.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -o outfile.mp4
 #+END_SRC
 
 + -i infile.(mp4|mkv|mov|m4v)
-+ -d (0.[0-9]|1) :optional agument # if option not provided defaults to 0.5
-+ -o outfile.mp4 :optional agument # if option not provided defaults to infile_name-fade-date-time
++ -d (0.[0-9]|1) :optional agument # default is 0.5
++ -o outfile.mp4 :optional agument # default is infile-name-fade-date-time
 
 ** fade-normalize
 
@@ -257,8 +257,8 @@ to adjust the levels and white balance
 fade-normalize -i video.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -c curve.txt -o outfile.mp4
 #+END_SRC
 
-+ -d (0.[0-9]|1) :optional agument # if option not provided defaults to 0.5
-+ -o outfile.mp4   :optional agument # if option not provided defaults to infile_name-normalized-date-time
++ -d (0.[0-9]|1) :optional agument # default is 0.5
++ -o outfile.mp4   :optional agument # default is infile-name-normalized-date-time
 
 ** fade-title
 
@@ -281,11 +281,11 @@ fade-title -i infile.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -s 000 -e 000 -c curve.txt
 #+END_SRC
 
 + -i infile.(mp4|mkv|mov|m4v)
-+ -d (0.[0-9]|1) : from 0.1 to 0.9 or 1 :optional agument # if option not provided defaults to 0.5
++ -d (0.[0-9]|1) : from 0.1 to 0.9 or 1 :optional agument # default is 0.5
 + -s 000         : from 000 to 999
 + -e 000         : from 000 to 999
 + -c curve.txt
-+ -o outfile.mp4 :optional agument # if option not provided defaults to infile_name-title-date-time
++ -o outfile.mp4 :optional agument # default is infile-name-title-date-time
 
 ** img2video
 
@@ -299,7 +299,7 @@ img2video -i infile.(png|jpg|jpeg) -d (000) -o outfile.mp4
 
 + -i infile.(mp4|mkv|mov|m4v)
 + -d (000)       : duration
-+ -o outfile.mp4 :optional agument # if option not provided defaults to infile_name-silence-date-time
++ -o outfile.mp4 :optional agument # default is infile-name-silence-date-time
 
 ** loudnorm
 
@@ -322,7 +322,7 @@ normalize -i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
 #+END_SRC
 
 + -i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
-+ -o outfile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3) :optional agument # if option not provided defaults to infile_name-silence-date-time-extension
++ -o outfile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3) :optional agument # default is infile-name-silence-date-time-extension
 
 ** overlay-clip
 
@@ -337,7 +337,7 @@ overlay-clip -i infile.(mp4|mkv|mov|m4v) -v infile.(mp4|mkv|mov|m4v) -p [0-999] 
 + -i infile.(mp4|mkv|mov|m4v) : bottom video
 + -v infile.(mp4|mkv|mov|m4v) : overlay video
 + -p [0-999]                  : time to overlay the video
-+ -o outfile.mp4              : optional agument # if option not provided defaults to infile_name-overlay-date-time
++ -o outfile.mp4              : optional agument # default is infile-name-overlay-date-time
 
 ** subs2transcript
 
@@ -361,7 +361,7 @@ subtitle-add -i video.(mp4|mov|mkv|m4v) -s subtitle.srt -o outfile.mp4
 
 + -i infile.(mp4|mkv|mov|m4v)
 + -s subtitle.srt
-+ -o outfile.mp4 :optional agument # if option not provided defaults to infile_name-silence-date-time
++ -o outfile.mp4 :optional agument # default is infile-name-silence-date-time
 
 ** trim-clip
 
@@ -376,7 +376,7 @@ trim-clip -s 00:00:00 -i infile.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3) -t 00:00:00 -o
 + -s 00:00:00 : start time
 + -i infile.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3)
 + -t 00:00:00 : number of seconds after start time
-+ -o outfile.(mp4|aac|mp3|wav) :optional agument # if option not provided defaults infile_name-trimmed-date-time.(mp4|aac|mp3|wav)
++ -o outfile.(mp4|aac|mp3|wav) :optional agument # default infile-name-trimmed-date-time.(mp4|aac|mp3|wav)
 
 ** waveform
 
@@ -389,7 +389,7 @@ waveform -i infile.(mp4|mkv|mov|m4v|wav|aac|m4a|mp3) -o oufile.png
 #+END_SRC
 
 + -i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
-+ -o outfile.png :optional agument # if option not provided defaults to infile_name-waveform-date-time
++ -o outfile.png :optional agument # default is infile-name-waveform-date-time
 
 ** xfade-clips
 
@@ -403,8 +403,8 @@ xfade-clips -a clip1.(mp4|mkv|mov|m4v) -b clip2.(mp4|mkv|mov|m4v) -d (1|2) -o ou
 
 + -a clip1.(mp4|mkv|mov|m4v) : first clip
 + -b clip2.(mp4|mkv|mov|m4v) : second clip
-+ -d (1|2)                   : cross fade duration :optional agument # if option not provided defaults to 1 second
-+ -o outfile.mp4             : optional agument # if option not provided defaults to infile_name-xfade-date-time
++ -d (1|2)                   : cross fade duration :optional agument # default is 1 second
++ -o outfile.mp4             : optional agument # default is infile-name-xfade-date-time
 
 ** zoompan
 
@@ -416,11 +416,11 @@ convert a image to video and apply ken burns style zoom into center
 zoompan -i infile.(png|jpg|jpeg) -d (000) -z (in|out) -p (tl|c|tc|tr|bl|br) -o outfile.mp4"
 #+END_SRC
 
-+ -i = infile.(png|jpg|jpeg)
-+ -d = duration : from 1-999
-+ -z = zoom : in or out
-+ -p = position : zoom to location listed below
-+ -o - outfile.mp4
++ -i infile.(png|jpg|jpeg)
++ -d duration : from 1-999
++ -z zoom : in or out
++ -p position : zoom to location listed below
++ -o outfile.mp4             : optional agument # default is infile-name-zoompan-date-time
 
 #+BEGIN_SRC sh
 +------------------------------+
