@@ -289,7 +289,7 @@ fade-title -i infile.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -s 000 -e 000 -c curve.txt
 
 ** img2video
 
-convert an image to a video file
+convert an image into a video file
 
 + script usage
 
