@@ -351,6 +351,9 @@ convert a subtitle file to a text transcript
 subs2transcript -i infile.(srt|vtt) -o outfile.txt
 #+END_SRC
 
++ -i infile.(srt|vtt)
++ -o outfile.mp4 : optional agument # default is infile-name-transcript-date-time
+
 ** subtitle-add
 
 add subtitles to a video file
