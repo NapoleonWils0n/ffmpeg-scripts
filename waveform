@@ -13,7 +13,7 @@ echo "\
 
 $(basename "$0") -i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3) -o outfile.png
 -i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
--o outfile.png :optional agument # if option not provided defaults to infile_name-waveform-date-time"
+-o outfile.png :optional agument # if option not provided defaults to infile-name-waveform-date-time"
 exit 2
 }
 

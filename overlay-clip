@@ -15,7 +15,7 @@ $(basename "$0") -i infile.(mp4|mkv|mov|m4v) -v infile.(mp4|mkv|mov|m4v) -p [0-9
 -i infile.(mp4|mkv|mov|m4v) : bottom video
 -v infile.(mp4|mkv|mov|m4v) : overlay video
 -p [0-999]                  : time to overlay the video
--o outfile.mp4              : optional agument # if option not provided defaults to infile_name-overlay-date-time"
+-o outfile.mp4              : optional agument # if option not provided defaults to infile-name-overlay-date-time"
 exit 2
 }
 

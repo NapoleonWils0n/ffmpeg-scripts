@@ -16,7 +16,7 @@ $(basename "$0") -i infile.(png|jpg|jpeg) -d (000) -z (in|out) -p (tl|c|tc|tr|bl
 -d = duration : from 1-999
 -z = zoom : in or out
 -p = position : zoom to location listed below
--o - outfile.mp4
+-o = outfile.mp4 : optional agument # default is infile-name-zoompan-date-time
 
 +------------------------------+
 +tl            tc            tr+

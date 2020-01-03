@@ -25,7 +25,7 @@ echo "\
 
 $(basename "$0") -i infile.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -c curve.txt -o outfile.mp4
 -d (0.[0-9]|1) :optional agument # if option not provided defaults to 0.5
--o outfile.mp4   :optional agument # if option not provided defaults to infile_name-normalized-date-time"
+-o outfile.mp4   :optional agument # if option not provided defaults to infile-name-normalized-date-time"
 exit 2
 }
 

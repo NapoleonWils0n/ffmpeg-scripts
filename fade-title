@@ -30,7 +30,7 @@ $(basename "$0") -i infile.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -s 000 -e 000 -c cur
 -s 000         : from 000 to 999
 -e 000         : from 000 to 999
 -c curve.txt
--o outfile.mp4 :optional agument # if option not provided defaults to infile_name-title-date-time"
+-o outfile.mp4 :optional agument # if option not provided defaults to infile-name-title-date-time"
 exit 2
 }
 

@@ -14,7 +14,7 @@ echo "\
 $(basename "$0") -i infile.(mp4|mov|mkv|m4v) -s 00:00:00 -o outfile.png
 -i infile.(mp4|mov|mkv|m4v)
 -s 00:00:00    :optional argument # if option not provided defaults to 00:00:00
--o outfile.png :optional agument # if option not provided defaults to infile_name-frame-date-time"
+-o outfile.png :optional agument # if option not provided defaults to infile-name-frame-date-time"
 exit 2
 }
 

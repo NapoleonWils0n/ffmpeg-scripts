@@ -257,8 +257,10 @@ to adjust the levels and white balance
 fade-normalize -i video.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -c curve.txt -o outfile.mp4
 #+END_SRC
 
++ -i infile.(mp4|mkv|mov|m4v)
 + -d (0.[0-9]|1) :optional agument # default is 0.5
-+ -o outfile.mp4   :optional agument # default is infile-name-normalized-date-time
++ -c curve.txt
++ -o outfile.mp4 :optional agument # default is infile-name-normalized-date-time
 
 ** fade-title
 
@@ -299,7 +301,7 @@ img2video -i infile.(png|jpg|jpeg) -d (000) -o outfile.mp4
 
 + -i infile.(mp4|mkv|mov|m4v)
 + -d (000)       : duration
-+ -o outfile.mp4 :optional agument # default is infile-name-silence-date-time
++ -o outfile.mp4 :optional agument # default is infile-name-video-date-time
 
 ** loudnorm
 
@@ -318,11 +320,11 @@ normalize audio levels
 + script usage
 
 #+BEGIN_SRC sh
-normalize -i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
+normalize -i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3) -o outfile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
 #+END_SRC
 
 + -i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
-+ -o outfile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3) :optional agument # default is infile-name-silence-date-time-extension
++ -o outfile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3) :optional agument # default is infile-name-normalize-date-time-extension
 
 ** overlay-clip
 
@@ -361,7 +363,7 @@ subtitle-add -i video.(mp4|mov|mkv|m4v) -s subtitle.srt -o outfile.mp4
 
 + -i infile.(mp4|mkv|mov|m4v)
 + -s subtitle.srt
-+ -o outfile.mp4 :optional agument # default is infile-name-silence-date-time
++ -o outfile.mp4 :optional agument # default is infile-name-subs-date-time
 
 ** trim-clip
 
@@ -421,7 +423,7 @@ zoompan -i infile.(png|jpg|jpeg) -d (000) -z (in|out) -p (tl|c|tc|tr|bl|br) -o o
 + -d duration : from 1-999
 + -z zoom : in or out
 + -p position : zoom to location listed below
-+ -o outfile.mp4             : optional agument # default is infile-name-zoompan-date-time
++ -o outfile.mp4 : optional agument # default is infile-name-zoompan-date-time
 
 #+BEGIN_SRC sh
 +------------------------------+

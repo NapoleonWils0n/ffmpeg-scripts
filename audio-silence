@@ -15,7 +15,7 @@ $(basename "$0") -i infile.(mp4|mkv|mov|m4v) -c (mono|stereo) -r (44100|48000) -
 -i infile.(mp4|mkv|mov|m4v)
 -c (mono|stereo) :optional agument # if option not provided defaults to mono
 -r (44100|48000) :optional agument # if option not provided defaults to 44100
--o outfile.mp4   :optional agument # if option not provided defaults to infile_name-silence-date-time"
+-o outfile.mp4   :optional agument # if option not provided defaults to infile-name-silence-date-time"
 exit 2
 }
 

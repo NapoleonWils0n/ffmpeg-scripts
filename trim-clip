@@ -16,7 +16,7 @@ $(basename "$0") -s 00:00:00 -i infile.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3) -t 00:0
 -i infile.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3)
 -t 00:00:00 : number of seconds after start time
 -o outfile.(mp4|aac|mp3|wav) :optional agument 
-# if option not provided defaults infile_name-trimmed-date-time.(mp4|wav)"
+# if option not provided defaults infile-name-trimmed-date-time.(mp4|wav)"
 exit 2
 }
 

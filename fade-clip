@@ -11,7 +11,7 @@ echo "\
 $(basename "$0") -i infile.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -o outfile.mp4
 -i infile.(mp4|mkv|mov|m4v)
 -d (0.[0-9]|1) :optional agument # if option not provided defaults to 0.5
--o outfile.mp4 :optional agument # if option not provided defaults to infile_name-fade-date-time"
+-o outfile.mp4 :optional agument # if option not provided defaults to infile-name-fade-date-time"
 exit 2
 }
 

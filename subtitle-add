@@ -14,7 +14,7 @@ echo "\
 $(basename "$0") -i infile.(mp4|mkv|mov|m4v) -s subtitle.srt -o outfile.mp4
 -i infile.(mp4|mkv|mov|m4v)
 -s subtitle.srt
--o outfile.mp4 :optional agument # if option not provided defaults to infile_name-silence-date-time"
+-o outfile.mp4 :optional agument # if option not provided defaults to infile-name-subs-date-time"
 exit 2
 }
 
