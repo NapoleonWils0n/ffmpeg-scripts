@@ -160,10 +160,12 @@ and adds a silent audio track to match the duration of the video and creates a n
 audio-silence -i infile.(mp4|mkv|mov|m4v) -c (mono|stereo) -r (44100|48000) -o outfile.mp4
 #+END_SRC
 
+#+BEGIN_EXAMPLE
 + -i infile.(mp4|mkv|mov|m4v)
 + -c (mono|stereo) :optional agument # default is mono
 + -r (44100|48000) :optional agument # default is 44100
 + -o outfile.mp4   :optional agument # default is infile-name-silence-date-time
+#+END_EXAMPLE
 
 ** combine-clips
 
