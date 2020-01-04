@@ -5,7 +5,7 @@
 
 A collection of ffmpeg shell scripts for basic editing tasks
 
-+ audio-silence
++ [[#audio-silence][audio-silence]]
 + combine-clips
 + correct-clip
 + ebu-meter
@@ -145,6 +145,9 @@ install the windows subsystem for linux and then install a linux distro like ubu
 then follow the linux install instructions
 
 ** audio-silence
+:PROPERTIES:
+:CUSTOM_ID: audio-silence
+:END:
 
 audio-silence add silent audio to a video clip
 
