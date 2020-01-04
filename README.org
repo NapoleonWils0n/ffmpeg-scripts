@@ -161,10 +161,10 @@ audio-silence -i infile.(mp4|mkv|mov|m4v) -c (mono|stereo) -r (44100|48000) -o o
 #+END_SRC
 
 #+BEGIN_EXAMPLE
-+ -i infile.(mp4|mkv|mov|m4v)
-+ -c (mono|stereo) :optional agument # default is mono
-+ -r (44100|48000) :optional agument # default is 44100
-+ -o outfile.mp4   :optional agument # default is infile-name-silence-date-time
+-i infile.(mp4|mkv|mov|m4v)
+-c (mono|stereo) :optional agument # default is mono
+-r (44100|48000) :optional agument # default is 44100
+-o outfile.mp4   :optional agument # default is infile-name-silence-date-time
 #+END_EXAMPLE
 
 ** combine-clips
@@ -177,9 +177,11 @@ combine video and audio files into new clip
 combine-clip -v video.(mp4|mov|mkv|m4v) -a audio.(m4a|aac|wav|mp3) -o outfile.mp4
 #+END_SRC
 
-+ -v infile.(mp4|mkv|mov|m4v)
-+ -a audio.(m4a|aac|wav|mp3)
-+ -o outfile.mp4 :optional agument # defaults is infile-name-combined-date-time
+#+BEGIN_EXAMPLE
+-v infile.(mp4|mkv|mov|m4v)
+-a audio.(m4a|aac|wav|mp3)
+-o outfile.mp4 :optional agument # defaults is infile-name-combined-date-time
+#+END_EXAMPLE
 
 ** correct-clip
 
@@ -198,9 +200,11 @@ to adjust the levels and white balance
 correct-clip -i infile.(mp4|mkv|mov|m4v) -c curve.txt -o outfile.mp4
 #+END_SRC
 
-+ -i infile.(mp4|mkv|mov|m4v)
-+ -c curve.txt
-+ -o outfile.mp4 :optional agument # default is infile-name-corrected-date-time
+#+BEGIN_EXAMPLE
+-i infile.(mp4|mkv|mov|m4v)
+-c curve.txt
+-o outfile.mp4 :optional agument # default is infile-name-corrected-date-time
+#+END_EXAMPLE
 
 ** ebu-meter
 
@@ -222,9 +226,11 @@ extract a frame from a video and save as a png image
 extract-frame -i infile.(mp4|mov|mkv|m4v) -s 00:00:00 -o outfile.mp4
 #+END_SRC
 
-+ -i infile.(mp4|mov|mkv|m4v)
-+ -s 00:00:00    :optional argument # default is 00:00:00
-+ -o outfile.png :optional agument # default is infile-name-frame-date-time
+#+BEGIN_EXAMPLE
+-i infile.(mp4|mov|mkv|m4v)
+-s 00:00:00    :optional argument # default is 00:00:00
+-o outfile.png :optional agument # default is infile-name-frame-date-time
+#+END_EXAMPLE
 
 ** fade-clip
 
@@ -236,9 +242,11 @@ fade video and audio in and out
 fade-clip -i video.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -o outfile.mp4
 #+END_SRC
 
-+ -i infile.(mp4|mkv|mov|m4v)
-+ -d (0.[0-9]|1) :optional agument # default is 0.5
-+ -o outfile.mp4 :optional agument # default is infile-name-fade-date-time
+#+BEGIN_EXAMPLE
+-i infile.(mp4|mkv|mov|m4v)
+-d (0.[0-9]|1) :optional agument # default is 0.5
+-o outfile.mp4 :optional agument # default is infile-name-fade-date-time
+#+END_EXAMPLE
 
 ** fade-normalize
 
@@ -259,10 +267,12 @@ to adjust the levels and white balance
 fade-normalize -i video.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -c curve.txt -o outfile.mp4
 #+END_SRC
 
-+ -i infile.(mp4|mkv|mov|m4v)
-+ -d (0.[0-9]|1) :optional agument # default is 0.5
-+ -c curve.txt
-+ -o outfile.mp4 :optional agument # default is infile-name-normalized-date-time
+#+BEGIN_EXAMPLE
+-i infile.(mp4|mkv|mov|m4v)
+-d (0.[0-9]|1) :optional agument # default is 0.5
+-c curve.txt
+-o outfile.mp4 :optional agument # default is infile-name-normalized-date-time
+#+END_EXAMPLE
 
 ** fade-title
 
@@ -284,12 +294,14 @@ to adjust the levels and white balance
 fade-title -i infile.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -s 000 -e 000 -c curve.txt -o outfile.mp4
 #+END_SRC
 
-+ -i infile.(mp4|mkv|mov|m4v)
-+ -d (0.[0-9]|1) : from 0.1 to 0.9 or 1 :optional agument # default is 0.5
-+ -s 000         : from 000 to 999
-+ -e 000         : from 000 to 999
-+ -c curve.txt
-+ -o outfile.mp4 :optional agument # default is infile-name-title-date-time
+#+BEGIN_EXAMPLE
+-i infile.(mp4|mkv|mov|m4v)
+-d (0.[0-9]|1) : from 0.1 to 0.9 or 1 :optional agument # default is 0.5
+-s 000         : from 000 to 999
+-e 000         : from 000 to 999
+-c curve.txt
+-o outfile.mp4 :optional agument # default is infile-name-title-date-time
+#+END_EXAMPLE
 
 ** img2video
 
@@ -301,9 +313,11 @@ convert an image into a video file
 img2video -i infile.(png|jpg|jpeg) -d (000) -o outfile.mp4
 #+END_SRC
 
-+ -i infile.(mp4|mkv|mov|m4v)
-+ -d (000)       : duration
-+ -o outfile.mp4 :optional agument # default is infile-name-video-date-time
+#+BEGIN_EXAMPLE
+-i infile.(mp4|mkv|mov|m4v)
+-d (000)       : duration
+-o outfile.mp4 :optional agument # default is infile-name-video-date-time
+#+END_EXAMPLE
 
 ** loudnorm
 
@@ -325,8 +339,10 @@ normalize audio levels
 normalize -i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3) -o outfile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
 #+END_SRC
 
-+ -i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
-+ -o outfile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3) :optional agument # default is infile-name-normalize-date-time-extension
+#+BEGIN_EXAMPLE
+-i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
+-o outfile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3) :optional agument # default is infile-name-normalize-date-time-extension
+#+END_EXAMPLE
 
 ** overlay-clip
 
@@ -338,10 +354,12 @@ overlay one video clip on top of another video clip
 overlay-clip -i infile.(mp4|mkv|mov|m4v) -v infile.(mp4|mkv|mov|m4v) -p [0-999] -o oufile.mp4
 #+END_SRC
 
+#+BEGIN_EXAMPLE
 + -i infile.(mp4|mkv|mov|m4v) : bottom video
 + -v infile.(mp4|mkv|mov|m4v) : overlay video
 + -p [0-999]                  : time to overlay the video
 + -o outfile.mp4              : optional agument # default is infile-name-overlay-date-time
+#+END_EXAMPLE
 
 ** subs2transcript
 
@@ -353,8 +371,10 @@ convert a subtitle file to a text transcript
 subs2transcript -i infile.(srt|vtt) -o outfile.txt
 #+END_SRC
 
-+ -i infile.(srt|vtt)
-+ -o outfile.mp4 : optional agument # default is infile-name-transcript-date-time
+#+BEGIN_EXAMPLE
+-i infile.(srt|vtt)
+-o outfile.mp4 : optional agument # default is infile-name-transcript-date-time
+#+END_EXAMPLE
 
 ** subtitle-add
 
@@ -366,9 +386,11 @@ add subtitles to a video file
 subtitle-add -i video.(mp4|mov|mkv|m4v) -s subtitle.srt -o outfile.mp4
 #+END_SRC
 
-+ -i infile.(mp4|mkv|mov|m4v)
-+ -s subtitle.srt
-+ -o outfile.mp4 :optional agument # default is infile-name-subs-date-time
+#+BEGIN_EXAMPLE
+-i infile.(mp4|mkv|mov|m4v)
+-s subtitle.srt
+-o outfile.mp4 :optional agument # default is infile-name-subs-date-time
+#+END_EXAMPLE
 
 ** trim-clip
 
@@ -381,10 +403,12 @@ trim-clip -s 00:00:00 -i infile.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3) \
 -t 00:00:00 -o outfile.(mp4|aac|mp3|wav)
 #+END_SRC
 
-+ -s 00:00:00 : start time
-+ -i infile.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3)
-+ -t 00:00:00 : number of seconds after start time
-+ -o outfile.(mp4|aac|mp3|wav) :optional agument # default infile-name-trimmed-date-time.(mp4|aac|mp3|wav)
+#+BEGIN_EXAMPLE
+-s 00:00:00 : start time
+-i infile.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3)
+-t 00:00:00 : number of seconds after start time
+-o outfile.(mp4|aac|mp3|wav) :optional agument # default infile-name-trimmed-date-time.(mp4|aac|mp3|wav)
+#+END_EXAMPLE
 
 ** waveform
 
@@ -396,23 +420,28 @@ create a waveform from an audio or video file and save as a png
 waveform -i infile.(mp4|mkv|mov|m4v|wav|aac|m4a|mp3) -o oufile.png
 #+END_SRC
 
-+ -i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
-+ -o outfile.png :optional agument # default is infile-name-waveform-date-time
+#+BEGIN_EXAMPLE
+-i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
+-o outfile.png :optional agument # default is infile-name-waveform-date-time
+#+END_EXAMPLE
 
 ** xfade-clips
 
 cross fade 2 video clips with either a 1 or 2 second cross fade
 the videos must have the same codecs, size and frame rate
+
 + script usage
 
 #+BEGIN_SRC sh
 xfade-clips -a clip1.(mp4|mkv|mov|m4v) -b clip2.(mp4|mkv|mov|m4v) -d (1|2) -o outfile.mp4
 #+END_SRC
 
-+ -a clip1.(mp4|mkv|mov|m4v) : first clip
-+ -b clip2.(mp4|mkv|mov|m4v) : second clip
-+ -d (1|2)                   : cross fade duration :optional agument # default is 1 second
-+ -o outfile.mp4             : optional agument # default is infile-name-xfade-date-time
+#+BEGIN_EXAMPLE
+-a clip1.(mp4|mkv|mov|m4v) : first clip
+-b clip2.(mp4|mkv|mov|m4v) : second clip
+-d (1|2)                   : cross fade duration :optional agument # default is 1 second
+-o outfile.mp4             : optional agument # default is infile-name-xfade-date-time
+#+END_EXAMPLE
 
 ** zoompan
 
@@ -424,11 +453,13 @@ convert a image to video and apply ken burns style zoom into center
 zoompan -i infile.(png|jpg|jpeg) -d (000) -z (in|out) -p (tl|c|tc|tr|bl|br) -o outfile.mp4"
 #+END_SRC
 
-+ -i infile.(png|jpg|jpeg)
-+ -d duration : from 1-999
-+ -z zoom : in or out
-+ -p position : zoom to location listed below
-+ -o outfile.mp4 : optional agument # default is infile-name-zoompan-date-time
+#+BEGIN_EXAMPLE
+-i infile.(png|jpg|jpeg)
+-d duration : from 1-999
+-z zoom : in or out
+-p position : zoom to location listed below
+-o outfile.mp4 : optional agument # default is infile-name-zoompan-date-time
+#+END_EXAMPLE
 
 #+BEGIN_SRC sh
 +------------------------------+
