@@ -6,7 +6,7 @@
 A collection of ffmpeg shell scripts for basic editing tasks
 
 + [[#audio-silence][audio-silence]]
-+ combine-clips
++ [[#combine-clips][combine-clips]]
 + correct-clip
 + ebu-meter
 + fade-clip
@@ -171,6 +171,9 @@ audio-silence -i infile.(mp4|mkv|mov|m4v) -c (mono|stereo) -r (44100|48000) -o o
 #+END_EXAMPLE
 
 ** combine-clips
+:PROPERTIES:
+:CUSTOM_ID: combine-clips
+:END:
 
 combine video and audio files into new clip
 
