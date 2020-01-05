@@ -30,9 +30,7 @@ A collection of ffmpeg shell scripts for basic editing tasks
 
 create a bin directory, download the scripts with git and copy the scripts to the the bin directory
 
-+ [[#bin-directory][create a bin directory]]
-+ [[#git-repository][clone the git repository]]
-+ [[#copy-symlink][copy the scripts to the bin directory]]
++ [[#scripts-install-id][scripts install]]
   
 install ffmpeg on linux, mac, freebsd and windows
 
@@ -420,11 +418,11 @@ zoompan -i infile.(png|jpg|jpeg) -d (000) -z (in|out) -p (tl|c|tc|tr|bl|br) -o o
 #+END_SRC
 
 ** scripts install
+:PROPERTIES:
+:CUSTOM_ID: scripts-install-id
+:END:
 
 *** create a bin directory
-:PROPERTIES:
-:CUSTOM_ID: bin-directory-id
-:END:
 
 create a bin directory in your home to add the scripts to
 
@@ -453,9 +451,6 @@ source ~/.zshrc
 #+END_SRC
 
 *** clone the git repository
-:PROPERTIES:
-:CUSTOM_ID: git-repository
-:END:
 
 create a git directory in you home folder to download the scripts into,
 or use any other location in your file system
@@ -479,9 +474,6 @@ git clone https://github.com/NapoleonWils0n/ffmpeg-scripts.git
 update the scripts using git pull
 
 *** copy or symlink scripts into the bin directory
-:PROPERTIES:
-:CUSTOM_ID: copy-symlink
-:END:
 
 you can now either copy the scripts into the ~/bin directory in your home,
 or create symbolic links from the scripts in the ~/git/ffmpeg-scripts directory to the ~/bin directory
