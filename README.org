@@ -5,6 +5,8 @@
 
 A collection of ffmpeg shell scripts for basic editing tasks
 
+** list of scripts
+
 + [[#audio-silence][audio-silence]]
 + [[#combine-clips][combine-clips]]
 + [[#correct-clip][correct-clip]]
@@ -23,128 +25,13 @@ A collection of ffmpeg shell scripts for basic editing tasks
 + [[#waveform][waveform]]
 + [[#xfade-clips][xfade-clips]]
 + [[#zoompan][zoompan]]
-  
-** scripts install
-
-*** create a bin directory
-
-create a bin directory in your home to add the scripts to
-
-#+BEGIN_SRC sh
-mkdir -p ~/bin
-#+END_SRC
-
-add the following code to your ~/.bashrc or ~/.zhrc file
-
-#+BEGIN_SRC sh
-if [ -d "$HOME/bin" ]; then
-   PATH="$HOME/bin:$PATH"
-fi
-#+END_SRC
-
-+ source your ~/.bashrc if you are using the bash shell
-
-#+BEGIN_SRC sh
-source ~/.bashrc
-#+END_SRC
-
-+ source your ~/.zshrc if you are using the zsh shell
-
-#+BEGIN_SRC sh
-source ~/.zshrc
-#+END_SRC
-
-*** clone git repo
-
-create a git directory in you home folder to download the scripts into,
-or use any other location in your file system
-
-#+BEGIN_SRC sh
-mkdir -p ~/git
-#+END_SRC
-
-change directory in the git directory
-
-#+BEGIN_SRC sh
-cd ~/git
-#+END_SRC
-
-clone the git repository
-
-#+BEGIN_SRC sh
-git clone https://github.com/NapoleonWils0n/ffmpeg-scripts.git
-#+END_SRC
-
-update the scripts using git pull
-
-*** copy or symlink scripts into the bin directory
-
-you can now either copy the scripts into the ~/bin directory in your home,
-or create symbolic links from the scripts in the ~/git/ffmpeg-scripts directory to the ~/bin directory
-
-creating a symbolic link
-
-#+BEGIN_SRC sh
-ln -s path/to/source path/to/destination
-#+END_SRC
-
-example
-
-#+BEGIN_SRC sh
-ln -s ~/git/ffmpeg-scripts/trim-clip ~/bin
-#+END_SRC
-
-*** ffmpeg install
-
-**** linux ffmpeg install
-
-install ffmpeg on debian or ubuntu,
-for other linux distros see the documentation for your package manager
-
-#+BEGIN_SRC sh
-sudo apt install ffmpeg
-#+END_SRC
-
-**** mac ffmpeg install
-
-open a terminal and run the following commands to install the xcode command line tools, homebrew and ffmpeg
-
-+ xcode command line tools install
-
-#+BEGIN_SRC sh
-xcode-select --install
-#+END_SRC
-
-+ homebrew install
-  
-#+BEGIN_SRC sh
-ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-#+END_SRC
-
-+ ffmpeg install
-  
-#+BEGIN_SRC sh
-brew install ffmpeg
-#+END_SRC
  
-**** freebsd ffmpeg install
+** install instructions 
 
-switch to root and install the ffmpeg package
-
-#+BEGIN_SRC sh
-pkg install ffmpeg
-#+END_SRC
-
-you can also install ffmpeg from ports,
-or use poudriere to build the ffmpeg package
-
-note the ebumeter script uses ffplay which isnt installed with the ffmpeg package,
-so you need to build ffmpeg with the sdl option enable from ports or with podriere
-
-**** windows ffmpeg install
-
-install the windows subsystem for linux and then install a linux distro like ubuntu,
-then follow the linux install instructions
++ [[#bin-directory][create a bin directory]]
++ [[#git-repo][clone the git repository]]
++ [[#copy-scripts][copy the scripts to the bin directory]]
++ [[#ffmpeg-install][install ffmpeg]]
 
 ** audio-silence
 :PROPERTIES:
@@ -526,3 +413,137 @@ zoompan -i infile.(png|jpg|jpeg) -d (000) -z (in|out) -p (tl|c|tc|tr|bl|br) -o o
 +bl                          br+
 +------------------------------+
 #+END_SRC
+
+** scripts install
+
+*** create a bin directory
+:PROPERTIES:
+:CUSTOM_ID: bin-directory
+:END:
+
+create a bin directory in your home to add the scripts to
+
+#+BEGIN_SRC sh
+mkdir -p ~/bin
+#+END_SRC
+
+add the following code to your ~/.bashrc or ~/.zhrc file
+
+#+BEGIN_SRC sh
+if [ -d "$HOME/bin" ]; then
+   PATH="$HOME/bin:$PATH"
+fi
+#+END_SRC
+
++ source your ~/.bashrc if you are using the bash shell
+
+#+BEGIN_SRC sh
+source ~/.bashrc
+#+END_SRC
+
++ source your ~/.zshrc if you are using the zsh shell
+
+#+BEGIN_SRC sh
+source ~/.zshrc
+#+END_SRC
+
+*** clone the git repository
+:PROPERTIES:
+:CUSTOM_ID: git-repo
+:END:
+
+create a git directory in you home folder to download the scripts into,
+or use any other location in your file system
+
+#+BEGIN_SRC sh
+mkdir -p ~/git
+#+END_SRC
+
+change directory in the git directory
+
+#+BEGIN_SRC sh
+cd ~/git
+#+END_SRC
+
+clone the git repository
+
+#+BEGIN_SRC sh
+git clone https://github.com/NapoleonWils0n/ffmpeg-scripts.git
+#+END_SRC
+
+update the scripts using git pull
+
+*** copy or symlink scripts into the bin directory
+:PROPERTIES:
+:CUSTOM_ID: copy-scripts
+:END:
+
+you can now either copy the scripts into the ~/bin directory in your home,
+or create symbolic links from the scripts in the ~/git/ffmpeg-scripts directory to the ~/bin directory
+
+creating a symbolic link
+
+#+BEGIN_SRC sh
+ln -s path/to/source path/to/destination
+#+END_SRC
+
+example
+
+#+BEGIN_SRC sh
+ln -s ~/git/ffmpeg-scripts/trim-clip ~/bin
+#+END_SRC
+
+*** ffmpeg install
+:PROPERTIES:
+:CUSTOM_ID: ffmpeg-install
+:END:
+
+**** linux ffmpeg install
+
+install ffmpeg on debian or ubuntu,
+for other linux distros see the documentation for your package manager
+
+#+BEGIN_SRC sh
+sudo apt install ffmpeg
+#+END_SRC
+
+**** mac ffmpeg install
+
+open a terminal and run the following commands to install the xcode command line tools, homebrew and ffmpeg
+
++ xcode command line tools install
+
+#+BEGIN_SRC sh
+xcode-select --install
+#+END_SRC
+
++ homebrew install
+  
+#+BEGIN_SRC sh
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+#+END_SRC
+
++ ffmpeg install
+  
+#+BEGIN_SRC sh
+brew install ffmpeg
+#+END_SRC
+ 
+**** freebsd ffmpeg install
+
+switch to root and install the ffmpeg package
+
+#+BEGIN_SRC sh
+pkg install ffmpeg
+#+END_SRC
+
+you can also install ffmpeg from ports,
+or use poudriere to build the ffmpeg package
+
+note the ebumeter script uses ffplay which isnt installed with the ffmpeg package,
+so you need to build ffmpeg with the sdl option enable from ports or with podriere
+
+**** windows ffmpeg install
+
+install the windows subsystem for linux and then install a linux distro like ubuntu,
+then follow the linux install instructions
