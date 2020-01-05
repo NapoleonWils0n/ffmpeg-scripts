@@ -28,7 +28,7 @@ A collection of ffmpeg shell scripts for basic editing tasks
  
 ** install instructions 
 
-+ [[#bin-directory][create a bin directory]]
++ [[#bin][create a bin directory]]
 + [[#git-repo][clone the git repository]]
 + [[#copy-scripts][copy the scripts to the bin directory]]
 + [[#ffmpeg-install][install ffmpeg]]
@@ -418,7 +418,7 @@ zoompan -i infile.(png|jpg|jpeg) -d (000) -z (in|out) -p (tl|c|tc|tr|bl|br) -o o
 
 *** create a bin directory
 :PROPERTIES:
-:CUSTOM_ID: bin-directory
+:CUSTOM_ID: bin
 :END:
 
 create a bin directory in your home to add the scripts to
