@@ -28,9 +28,14 @@ A collection of ffmpeg shell scripts for basic editing tasks
  
 ** install instructions 
 
-+ [[#bin-directory-id][create a bin directory]]
+create a bin directory, download the scripts with git and copy the scripts to the the bin directory
+
++ [[#bin-directory][create a bin directory]]
 + [[#git-repository][clone the git repository]]
 + [[#copy-symlink][copy the scripts to the bin directory]]
+  
+install ffmpeg on linux, mac, freebsd and windows
+
 + [[#ffmpeg-install][install ffmpeg]]
 
 ** audio-silence
@@ -448,6 +453,9 @@ source ~/.zshrc
 #+END_SRC
 
 *** clone the git repository
+:PROPERTIES:
+:CUSTOM_ID: git-repository
+:END:
 
 create a git directory in you home folder to download the scripts into,
 or use any other location in your file system
@@ -471,6 +479,9 @@ git clone https://github.com/NapoleonWils0n/ffmpeg-scripts.git
 update the scripts using git pull
 
 *** copy or symlink scripts into the bin directory
+:PROPERTIES:
+:CUSTOM_ID: copy-symlink
+:END:
 
 you can now either copy the scripts into the ~/bin directory in your home,
 or create symbolic links from the scripts in the ~/git/ffmpeg-scripts directory to the ~/bin directory
