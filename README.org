@@ -28,13 +28,10 @@ A collection of ffmpeg shell scripts for basic editing tasks
  
 ** install instructions 
 
-create a bin directory, download the scripts with git and copy the scripts to the the bin directory
+create a bin directory, download the scripts with git 
+and copy the scripts to the the bin directory then install ffmpeg 
 
 + [[#scripts-install-id][scripts install]]
-  
-install ffmpeg on linux, mac, freebsd and windows
-
-+ [[#ffmpeg-install][install ffmpeg]]
 
 ** audio-silence
 :PROPERTIES:
@@ -419,7 +416,7 @@ zoompan -i infile.(png|jpg|jpeg) -d (000) -z (in|out) -p (tl|c|tc|tr|bl|br) -o o
 
 ** scripts install
 :PROPERTIES:
-:CUSTOM_ID: scripts-install-id
+:CUSTOM_ID: scripts-install
 :END:
 
 *** create a bin directory
@@ -491,9 +488,6 @@ ln -s ~/git/ffmpeg-scripts/trim-clip ~/bin
 #+END_SRC
 
 *** ffmpeg install
-:PROPERTIES:
-:CUSTOM_ID: ffmpeg-install
-:END:
 
 **** linux ffmpeg install
 
