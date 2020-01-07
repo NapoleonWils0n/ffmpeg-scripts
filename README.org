@@ -147,7 +147,10 @@ you can also install ffmpeg from ports,
 or use poudriere to build the ffmpeg package
 
 note the ebumeter script uses ffplay which isnt installed with the ffmpeg package,
-so you need to build ffmpeg with the sdl option enable from ports or with podriere
+so you need to build ffmpeg with the sdl option enable from ports or with poudriere
+
+if you want to use the libfdk_aac audio you should also enable that option when building
+the ffmpeg port, and build the lame package for mp3 support
 
 **** windows ffmpeg install
 
