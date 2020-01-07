@@ -56,6 +56,18 @@ infile_name="${infile_nopath%.*}"
 outfile_default="${infile_name}-fade-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
 duration_default="0.5"
 
+# check if the libfdk_aac codec is installed, if not fall back to the aac codec
+aac_codec="$(ffmpeg -hide_banner -stats -v panic -h encoder=libfdk_aac)"
+aac_error="Codec 'libfdk_aac' is not recognized by FFmpeg."
+aac_check="$(echo "${aac_codec}" | grep "${aac_error}")"
+
+# check ffmpeg aac codecs
+if [ -z "${aac_check}" ]; then
+   aac='libfdk_aac' # libfdk_aac codec is installed
+else
+   aac='aac' # libfdk_aac codec isnt installed, fall back to aac codec
+fi
+
 # ffmpeg fade video track
 fade_v () {
     echo '+ Getting video duration' && \
@@ -91,7 +103,7 @@ fade_va () {
       [0:v] fade=t=in:st=0:d=${dur:=${duration_default}},fade=t=out:st='${vid_offset}':d=${dur:=${duration_default}}[fv]
     " \
     -map "[fv]" -map "[fa]" \
-    -c:a aac \
+    -c:a "${aac}" \
     -c:v libx264 -preset fast \
     -profile:v high \
     -crf 18 -coder 1 \

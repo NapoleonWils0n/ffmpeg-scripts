@@ -62,6 +62,17 @@ infile_name="${infile_nopath%.*}"
 
 # defaults for variables
 outfile_default="${infile_name}-corrected-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+# check if the libfdk_aac codec is installed, if not fall back to the aac codec
+aac_codec="$(ffmpeg -hide_banner -stats -v panic -h encoder=libfdk_aac)"
+aac_error="Codec 'libfdk_aac' is not recognized by FFmpeg."
+aac_check="$(echo "${aac_codec}" | grep "${aac_error}")"
+
+# check ffmpeg aac codecs
+if [ -z "${aac_check}" ]; then
+   aac='libfdk_aac' # libfdk_aac codec is installed
+else
+   aac='aac' # libfdk_aac codec isnt installed, fall back to aac codec
+fi
 
 # correct video track
 correct_v () {
@@ -90,7 +101,7 @@ correct_va () {
     -filter_complex \
     "[0:v]${text_contents}[video]" \
     -map "[video]" -map 0:a \
-    -c:a aac \
+    -c:a "${aac}" \
     -c:v libx264 -preset fast \
     -profile:v high \
     -crf 18 -coder 1 \

@@ -72,6 +72,18 @@ channel_default='mono'
 rate_default='44100'
 outfile_default="${infile_name}-silence-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
 
+# check if the libfdk_aac codec is installed, if not fall back to the aac codec
+aac_codec="$(ffmpeg -hide_banner -stats -v panic -h encoder=libfdk_aac)"
+aac_error="Codec 'libfdk_aac' is not recognized by FFmpeg."
+aac_check="$(echo "${aac_codec}" | grep "${aac_error}")"
+
+# check ffmpeg aac codecs
+if [ -z "${aac_check}" ]; then
+   aac='libfdk_aac' # libfdk_aac codec is installed
+else
+   aac='aac' # libfdk_aac codec isnt installed, fall back to aac codec
+fi
+
 # video function
 video_silence () {
   ffmpeg \
@@ -80,7 +92,7 @@ video_silence () {
   -f lavfi \
   -i anullsrc=channel_layout="${channel:=${channel_default}}":sample_rate="${rate:=${rate_default}}" \
   -i "${infile}" \
-  -shortest -c:v copy -c:a aac \
+  -shortest -c:v copy -c:a "${aac}" \
   -movflags +faststart -f mp4 \
   "${outfile:=${outfile_default}}"
 }
@@ -93,7 +105,7 @@ video_audio_silence () {
   -f lavfi \
   -i anullsrc=channel_layout="${channel:=${channel_default}}":sample_rate="${rate:=${rate_default}}" \
   -i "${infile}" \
-  -shortest -c:v copy -c:a aac \
+  -shortest -c:v copy -c:a "${aac}" \
   -map 0:a -map 1:v \
   -movflags +faststart -f mp4 \
   "${outfile:=${outfile_default}}"

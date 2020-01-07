@@ -105,9 +105,6 @@ audio () {
     linear=true:
     print_format=summary [audio]" \
     -map "[audio]" \
-    -pix_fmt yuv420p \
-    -movflags +faststart \
-    -f mp4 \
     "${outfile:=${outfile_default}}"
 }
 
