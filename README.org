@@ -122,10 +122,17 @@ xcode-select --install
 ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 #+END_SRC
 
-+ ffmpeg install
++ ffmpeg install with libfdk_aac
   
 #+BEGIN_SRC sh
-brew install ffmpeg
+brew tap homebrew-ffmpeg/ffmpeg
+brew install homebrew-ffmpeg/ffmpeg/ffmpeg --with-fdk-aac --HEAD
+#+END_SRC
+
++ ffmpeg upgrade
+
+#+BEGIN_SRC sh
+brew update && brew upgrade homebrew-ffmpeg/ffmpeg/ffmpeg --fetch-HEAD
 #+END_SRC
  
 **** freebsd ffmpeg install
