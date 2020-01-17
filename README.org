@@ -183,6 +183,31 @@ audio-silence -i infile.(mp4|mkv|mov|m4v) -c (mono|stereo) -r (44100|48000) -o o
 -o outfile.mp4   : optional agument # default is infile-name-silence-date-time
 #+END_EXAMPLE
 
+*** audio-silence batch process
+
+Batch process files in the current working directory
+  
+Note we omit the -o option to use the default outfile name,
+which is infile-name-silence-date-time
+
+audio-silence batch process without specifying the -c and -r options
+using the defaults of -c mono and -r 44100
+
+#+BEGIN_SRC sh
+find -s . -type f -name "*.mp4" -exec sh -c \
+'audio-silence -i "${0}"'     
+"{}" \;
+#+END_SRC
+
+audio-silence batch process and override the defaults
+with the -c and -r options
+
+#+BEGIN_SRC sh
+find -s . -type f -name "*.mp4" -exec sh -c \
+'audio-silence -i "${0}" -c stereo -r 48000'     
+"{}" \;
+#+END_SRC
+
 ** combine-clips
 :PROPERTIES:
 :CUSTOM_ID: combine-clips
@@ -201,6 +226,59 @@ combine-clip -i infile.(mp4|mov|mkv|m4v|png|jpg) -a audio.(m4a|aac|wav|mp3) -o o
 -a audio.(m4a|aac|wav|mp3)
 -o outfile.mp4 : optional agument # defaults is infile-name-combined-date-time
 #+END_EXAMPLE
+
+*** combine-clips batch process
+
+Batch process files in the current working directory
+  
+Note we omit the -o option to use the default outfile name,
+infile-name-combined-date-time
+
++ batch combine video and audio files into video clips
+
+The video and audio files you want to combine must have the same name
+
+for example
+
+#+BEGIN_EXAMPLE
+file1.mp4
+file1.wav
+file2.mp4
+file2.wav
+#+END_EXAMPLE
+
+running the following code will combine
+file1.mp4 with file1.wav and 
+file2.mp4 with file2.wav
+
+#+BEGIN_SRC sh
+find -s . -type f -name "*.mp4" -exec sh -c \
+'combine-clips -i "${0}" -a "${0%.*}.wav"' \
+"{}" \;
+#+END_SRC
+
++ batch combine images and audio files into video clips
+
+The images and audio files you want to combine must have the same name
+
+for example
+
+#+BEGIN_EXAMPLE
+file1.png
+file1.wav
+file2.png
+file2.wav
+#+END_EXAMPLE
+
+running the following code will combine
+file1.png with file1.wav and 
+file2.png with file2.wav
+
+#+BEGIN_SRC sh
+find -s . -type f -name "*.png" -exec sh -c \
+'combine-clips -i "${0}" -a "${0%.*}.wav"' \
+"{}" \;
+#+END_SRC
 
 ** correct-clip
 :PROPERTIES:
