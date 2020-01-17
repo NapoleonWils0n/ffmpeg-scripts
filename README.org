@@ -698,6 +698,35 @@ subtitle-add -i video.(mp4|mov|mkv|m4v) -s subtitle.srt -o outfile.mp4
 -o outfile.mp4 : optional agument # default is infile-name-subs-date-time
 #+END_EXAMPLE
 
+*** subtitle-add batch process
+
+Batch process files in the current working directory
+  
+Note we omit the -o option to use the default outfile name,
+infile-name-subs-date-time
+
+The video and subtitle files you want to combine must have the same name
+
+for example
+
+#+BEGIN_EXAMPLE
+file1.mp4
+file1.srt
+file2.mp4
+file2.srt
+#+END_EXAMPLE
+
+running the following code will run the subtitle-add script and combine
+file1.mp4 with file1.srt and 
+file2.mp4 with file2.srt
+
+#+BEGIN_SRC sh
+find -s . -type f -name "*.mp4" -exec sh -c \
+'subtitle-add -i "${0}" -s "${0%.*}.srt"' \
+"{}" \;
+#+END_SRC
+
+
 ** trim-clip
 :PROPERTIES:
 :CUSTOM_ID: trim-clip
