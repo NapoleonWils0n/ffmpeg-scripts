@@ -253,7 +253,7 @@ file2.mp4 with file2.wav
 
 #+BEGIN_SRC sh
 find -s . -type f -name "*.mp4" -exec sh -c \
-'combine-clips -i "${0}" -a "${0%.*}.wav"' \
+'combine-clip -i "${0}" -a "${0%.*}.wav"' \
 "{}" \;
 #+END_SRC
 
@@ -276,7 +276,7 @@ file2.png with file2.wav
 
 #+BEGIN_SRC sh
 find -s . -type f -name "*.png" -exec sh -c \
-'combine-clips -i "${0}" -a "${0%.*}.wav"' \
+'combine-clip -i "${0}" -a "${0%.*}.wav"' \
 "{}" \;
 #+END_SRC
 
@@ -305,6 +305,34 @@ correct-clip -i infile.(mp4|mkv|mov|m4v) -c curve.txt -o outfile.mp4
 -c curve.txt
 -o outfile.mp4 :optional agument # default is infile-name-corrected-date-time
 #+END_EXAMPLE
+
+*** correct-clip batch process
+
+Batch process files in the current working directory
+  
+Note we omit the -o option to use the default outfile name,
+infile-name-corrected-date-time
+
+The video and gimp curve text files you want to combine must have the same name
+
+for example
+
+#+BEGIN_EXAMPLE
+file1.mp4
+file1.txt
+file2.mp4
+file2.txt
+#+END_EXAMPLE
+
+running the following code will correct
+file1.mp4 with file1.txt gimp curve file and
+file2.mp4 with file2.tx gimp curve file
+
+#+BEGIN_SRC sh
+find -s . -type f -name "*.png" -exec sh -c \
+'correct-clip -i "${0}" -c "${0%.*}.txt"' \
+"{}" \;
+#+END_SRC
 
 ** ebu-meter
 :PROPERTIES:
