@@ -666,6 +666,19 @@ subs2transcript -i infile.(srt|vtt) -o outfile.txt
 -o outfile.mp4 : optional agument # default is infile-name-transcript-date-time
 #+END_EXAMPLE
 
+*** subs2transcript batch process
+
+Batch process files in the current working directory
+  
+Note we omit the -o option to use the default outfile name,
+infile-name-transcript-date-time
+
+#+BEGIN_SRC sh
+find -s . -type f -name "*.srt" -exec sh -c \
+'subs2transcript -i "${0}"' \
+"{}" \;
+#+END_SRC
+
 ** subtitle-add
 :PROPERTIES:
 :CUSTOM_ID: subtitle-add
