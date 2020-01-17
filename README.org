@@ -567,6 +567,21 @@ img2video -i infile.(png|jpg|jpeg) -d (000) -o outfile.mp4
 -o outfile.mp4 : optional agument # default is infile-name-video-date-time
 #+END_EXAMPLE
 
+*** img2video batch process
+
+Batch process files in the current working directory
+  
+Note we omit the -o option to use the default outfile name,
+infile-name-video-date-time
+
+Batch convert png in the current directory into video clips with a 30 second duration
+
+#+BEGIN_SRC sh
+find -s . -type f -name "*.png" -exec sh -c \
+'img2video -i "${0}" -d 30' \
+"{}" \;
+#+END_SRC
+
 ** loudnorm
 :PROPERTIES:
 :CUSTOM_ID: loudnorm
