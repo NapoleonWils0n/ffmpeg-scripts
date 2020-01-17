@@ -781,6 +781,21 @@ waveform -i infile.(mp4|mkv|mov|m4v|wav|aac|m4a|mp3) -o oufile.png
 -o outfile.png : optional agument # default is infile-name-waveform-date-time
 #+END_EXAMPLE
 
+*** waveform batch process
+
+Batch process files in the current working directory
+  
+Note we omit the -o option to use the default outfile name,
+infile-name-waveform-date-time
+
+Create waveform images from all the mp4 fies in the current directory
+
+#+BEGIN_SRC sh
+find -s . -type f -name "*.mp4" -exec sh -c \
+'waveform -i "${0}"' \
+"{}" \;
+#+END_SRC
+
 ** xfade-clips
 :PROPERTIES:
 :CUSTOM_ID: xfade-clips
