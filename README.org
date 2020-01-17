@@ -329,7 +329,7 @@ file1.mp4 with file1.txt gimp curve file and
 file2.mp4 with file2.txt gimp curve file
 
 #+BEGIN_SRC sh
-find -s . -type f -name "*.png" -exec sh -c \
+find -s . -type f -name "*.mp4" -exec sh -c \
 'correct-clip -i "${0}" -c "${0%.*}.txt"' \
 "{}" \;
 #+END_SRC
