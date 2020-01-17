@@ -326,7 +326,7 @@ file2.txt
 
 running the following code will correct
 file1.mp4 with file1.txt gimp curve file and
-file2.mp4 with file2.tx gimp curve file
+file2.mp4 with file2.txt gimp curve file
 
 #+BEGIN_SRC sh
 find -s . -type f -name "*.png" -exec sh -c \
@@ -389,7 +389,6 @@ find -s . -type f -name "*.mp4" -exec sh -c \
 "{}" \;
 #+END_SRC
 
-
 ** fade-clip
 :PROPERTIES:
 :CUSTOM_ID: fade-clip
@@ -408,6 +407,29 @@ fade-clip -i video.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -o outfile.mp4
 -d (0.[0-9]|1) : optional agument # default is 0.5
 -o outfile.mp4 : optional agument # default is infile-name-fade-date-time
 #+END_EXAMPLE
+
+*** fade-clip batch process
+
+Batch process files in the current working directory
+  
+Note we omit the -o option to use the default outfile name,
+infile-name-fade-date-time
+
++ fade-clip with default option of 0.5
+
+#+BEGIN_SRC sh
+find -s . -type f -name "*.mp4" -exec sh -c \
+'fade-clip -i "${0}"' \
+"{}" \;
+#+END_SRC
+
++ fade-clip and override the default option of 0.5 with -d 1 for a 1 second fade
+
+#+BEGIN_SRC sh
+find -s . -type f -name "*.mp4" -exec sh -c \
+'fade-clip -i "${0}" -d 1' \
+"{}" \;
+#+END_SRC
 
 ** fade-normalize
 :PROPERTIES:
@@ -437,6 +459,34 @@ fade-normalize -i video.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -c curve.txt -o outfile
 -c curve.txt
 -o outfile.mp4 : optional agument # default is infile-name-normalized-date-time
 #+END_EXAMPLE
+
+*** fade-normalize batch process
+
+Batch process files in the current working directory
+  
+Note we omit the -o option to use the default outfile name,
+infile-name-normalized-date-time
+
+The video and gimp curve text files you want to combine must have the same name
+
+for example
+
+#+BEGIN_EXAMPLE
+file1.mp4
+file1.txt
+file2.mp4
+file2.txt
+#+END_EXAMPLE
+
+running the following code will run the fade-normalize script and process
+file1.mp4 with file1.txt gimp curve file and
+file2.mp4 with file2.txt gimp curve file
+
+#+BEGIN_SRC sh
+find -s . -type f -name "*.mp4" -exec sh -c \
+'fade-normalize -i "${0}" -d 0.5 -c "${0%.*}.txt"' \
+"{}" \;
+#+END_SRC
 
 ** fade-title
 :PROPERTIES:
@@ -469,6 +519,34 @@ fade-title -i infile.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -s 000 -e 000 -c curve.txt
 -c curve.txt
 -o outfile.mp4 : optional agument # default is infile-name-title-date-time
 #+END_EXAMPLE
+
+*** fade-title batch process
+
+Batch process files in the current working directory
+  
+Note we omit the -o option to use the default outfile name,
+infile-name-title-date-time
+
+The video and gimp curve text files you want to combine must have the same name
+
+for example
+
+#+BEGIN_EXAMPLE
+file1.mp4
+file1.txt
+file2.mp4
+file2.txt
+#+END_EXAMPLE
+
+running the following code will run the fade-title script and process
+file1.mp4 with file1.txt gimp curve file and
+file2.mp4 with file2.txt gimp curve file
+
+#+BEGIN_SRC sh
+find -s . -type f -name "*.mp4" -exec sh -c \
+'fade-title -i "${0}" -d 0.5 -s 10 -e 20 -c "${0%.*}.txt"' \
+"{}" \;
+#+END_SRC
 
 ** img2video
 :PROPERTIES:
