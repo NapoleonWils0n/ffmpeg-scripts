@@ -847,3 +847,19 @@ zoompan -i infile.(png|jpg|jpeg) -d (000) -z (in|out) -p (tl|c|tc|tr|bl|br) -o o
 +bl                          br+
 +------------------------------+
 #+END_SRC
+
+*** zoompan batch process
+
+Batch process files in the current working directory
+  
+Note we omit the -o option to use the default outfile name,
+infile-name-zoompan-date-time
+
+Batch process all the png files in the current working directory,
+apply the zoompan script with a 5 second duration, zoom in to the center of the image
+
+#+BEGIN_SRC sh
+find -s . -type f -name "*.png" -exec sh -c \
+'zoompan -i "${0}" -d 5 -z in -p c' \
+"{}" \;
+#+END_SRC
