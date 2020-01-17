@@ -366,6 +366,30 @@ extract-frame -i infile.(mp4|mov|mkv|m4v) -s 00:00:00 -o outfile.mp4
 -o outfile.png : optional agument # default is infile-name-frame-date-time
 #+END_EXAMPLE
 
+*** extract-frame batch process
+
+Batch process files in the current working directory
+  
+Note we omit the -o option to use the default outfile name,
+infile-name-frame-date-time
+
++ extract frame with default option of 00:00:00
+
+#+BEGIN_SRC sh
+find -s . -type f -name "*.mp4" -exec sh -c \
+'extract-frame -i "${0}"' \
+"{}" \;
+#+END_SRC
+
++ extract frame at 30 seconds into the video
+
+#+BEGIN_SRC sh
+find -s . -type f -name "*.mp4" -exec sh -c \
+'extract-frame -i "${0}" -s 00:00:30' \
+"{}" \;
+#+END_SRC
+
+
 ** fade-clip
 :PROPERTIES:
 :CUSTOM_ID: fade-clip
