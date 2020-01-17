@@ -726,7 +726,6 @@ find -s . -type f -name "*.mp4" -exec sh -c \
 "{}" \;
 #+END_SRC
 
-
 ** trim-clip
 :PROPERTIES:
 :CUSTOM_ID: trim-clip
@@ -747,6 +746,22 @@ trim-clip -s 00:00:00 -i infile.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3) \
 -t 00:00:00                  : number of seconds after start time
 -o outfile.(mp4|aac|mp3|wav) : optional agument # default infile-name-trimmed-date-time.(mp4|aac|mp3|wav)
 #+END_EXAMPLE
+
+*** trim-clip batch process
+
+Batch process files in the current working directory
+  
+Note we omit the -o option to use the default outfile name,
+infile-name-trimmed-date-time
+
+Batch trim all the mp4 files in the current directory,
+from 00:00:00 to 00:00:30
+
+#+BEGIN_SRC sh
+find -s . -type f -name "*.mp4" -exec sh -c \
+'trim-clip -s 00:00:00 -i "${0}" -t 00:00:30' \
+"{}" \;
+#+END_SRC
 
 ** waveform
 :PROPERTIES:
