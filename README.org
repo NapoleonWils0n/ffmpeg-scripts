@@ -438,25 +438,15 @@ find -s . -type f -name "*.mp4" -exec sh -c \
 
 fade video and audio in and out and normalize
 
-+ curves code based on:
-[[https://video.stackexchange.com/questions/16352/converting-gimp-curves-files-to-photoshop-acv-for-ffmpeg/20005#20005][converting gimp curves files for ffmpeg]]
-
-correct a video clip by using a gimp curve converted into a ffmpeg curves filter command,
-to adjust the levels and white balance
-
-+ requires a curve file created with the following script
-[[https://github.com/NapoleonWils0n/curve2ffmpeg][curve2ffmpeg]]
-
 + script usage
 
 #+BEGIN_SRC sh
-fade-normalize -i video.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -c curve.txt -o outfile.mp4
+fade-normalize -i video.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -o outfile.mp4
 #+END_SRC
 
 #+BEGIN_EXAMPLE
 -i infile.(mp4|mkv|mov|m4v)
 -d (0.[0-9]|1) : optional agument # default is 0.5
--c curve.txt
 -o outfile.mp4 : optional agument # default is infile-name-normalized-date-time
 #+END_EXAMPLE
 
@@ -464,27 +454,9 @@ fade-normalize -i video.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -c curve.txt -o outfile
 
 Batch process files in the current working directory
   
-Note we omit the -o option to use the default outfile name,
-infile-name-normalized-date-time
-
-The video and gimp curve text files you want to combine must have the same name
-
-for example
-
-#+BEGIN_EXAMPLE
-file1.mp4
-file1.txt
-file2.mp4
-file2.txt
-#+END_EXAMPLE
-
-running the following code will run the fade-normalize script and process
-file1.mp4 with file1.txt gimp curve file and
-file2.mp4 with file2.txt gimp curve file
-
 #+BEGIN_SRC sh
 find -s . -type f -name "*.mp4" -exec sh -c \
-'fade-normalize -i "${0}" -d 0.5 -c "${0%.*}.txt"' \
+'fade-normalize -i "${0}" -d 0.5' \
 "{}" \;
 #+END_SRC
 
@@ -496,19 +468,10 @@ find -s . -type f -name "*.mp4" -exec sh -c \
 fade video and audio in and out, 
 normalize and create vide title from filename
 
-+ curves code based on:
-[[https://video.stackexchange.com/questions/16352/converting-gimp-curves-files-to-photoshop-acv-for-ffmpeg/20005#20005][converting gimp curves files for ffmpeg]]
-
-correct a video clip by using a gimp curve converted into a ffmpeg curves filter command,
-to adjust the levels and white balance
-
-+ requires a curve file created with the following script
-[[https://github.com/NapoleonWils0n/curve2ffmpeg][curve2ffmpeg]]
-
 + script usage
 
 #+BEGIN_SRC sh
-fade-title -i infile.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -s 000 -e 000 -c curve.txt -o outfile.mp4
+fade-title -i infile.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -s 000 -e 000 -o outfile.mp4
 #+END_SRC
 
 #+BEGIN_EXAMPLE
@@ -516,7 +479,6 @@ fade-title -i infile.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -s 000 -e 000 -c curve.txt
 -d (0.[0-9]|1) : from 0.1 to 0.9 or 1 : optional agument # default is 0.5
 -s 000         : from 000 to 999
 -e 000         : from 000 to 999
--c curve.txt
 -o outfile.mp4 : optional agument # default is infile-name-title-date-time
 #+END_EXAMPLE
 
@@ -524,27 +486,9 @@ fade-title -i infile.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -s 000 -e 000 -c curve.txt
 
 Batch process files in the current working directory
   
-Note we omit the -o option to use the default outfile name,
-infile-name-title-date-time
-
-The video and gimp curve text files you want to combine must have the same name
-
-for example
-
-#+BEGIN_EXAMPLE
-file1.mp4
-file1.txt
-file2.mp4
-file2.txt
-#+END_EXAMPLE
-
-running the following code will run the fade-title script and process
-file1.mp4 with file1.txt gimp curve file and
-file2.mp4 with file2.txt gimp curve file
-
 #+BEGIN_SRC sh
 find -s . -type f -name "*.mp4" -exec sh -c \
-'fade-title -i "${0}" -d 0.5 -s 10 -e 20 -c "${0%.*}.txt"' \
+'fade-title -i "${0}" -d 0.5 -s 10 -e 20' \
 "{}" \;
 #+END_SRC
 
