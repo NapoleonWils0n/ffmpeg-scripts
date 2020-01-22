@@ -123,7 +123,7 @@ trim_mp3 () {
     -i "${infile}" \
     -t "${end}" \
     -c:a libmp3lame \
-    -f mp3
+    -f mp3 \
     "${outfile:=${mp3_default}}"
 }
 
@@ -136,7 +136,7 @@ trim_wav () {
     -i "${infile}" \
     -t "${end}" \
     -c:a pcm_s16le \
-    -f wav
+    -f wav \
     "${outfile:=${wav_default}}"
 }
 
