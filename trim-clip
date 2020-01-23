@@ -78,8 +78,6 @@ if [ "${infile_ext}" = 'm4a' ]; then
     filetype="${m4a_mime}"
 fi
 
-echo "${filetype}"
-
 # defaults for variables if not defined
 videofile_default="${infile_name}-trimmed-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
 aac_default="${infile_name}-trimmed-$(date +"%Y-%m-%d-%H-%M-%S").aac"
