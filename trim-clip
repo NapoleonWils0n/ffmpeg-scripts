@@ -134,7 +134,7 @@ trim_m4a () {
     -i "${infile}" \
     -t "${end}" \
     -c:a "${aac}" \
-    -f adts \
+    -f mp4 \
     "${outfile:=${m4a_default}}"
 }
 
