@@ -1,0 +1,178 @@
+#!/bin/sh
+
+# combine an image or video file with an audio clip
+
+# script usage
+usage ()
+{
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+# combine an image or video file with an audio clip
+
+$(basename "$0") -i infile.(mp4|mkv|mov|m4v|png|jpg) -a audio.(m4a|aac|wav|mp3) -o outfile.mp4
+-i infile.(mp4|mkv|mov|m4v|png|jpg)
+-a audio.(m4a|aac|wav|mp3)
+-o outfile.mp4 :optional agument # if option not provided defaults to infile-name-combined-date-time"
+exit 2
+}
+
+# error messages
+NOTFILE_ERR='not a file'
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+NOT_MEDIA_FILE_ERR='is not a media file'
+
+# if script is run arguments pass and check the options with getopts,
+# else display script usage and exit
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+# getopts check and validate options
+while getopts ':i:a:o:h' opt
+do
+  case ${opt} in
+     i) infile="${OPTARG}"
+	[ -f "${infile}" ] || usage "${infile} ${NOTFILE_ERR}";;
+     a) audio="${OPTARG}"
+	[ -f "${audio}" ] || usage "${audio} ${NOTFILE_ERR}";;
+     o) outfile="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+# infile, infile name
+infile_nopath="${infile##*/}"
+infile_name="${infile_nopath%.*}"
+
+# audio file extension
+audio_ext="${audio##*.}"
+
+# file command check input file mime type
+infile_filetype="$(file --mime-type -b "${infile}")"
+audio_filetype="$(file --mime-type -b "${audio}")"
+
+# audio and video mimetypes
+mov_mime='video/quicktime'
+mkv_mime='video/x-matroska'
+mp4_mime='video/mp4'
+m4v_mime='video/x-m4v'
+wav_mime='audio/x-wav'
+audio_mime='audio/mpeg'
+aac_mime='audio/x-hx-aac-adts'
+m4a_mime='audio/mp4'
+
+# the file command wrongly identifies .m4a audio as a video file
+# so we check if the file extension is .m4a and set the mime type to audio/mp4
+if [ "${audio_ext}" = 'm4a' ]; then
+    audio_filetype="${m4a_mime}"
+fi
+
+# image mimetypes
+png_mime='image/png'
+jpg_mime='image/jpeg'
+
+# defaults for variables
+outfile_default="${infile_name}-combined-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+
+# check if the libfdk_aac codec is installed, if not fall back to the aac codec
+aac_codec="$(ffmpeg -hide_banner -stats -v panic -h encoder=libfdk_aac)"
+aac_error="Codec 'libfdk_aac' is not recognized by FFmpeg."
+aac_check="$(echo "${aac_codec}" | grep "${aac_error}")"
+
+# check ffmpeg aac codecs
+if [ -z "${aac_check}" ]; then
+   aac='libfdk_aac' # libfdk_aac codec is installed
+else
+   aac='aac' # libfdk_aac codec isnt installed, fall back to aac codec
+fi
+
+# video - audio is aac, copy audio stream
+record_copy () {
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -i "${infile}" \
+    -i "${audio}" \
+    -c:a copy \
+    -c:v copy \
+    -map 0:v -map 1:a \
+    -pix_fmt yuv420p \
+    -movflags +faststart \
+    -f mp4 \
+    "${outfile:=${outfile_default}}"
+}
+
+# video - audio isnt aac, encode audio as aac
+record_aac () {
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -i "${infile}" \
+    -i "${audio}" \
+    -c:a "${aac}" \
+    -c:v copy \
+    -map 0:v -map 1:a \
+    -pix_fmt yuv420p \
+    -movflags +faststart \
+    -f mp4 \
+    "${outfile:=${outfile_default}}"
+}
+
+# image - audio is aac, copy audio stream
+record_img_copy () {
+  ffmpeg \
+  -hide_banner \
+  -stats -v panic \
+  -loop 1 \
+  -i "${infile}" \
+  -i "${audio}" \
+  -c:a copy \
+  -c:v libx264 -crf 18 -profile:v high \
+  -map 0:v -map 1:a \
+  -r 30 -pix_fmt yuv420p \
+  -shortest \
+  -movflags +faststart -f mp4 \
+  "${outfile:=${outfile_default}}"
+}
+
+# image - audio isnt aac, encode audio as aac
+record_img_aac () {
+  ffmpeg \
+  -hide_banner \
+  -stats -v panic \
+  -loop 1 \
+  -i "${infile}" \
+  -i "${audio}" \
+  -c:a "${aac}" \
+  -c:v libx264 -crf 18 -profile:v high \
+  -map 0:v -map 1:a \
+  -r 30 -pix_fmt yuv420p \
+  -shortest \
+  -movflags +faststart -f mp4 \
+  "${outfile:=${outfile_default}}"
+}
+
+# check the infile mime type
+case "${infile_filetype}" in
+    ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime});;
+    ${png_mime}|${jpg_mime})
+    case "${audio_filetype}" in
+        ${aac_mime}|${m4a_mime}) record_img_copy "${infile}" "${audio}" && exit;;
+        ${wav_mime}|${audio_mime}) record_img_aac "${infile}" "${audio}" && exit;;
+        *) usage "${audio} ${NOT_MEDIA_FILE_ERR}";;
+    esac
+    ;;
+    *) usage "${infile} ${NOT_MEDIA_FILE_ERR}";;
+esac
+
+# run the ffmpeg function based on the audio mime type
+case "${audio_filetype}" in
+    ${aac_mime}|${m4a_mime}) record_copy "${infile}" "${audio}";;
+    ${wav_mime}|${audio_mime}) record_aac "${infile}" "${audio}";;
+    *) usage "${audio} ${NOT_MEDIA_FILE_ERR}";;
+esac

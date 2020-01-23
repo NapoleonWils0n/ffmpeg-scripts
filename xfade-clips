@@ -1,0 +1,150 @@
+#!/bin/sh
+
+# ffmpeg cross fade clips
+
+# script usage
+usage()
+{
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+# ffmpeg cross fade clips
+
+$(basename "$0") -a clip1.(mp4|mkv|mov|m4v) -b clip2.(mp4|mkv|mov|m4v) -d (1|2) -o outfile.mp4
+-a clip1.(mp4|mkv|mov|m4v) : first clip
+-b clip2.(mp4|mkv|mov|m4v) : second clip
+-d (1|2)                   : cross fade duration :optional agument # if option not provided defaults to 1 second
+-o outfile.mp4             : optional agument # if option not provided defaults to infile-name-xfade-date-time"
+exit 2
+}
+
+# error messages
+NOTFILE_ERR='not a file'
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+NOT_MEDIA_FILE_ERR='is not a media file'
+
+# if script is run arguments pass and check the options with getopts,
+# else display script usage and exit
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+# duration regex match 1
+dur_long='^[1-2]\{1\}$'
+
+# getopts check and validate options
+while getopts ':a:b:d:o:h' opt
+do
+  case ${opt} in
+     a) clip1="${OPTARG}"
+	[ -f "${clip1}" ] || usage "${clip1} ${NOTFILE_ERR}";;
+     b) clip2="${OPTARG}"
+	[ -f "${clip2}" ] || usage "${clip2} ${NOTFILE_ERR}";;
+     d) dur="${OPTARG}"
+        expr "${dur}" : "${dur_long}" 1>/dev/null;;
+     o) outfile="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+# infile, infile name and extension
+clip1_nopath="${clip1##*/}"
+clip1_name="${clip1_nopath%.*}"
+
+# file command check input file mime type
+clip1_filetype="$(file --mime-type -b "${clip1}")"
+clip2_filetype="$(file --mime-type -b "${clip2}")"
+
+# audio and video mimetypes
+mov_mime='video/quicktime'
+mkv_mime='video/x-matroska'
+mp4_mime='video/mp4'
+m4v_mime='video/x-m4v'
+
+# check the clips mime type
+checkmime () {
+case "${1}" in
+    ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime});;
+    *) usage "${2} ${NOT_MEDIA_FILE_ERR}";;
+esac
+}
+
+# check mime type
+checkmime "${clip1_filetype}" "${clip1}"
+checkmime "${clip2_filetype}" "${clip2}"
+
+# clip durations for fades
+clip1_dur=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$clip1" | cut -d\. -f1)
+clip2_dur=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$clip2" | cut -d\. -f1)
+
+# clip1 use the bc command to remove 1 second from length of clip for cross fade
+clip1_offset=$(echo "${clip1_dur}-1" | bc -l)
+clip2_offset=$(echo "${clip2_dur}-1" | bc -l)
+
+# variables
+outfile_default="${clip1_name}-xfade-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+duration_default='1'
+
+# cross fade video and audio
+xfade_va () {
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -i "${clip1}" -i "${clip2}" \
+    -an -filter_complex \
+    "   [0:v]trim=start=0:end='${clip1_offset}',setpts=PTS-STARTPTS[firstclip];
+        [1:v]trim=start=${dur:=${duration_default}},setpts=PTS-STARTPTS[secondclip];
+        [0:v]trim=start='${clip1_offset}':end='${clip1_dur}',setpts=PTS-STARTPTS[fadeoutsrc];
+        [1:v]trim=start=0:end=${dur:=${duration_default}},setpts=PTS-STARTPTS[fadeinsrc];
+        [fadeinsrc]format=pix_fmts=yuva420p,      
+                    fade=t=in:st=0:d=${dur:=${duration_default}}:alpha=1[fadein];
+        [fadeoutsrc]format=pix_fmts=yuva420p,
+                    fade=t=out:st=0:d=${dur:=${duration_default}}:alpha=1[fadeout];
+        [fadein]fifo[fadeinfifo];
+        [fadeout]fifo[fadeoutfifo];
+        [fadeoutfifo][fadeinfifo]overlay[crossfade];
+        [firstclip][crossfade][secondclip]concat=n=3[output];
+        [0:a] afade=t=in:st=0:d=${dur:=${duration_default}} [audiofadein];
+        [1:a] afade=t=out:st='${clip2_offset}':d=${dur:=${duration_default}} [audiofadeout];
+        [audiofadein][audiofadeout] acrossfade=d=${dur:=${duration_default}} [audio]
+    " \
+    -map "[output]" -map "[audio]" "${outfile:=${outfile_default}}"
+}
+
+# cross fade video
+xfade_v () {
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -i "${clip1}" -i "${clip2}" \
+    -an -filter_complex \
+    "   [0:v]trim=start=0:end='${clip1_offset}',setpts=PTS-STARTPTS[firstclip];
+        [1:v]trim=start=${dur:=${duration_default}},setpts=PTS-STARTPTS[secondclip];
+        [0:v]trim=start='${clip1_offset}':end='${clip1_dur}',setpts=PTS-STARTPTS[fadeoutsrc];
+        [1:v]trim=start=0:end=${dur:=${duration_default}},setpts=PTS-STARTPTS[fadeinsrc];
+        [fadeinsrc]format=pix_fmts=yuva420p,      
+                    fade=t=in:st=0:d=${dur:=${duration_default}}:alpha=1[fadein];
+        [fadeoutsrc]format=pix_fmts=yuva420p,
+                    fade=t=out:st=0:d=${dur:=${duration_default}}:alpha=1[fadeout];
+        [fadein]fifo[fadeinfifo];
+        [fadeout]fifo[fadeoutfifo];
+        [fadeoutfifo][fadeinfifo]overlay[crossfade];
+        [firstclip][crossfade][secondclip]concat=n=3[output]
+    " \
+-map "[output]" "${outfile:=${outfile_default}}"
+}
+
+# check if video has an audio track
+clip1_check="$(ffprobe -i "${clip1}" -show_streams -select_streams a -loglevel error)"
+clip2_check="$(ffprobe -i "${clip2}" -show_streams -select_streams a -loglevel error)"
+
+# check if audio_check is null which means the video doesnt have an audio track
+if [ -z "${clip1_check}" ] || [ -z "${clip2_check}" ]; then
+   xfade_v "${clip1}" "${clip2}" # fade video track
+else
+   xfade_va "${clip1}" "${clip2}" # fade video and audio track
+fi

@@ -1,0 +1,204 @@
+#!/bin/sh
+
+# zoompan, ken burns effect
+
+# script usage
+usage ()
+{
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+# zoompan, ken burns effect
+
+$(basename "$0") -i infile.(png|jpg|jpeg) -d (000) -z (in|out) -p (tl|c|tc|tr|bl|br) -o outfile.mp4
+-i = infile.(png|jpg|jpeg)
+-d = duration : from 1-999
+-z = zoom : in or out
+-p = position : zoom to location listed below
+-o = outfile.mp4 : optional agument # default is infile-name-zoompan-date-time
+
++------------------------------+
++tl            tc            tr+
++                              +        
++              c               +
++                              +
++bl                          br+
++------------------------------+"
+exit 2
+}
+
+# error messages
+NOTFILE_ERR='not a file'
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+NOT_MEDIA_FILE_ERR='is not a media file'
+
+# if script is run arguments pass and check the options with getopts,
+# else display script usage and exit
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+# duration regex match [1-9]
+dur_regex='^[0-9]\{1,2\}$'
+position_regex='^[a-z]\{1,2\}$'
+
+# getopts and check if input a file
+while getopts ':i:d:z:p:o:h' opt
+do
+  case ${opt} in
+     i) infile="${OPTARG}"
+	[ -f "${infile}" ] || usage "${infile} ${NOTFILE_ERR}";;
+     d) dur="${OPTARG}"
+        expr "${dur}" : "${dur_regex}" 1>/dev/null;;
+     z) zoom="${OPTARG}"
+        [ "${zoom}" = 'in' ] || [ "${zoom}" = 'out' ];;
+     p) position="${OPTARG}"
+        expr "${position}" : "${position_regex}" 1>/dev/null;;
+     o) outfile="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+# infile, infile name and extension
+infile_nopath="${infile##*/}"
+infile_name="${infile_nopath%.*}"
+
+# file command check input file mime type
+filetype="$(file --mime-type -b "${infile}")"
+
+# image mimetypes
+png_mime='image/png'
+jpg_mime='image/jpeg'
+
+# ffprobe get image height
+imgheight="$(ffprobe -v error -select_streams v:0 -show_entries stream=height -of default=nw=1:nk=1 "${infile}")"
+
+# frames per seconds
+infps='30'
+
+### zoom in positions
+
+# zoom in top left
+zi_top_left="scale=-2:10*ih,\
+zoompan=z='min(zoom+0.0015,1.5)':\
+fps=${infps}:d=${infps}*${dur},\
+scale=-2:${imgheight}" \
+
+# zoom in center
+zi_center="scale=-2:10*ih,\
+zoompan=z='min(zoom+0.0015,1.5)':\
+fps=${infps}:d=${infps}*${dur}:\
+x='iw/2-(iw/zoom/2)':\
+y='ih/2-(ih/zoom/2)',\
+scale=-2:${imgheight}" \
+
+# zoom in top center
+zi_top_center="scale=-2:10*ih,\
+zoompan=z='min(zoom+0.0015,1.5)':\
+fps=${infps}:d=${infps}*${dur}:\
+x='iw/2-(iw/zoom/2)',\
+scale=-2:${imgheight}" \
+
+# zoom in top right
+zi_top_right="scale=-2:10*ih,\
+zoompan=z='min(zoom+0.0015,1.5)':\
+fps=${infps}:d=${infps}*${dur}:\
+x='iw/zoom-(iw/zoom/2)',\
+scale=-2:${imgheight}" \
+
+### zoom out positions
+
+# zoom out top left
+zo_top_left="scale=-2:2*ih,\
+zoompan=z='if(lte(zoom,1.0),1.5,max(1.001,zoom-0.0015))':\
+fps=${infps}:d=${infps}*${dur},\
+scale=-2:${imgheight}" \
+
+zo_center="scale=-2:2*ih,\
+zoompan=z='if(lte(zoom,1.0),1.5,max(1.001,zoom-0.0015))':\
+fps=${infps}:d=${infps}*${dur}:\
+x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)',\
+scale=-2:${imgheight}" \
+
+# zoom out top center
+zo_top_center="scale=-2:2*ih,\
+zoompan=z='if(lte(zoom,1.0),1.5,max(1.001,zoom-0.0015))':\
+fps=${infps}:d=${infps}*${dur}:\
+x='iw/2-(iw/zoom/2)',\
+scale=-2:${imgheight}" \
+
+# zoom out top right
+zo_top_right="scale=-2:2*ih,\
+zoompan=z='if(lte(zoom,1.0),1.5,max(1.001,zoom-0.0015))':\
+fps=${infps}:d=${infps}*${dur}:\
+x='iw/zoom-(iw/zoom/2)',\
+scale=-2:${imgheight}" \
+
+# zoom out bottom left
+zo_bottom_left="scale=-2:2*ih,\
+zoompan=z='if(lte(zoom,1.0),1.5,max(1.001,zoom-0.0015))':\
+fps=${infps}:d=${infps}*${dur}:\
+y='ih-ih/zoom',\
+scale=-2:${imgheight}" \
+
+# zoom out bottom right
+zo_bottom_right="scale=-2:2*ih,\
+zoompan=z='if(lte(zoom,1.0),1.5,max(1.001,zoom-0.0015))':\
+fps=${infps}:d=${infps}*${dur}:\
+x='iw-iw/zoom':\
+y='ih-ih/zoom',\
+scale=-2:${imgheight}" \
+
+# outfile file recording destination
+outfile_default="${infile_name}-zoompan-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+
+# check the files mime type is a image
+case "${filetype}" in
+    ${png_mime}|${jpg_mime});;
+    *) { echo "${infile} ${NOT_MEDIA_FILE_ERR}" && usage; };;
+esac
+
+### zoom function
+zoom_func () {
+  ffmpeg \
+  -hide_banner \
+  -stats -v panic \
+  -r 30 \
+  -i "${infile}" \
+  -filter_complex \
+  "${1}" \
+  -y -shortest \
+  -c:v libx264 -crf 18 -profile:v high \
+  -r 30 -pix_fmt yuv420p \
+  -movflags +faststart -f mp4 \
+  "${outfile:=${outfile_default}}"
+}
+
+# check zoom and position
+case "${zoom}" in
+    in)
+	case "${position}" in
+          tl) zoom_func "${zi_top_left}" "${infile}";;
+          tc) zoom_func "${zi_top_center}" "${infile}";;
+          c) zoom_func "${zi_center}" "${infile}";;
+          tr) zoom_func "${zi_top_right}" "${infile}";;
+	  *) help;;
+	esac
+	;;
+    out)
+	case "${position}" in
+          tl) zoom_func "${zo_top_left}" "${infile}";;
+          tc) zoom_func "${zo_top_center}" "${infile}";;
+          c) zoom_func "${zo_center}" "${infile}";;
+          tr) zoom_func "${zo_top_right}" "${infile}";;
+          bl) zoom_func "${zo_bottom_left}" "${infile}";;
+          br) zoom_func "${zo_bottom_right}" "${infile}";;
+	  *) help;;
+	esac
+	;;
+    *) usage "${infile} ${NOT_MEDIA_FILE_ERR}";;
+esac

@@ -1,0 +1,78 @@
+#!/bin/sh
+
+# ffmpeg loudnorm
+
+# script usage
+usage()
+{
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+# ffmpeg loudnorm
+
+$(basename "$0") -i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)"
+exit 2
+}
+
+# error messages
+NOTFILE_ERR='not a file'
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+NOT_MEDIA_FILE_ERR='is not a media file'
+
+# if script is run arguments pass and check the options with getopts,
+# else display script usage and exit
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+# getopts check and validate options
+while getopts ':i:h' opt
+do
+  case ${opt} in
+     i) infile="${OPTARG}"
+	[ -f "${infile}" ] || usage "${infile} ${NOTFILE_ERR}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+# audio file extension
+audio_ext="${infile##*.}"
+
+# file command check input file mime type
+filetype="$(file --mime-type -b "${infile}")"
+
+# audio and video mimetypes
+mov_mime='video/quicktime'
+mkv_mime='video/x-matroska'
+mp4_mime='video/mp4'
+m4v_mime='video/x-m4v'
+wav_mime='audio/x-wav'
+audio_mime='audio/mpeg'
+aac_mime='audio/x-hx-aac-adts'
+m4a_mime='audio/mp4'
+
+# the file command wrongly identifies .m4a audio as a video file
+# so we check if the file extension is .m4a and set the mime type to audio/mp4
+if [ "${audio_ext}" = 'm4a' ]; then
+    filetype="${m4a_mime}"
+fi
+
+# ffmpeg loudnorm get stats from file
+normalize () {
+    ffmpeg \
+    -hide_banner \
+    -i "${infile}" \
+    -af "loudnorm=I=-16:dual_mono=true:TP=-1.5:LRA=11:print_format=summary" \
+    -f null -
+}
+
+# check the files mime type
+case "${filetype}" in
+    ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime}| \
+    ${wav_mime}|${audio_mime}|${aac_mime}|${m4a_mime}) normalize "${infile}";;
+    *) usage "${infile} ${NOT_MEDIA_FILE_ERR}";;
+esac

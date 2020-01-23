@@ -1,0 +1,150 @@
+#!/bin/sh
+
+# code based on:
+# https://video.stackexchange.com/questions/16352/converting-gimp-curves-files-to-photoshop-acv-for-ffmpeg/20005#20005
+
+# correct a video clip by using a gimp curve
+# converted into a ffmpeg curves filter command
+# to adjust the levels and white balance
+
+# requires a curve file created with the following script
+# https://github.com/NapoleonWils0n/curve2ffmpeg
+
+# script usage
+usage()
+{
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+echo "\
+# correct a video clip by using a gimp curve
+
+# requires a curve file created with the following script
+# https://github.com/NapoleonWils0n/curve2ffmpeg
+
+$(basename "$0") -i infile.(mp4|mkv|mov|m4v) -c curve.txt -o outfile.mp4
+-i infile.(mp4|mkv|mov|m4v)
+-c curve.txt
+-o outfile.mp4 :optional agument # if option not provided defaults to infile-name-corrected-date-time"
+exit 2
+}
+
+# error messages
+NOTFILE_ERR='not a file'
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+NOT_MEDIA_FILE_ERR='is not a media file'
+NOT_TEXT_FILE_ERR='is not a text file'
+
+# if script is run arguments pass and check the options with getopts,
+# else display script usage and exit
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+# getopts check and validate options
+while getopts ':i:c:o:h' opt
+do
+  case ${opt} in
+     i) infile="${OPTARG}"
+	[ -f "${infile}" ] || { echo "${infile} ${NOTFILE_ERR}" && usage; };;
+     c) text="${OPTARG}"
+	[ -f "${text}" ] || { echo "${text} ${NOTFILE_ERR}" && usage; };;
+     o) outfile="${OPTARG}";;
+     h) usage;;
+     \?) echo "${INVALID_OPT_ERR} ${OPTARG}" 1>&2 && usage;;
+     :) echo "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2 && usage;;
+  esac
+done
+shift $((OPTIND-1))
+
+# infile, infile name
+infile_nopath="${infile##*/}"
+infile_name="${infile_nopath%.*}"
+
+# defaults for variables
+outfile_default="${infile_name}-corrected-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+# check if the libfdk_aac codec is installed, if not fall back to the aac codec
+aac_codec="$(ffmpeg -hide_banner -stats -v panic -h encoder=libfdk_aac)"
+aac_error="Codec 'libfdk_aac' is not recognized by FFmpeg."
+aac_check="$(echo "${aac_codec}" | grep "${aac_error}")"
+
+# check ffmpeg aac codecs
+if [ -z "${aac_check}" ]; then
+   aac='libfdk_aac' # libfdk_aac codec is installed
+else
+   aac='aac' # libfdk_aac codec isnt installed, fall back to aac codec
+fi
+
+# correct video track
+correct_v () {
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -i "${infile}" \
+    -filter_complex \
+    "[0:v]${text_contents}[video]" \
+    -map "[video]" \
+    -c:v libx264 -preset fast \
+    -profile:v high \
+    -crf 18 -coder 1 \
+    -pix_fmt yuv420p \
+    -movflags +faststart \
+    -f mp4 \
+    "${outfile:=${outfile_default}}"
+}
+
+# correct video and audio tracks
+correct_va () {
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -i "${infile}" \
+    -filter_complex \
+    "[0:v]${text_contents}[video]" \
+    -map "[video]" -map 0:a \
+    -c:a "${aac}" \
+    -c:v libx264 -preset fast \
+    -profile:v high \
+    -crf 18 -coder 1 \
+    -pix_fmt yuv420p \
+    -movflags +faststart \
+    -f mp4 \
+    "${outfile:=${outfile_default}}"
+}
+
+# file command check input file mime type
+filetype="$(file --mime-type -b "${infile}")"
+textfile="$(file --mime-type -b "${text}")"
+
+# video mimetypes
+mov_mime='video/quicktime'
+mkv_mime='video/x-matroska'
+mp4_mime='video/mp4'
+m4v_mime='video/x-m4v'
+
+# text mimetype
+txt_mime='text/plain'
+
+# check the files mime type is a video
+case "${filetype}" in
+    ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime});;
+    *) usage "${infile} ${NOT_MEDIA_FILE_ERR}";;
+esac
+
+# check the text file mime type is a text
+case "${textfile}" in
+    ${txt_mime});;
+    *) usage "${textfile} ${NOT_TEXT_FILE_ERR}";;
+esac
+
+# read the contents of the curve text file and store in a variable
+text_contents="$(while IFS= read -r line; do echo "${line}"; done < "${text}")"
+
+# check if video has an audio track
+audio_check="$(ffprobe -i "${infile}" -show_streams -select_streams a -loglevel error)"
+
+# check if audio_check is null which means the video doesnt have an audio track
+if [ -z "${audio_check}" ]; then
+   correct_v "${infile}" # null value
+else
+   correct_va "${infile}" # non null value
+fi

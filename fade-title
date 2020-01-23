@@ -1,0 +1,220 @@
+#!/bin/sh
+
+# fade video, audio add title from video filename
+
+# script usage
+usage ()
+{
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+# fade video, audio add title from video filename
+
+$(basename "$0") -i infile.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -s 000 -e 000 -o outfile.mp4
+
+-i infile.(mp4|mkv|mov|m4v)
+-d (0.[0-9]|1) : from 0.1 to 0.9 or 1 :optional agument # if option not provided defaults to 0.5
+-s 000         : from 000 to 999
+-e 000         : from 000 to 999
+-o outfile.mp4 :optional agument # if option not provided defaults to infile-name-title-date-time"
+exit 2
+}
+
+# error messages
+NOTFILE_ERR='not a file'
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+NOT_MEDIA_FILE_ERR='is not a media file'
+TITLE_FADE_ERR='title end must be after title start'
+
+# if script is run arguments pass and check the options with getopts,
+# else display script usage and exit
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+# duration regex match 0.[1-9]
+dur_short='^[0]\{1\}\.[1-9]\{1\}$'
+
+# duration regex match 1
+dur_long='^[1]\{1\}$'
+
+# title start, end, duration regex
+title_start_reg='^[0-9]\{1,3\}$'
+title_end_reg='^[0-9]\{1,3\}$'
+
+# getopts check and validate options
+while getopts ':i:d:s:e:o:h' opt
+do
+  case ${opt} in
+     i) infile="${OPTARG}"
+	[ -f "${infile}" ] || usage "${infile} ${NOTFILE_ERR}";;
+     d) dur="${OPTARG}"
+	expr "${dur}" : "${dur_short}" 1>/dev/null \
+	|| expr "${dur}" : "${dur_long}" 1>/dev/null;;
+     s) title_start="${OPTARG}"
+        expr "${title_start}" : "${title_start_reg}" 1>/dev/null;;
+     e) title_end="${OPTARG}"
+        expr "${title_end}" : "${title_end_reg}" 1>/dev/null;;
+     o) outfile="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+# infile, infile name and file extension
+infile_nopath="${infile##*/}"
+infile_name="${infile_nopath%.*}"
+
+# file command check input file mime type
+filetype="$(file --mime-type -b "${infile}")"
+
+# video mimetypes
+mov_mime='video/quicktime'
+mkv_mime='video/x-matroska'
+mp4_mime='video/mp4'
+m4v_mime='video/x-m4v'
+
+# check the files mime type
+case "${filetype}" in
+    ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime});;
+    *) usage "${infile} ${NOT_MEDIA_FILE_ERR}";;
+esac
+
+# defaults for variables if not defined
+outfile_default="${infile_name}-title-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+duration_default="0.5"
+
+# print analyzing file
+echo '+ Analyzing file with ffmpeg'
+
+# ffmpeg loudnorm get stats from file
+normalize=$(ffmpeg \
+-hide_banner \
+-i "${infile}" \
+-af "loudnorm=I=-16:dual_mono=true:TP=-1.5:LRA=11:print_format=summary" \
+-f null - 2>&1 | tail -n 12)
+
+# read the output of normalize line by line and store in variables
+for line in "${normalize}"; do
+    measured_I=$(echo "${line}" | awk -F' ' '/Input Integrated:/ {print $3}')
+    measured_TP=$(echo "${line}" | awk -F' ' '/Input True Peak:/ {print $4}')
+    measured_LRA=$(echo "${line}" | awk -F' ' '/Input LRA:/ {print $3}')
+    measured_thresh=$(echo "${line}" | awk -F' ' '/Input Threshold:/ {print $3}')
+    offset=$(echo "${line}" | awk -F' ' '/Target Offset:/ {print $3}')
+done
+
+# video duration and video offset minus 1 second for fade out
+video_dur=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${infile}" | cut -d\. -f1)
+vid_offset=$(echo "${video_dur}-${dur:=${duration_default}}" | bc -l)
+
+# video height
+video_size=$(ffprobe -v error -show_entries stream=height -of default=noprint_wrappers=1:nokey=1 "${infile}")
+
+# video title from filename
+title="${infile_name}"
+
+# video title variables
+font="OpenSans-Regular.ttf"
+font_color="white"
+boxcolor="black@0.4"
+
+# video title fade
+DS="${title_start}" # display start
+DE="${title_end}" # display end, number of seconds after start
+FID="${dur:=${duration_default}}" # fade in duration
+FOD="${dur:=${duration_default}}" # fade out duration
+
+# check title end is a number larger than title start
+if [ "${DE}" -le "${DS}" ]; then
+    echo "${TITLE_FADE_ERR}" && usage
+fi
+
+# calculate drawbox and drawtext size based on video height
+case "${video_size}" in
+    1080) # 1080 height
+    drawbox_height=$(echo "${video_size}/13.4" | bc)
+    drawtext_size=$(echo "${drawbox_height}/2" | bc)
+    ;;
+    720) # 720 height
+    drawbox_height=$(echo "${video_size}/9" | bc)
+    drawtext_size=$(echo "${drawbox_height}/2" | bc)
+    ;;
+    *) # all other heights
+    drawbox_height=$(echo "${video_size}/9" | bc)
+    drawtext_size=$(echo "${drawbox_height}/2" | bc)
+    ;;
+esac
+
+# drawbox, drawtext size
+boxheight="${drawbox_height}"
+font_size="${drawtext_size}"
+
+# check if the libfdk_aac codec is installed, if not fall back to the aac codec
+aac_codec="$(ffmpeg -hide_banner -stats -v panic -h encoder=libfdk_aac)"
+aac_error="Codec 'libfdk_aac' is not recognized by FFmpeg."
+aac_check="$(echo "${aac_codec}" | grep "${aac_error}")"
+
+# check ffmpeg aac codecs
+if [ -z "${aac_check}" ]; then
+   aac='libfdk_aac' # libfdk_aac codec is installed
+else
+   aac='aac' # libfdk_aac codec isnt installed, fall back to aac codec
+fi
+
+# video function
+video () {
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -i "${infile}" \
+    -filter_complex \
+    "[0:a] afade=t=in:st=0:d=${dur:=${duration_default}},afade=t=out:st='${vid_offset}':d=${dur:=${duration_default}},
+    compand=attacks=0:points=-70/-90|-24/-12|0/-6|20/-6,
+    highpass=f=60,
+    lowpass=f=13700,
+    afftdn=nt=w,
+    adeclick,
+    deesser,
+    loudnorm=I=-16:
+    dual_mono=true:
+    TP=-1.5:
+    LRA=11:
+    measured_I=${measured_I}:
+    measured_LRA=${measured_LRA}:
+    measured_TP=${measured_TP}:
+    measured_thresh=${measured_thresh}:
+    offset=${offset}:
+    linear=true:
+    print_format=summary [audio];
+    [0:v] fade=t=in:st=0:d=${dur:=${duration_default}},fade=t=out:st='${vid_offset}':d=${dur:=${duration_default}}, \
+    format=yuv444p, 
+    drawbox=enable='between(t,${DS},${DE})':
+    y=(ih-h/PHI)-(${boxheight}):
+    color=${boxcolor}:
+    width=iw:height=${boxheight}:t=fill,
+    drawtext=fontfile=${font}:
+    text=${title}: 
+    fontcolor=${font_color}:fontsize=${font_size}:
+    x=20:
+    y=h-(${boxheight})-(${boxheight}/2)+th/4:
+    :fontcolor_expr=fdfdfd%{eif\\\\: clip(255*(1*between(t\\, $DS + $FID\\, $DE - $FOD) + ((t - $DS)/$FID)*between(t\\, $DS\\, $DS + $FID) + (-(t - $DE)/$FOD)*between(t\\, $DE - $FOD\\, $DE) )\\, 0\\, 255) \\\\: x\\\\: 2 }, \
+     format=yuv420p[video]" \
+    -map "[video]" -map "[audio]" \
+    -c:a "${aac}" -ar 44100 \
+    -c:v libx264 -preset fast \
+    -profile:v high \
+    -crf 18 -coder 1 \
+    -pix_fmt yuv420p \
+    -movflags +faststart \
+    -f mp4 \
+    "${outfile:=${outfile_default}}"
+}
+
+# check the files mime type
+case "${filetype}" in
+    ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime}) video "${infile}";;
+    *) usage "${infile} ${NOT_MEDIA_FILE_ERR}";;
+esac

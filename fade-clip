@@ -1,0 +1,139 @@
+#!/bin/sh
+
+# fade video and audio in and out
+
+# script usage
+usage()
+{
+echo "\
+# fade video and audio in and out
+
+$(basename "$0") -i infile.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -o outfile.mp4
+-i infile.(mp4|mkv|mov|m4v)
+-d (0.[0-9]|1) :optional agument # if option not provided defaults to 0.5
+-o outfile.mp4 :optional agument # if option not provided defaults to infile-name-fade-date-time"
+exit 2
+}
+
+# error messages
+NOTFILE_ERR='not a file'
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+NOT_MEDIA_FILE_ERR='is not a media file'
+
+# if script is run arguments pass and check the options with getopts,
+# else display script usage and exit
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+# duration regex match 0.[1-9]
+dur_short='^[0]\{1\}\.[1-9]\{1\}$'
+# duration regex match 1
+dur_long='^[1]\{1\}$'
+
+# getopts check and validate options
+while getopts ':i:d:o:h' opt
+do
+  case ${opt} in
+     i) infile="${OPTARG}"
+	[ -f "${infile}" ] || usage "${infile} ${NOTFILE_ERR}";;
+     d) dur="${OPTARG}"
+        expr "${dur}" : "${dur_short}" 1>/dev/null \
+        || expr "${dur}" : "${dur_long}" 1>/dev/null;;
+     o) outfile="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+# infile, infile name and extension
+infile_nopath="${infile##*/}"
+infile_name="${infile_nopath%.*}"
+
+# defaults for variables if not defined
+outfile_default="${infile_name}-fade-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+duration_default="0.5"
+
+# check if the libfdk_aac codec is installed, if not fall back to the aac codec
+aac_codec="$(ffmpeg -hide_banner -stats -v panic -h encoder=libfdk_aac)"
+aac_error="Codec 'libfdk_aac' is not recognized by FFmpeg."
+aac_check="$(echo "${aac_codec}" | grep "${aac_error}")"
+
+# check ffmpeg aac codecs
+if [ -z "${aac_check}" ]; then
+   aac='libfdk_aac' # libfdk_aac codec is installed
+else
+   aac='aac' # libfdk_aac codec isnt installed, fall back to aac codec
+fi
+
+# ffmpeg fade video track
+fade_v () {
+    echo '+ Getting video duration' && \
+    video_dur=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${infile}" | cut -d\. -f1)
+    vid_offset=$(echo "${video_dur}-${dur:=${duration_default}}" | bc -l)
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -i "${infile}" \
+    -filter_complex \
+    " [0:v] fade=t=in:st=0:d=${dur:=${duration_default}},fade=t=out:st='${vid_offset}':d=${dur:=${duration_default}}[fv] " \
+    -map "[fv]" \
+    -c:v libx264 -preset fast \
+    -profile:v high \
+    -crf 18 -coder 1 \
+    -pix_fmt yuv420p \
+    -movflags +faststart \
+    -f mp4 \
+    "${outfile:=${outfile_default}}"
+}
+
+# fade video and audio tracks
+fade_va () {
+    echo '+ Getting video duration' && \
+    video_dur=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${infile}" | cut -d\. -f1)
+    vid_offset=$(echo "${video_dur}-${dur:=${duration_default}}" | bc -l)
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -i "${infile}" \
+    -filter_complex \
+    " [0:a] afade=t=in:st=0:d=${dur:=${duration_default}},afade=t=out:st='${vid_offset}':d=${dur:=${duration_default}}[fa]; 
+      [0:v] fade=t=in:st=0:d=${dur:=${duration_default}},fade=t=out:st='${vid_offset}':d=${dur:=${duration_default}}[fv]
+    " \
+    -map "[fv]" -map "[fa]" \
+    -c:a "${aac}" \
+    -c:v libx264 -preset fast \
+    -profile:v high \
+    -crf 18 -coder 1 \
+    -pix_fmt yuv420p \
+    -movflags +faststart \
+    -f mp4 \
+    "${outfile:=${outfile_default}}"
+}
+
+# file command check input file mime type
+filetype="$(file --mime-type -b "${infile}")"
+
+# video mimetypes
+mov_mime='video/quicktime'
+mkv_mime='video/x-matroska'
+mp4_mime='video/mp4'
+m4v_mime='video/x-m4v'
+
+# check the files mime type is a video
+case "${filetype}" in
+    ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime});;
+    *) usage "${infile} ${NOT_MEDIA_FILE_ERR}";;
+esac
+
+# check if video has an audio track
+audio_check="$(ffprobe -i "${infile}" -show_streams -select_streams a -loglevel error)"
+
+# check if audio_check is null which means the video doesnt have an audio track
+if [ -z "${audio_check}" ]; then
+   fade_v "${infile}" # null value
+else
+   fade_va "${infile}" # non null value
+fi
