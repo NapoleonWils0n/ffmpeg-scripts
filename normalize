@@ -112,6 +112,7 @@ audio () {
     linear=true:
     print_format=summary [audio]" \
     -map "[audio]" \
+    -ar 44100 \
     "${outfile:=${outfile_default}}"
 }
 
@@ -135,6 +136,7 @@ video () {
     linear=true:
     print_format=summary [audio]" \
     -map 0:v -map "[audio]" \
+    -ar 44100 \
     -pix_fmt yuv420p \
     -movflags +faststart \
     -f mp4 \
