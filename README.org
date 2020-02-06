@@ -623,6 +623,8 @@ overlay-clip -i infile.(mp4|mkv|mov|m4v) -v infile.(mp4|mkv|mov|m4v) -p [0-999] 
 
 add subtitles to a video file
 
+[[https://youtu.be/p6BHhO5VfEg][subtitle-add youtube]]
+
 + script usage
 
 #+BEGIN_SRC sh
