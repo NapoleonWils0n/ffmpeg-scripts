@@ -358,6 +358,8 @@ ebu-meter -i infile.(mp4|mov|mkv|m4v|m4a|aac|wav|mp3)
 
 extract a frame from a video and save as a png image
 
+[[https://youtu.be/cOk0i384crE][extract-frame youtube]]
+
 + script usage
 
 #+BEGIN_SRC sh
