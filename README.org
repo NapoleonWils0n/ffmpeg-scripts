@@ -740,7 +740,7 @@ convert a image to video and apply the ken burns effect to the clip
 + script usage
 
 #+BEGIN_SRC sh
-zoompan -i infile.(png|jpg|jpeg) -d (000) -z (in|out) -p (tl|c|tc|tr|bl|br) -o outfile.mp4"
+zoompan -i infile.(png|jpg|jpeg) -d (000) -z (in|out) -p (tl|c|tc|tr|bl|br) -o outfile.mp4
 #+END_SRC
 
 #+BEGIN_EXAMPLE
