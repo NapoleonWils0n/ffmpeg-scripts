@@ -601,6 +601,8 @@ find -s . -type f -name "*.mp4" -exec sh -c \
 
 overlay one video clip on top of another video clip
 
+[[https://youtu.be/tfzKo9jy2sI][overay-clip youtube]]
+
 + script usage
 
 #+BEGIN_SRC sh
