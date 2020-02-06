@@ -697,6 +697,8 @@ find -s . -type f -name "*.mp4" -exec sh -c \
 
 create a waveform from an audio or video file and save as a png
 
+[[https://youtu.be/OBnYLVahUaA][waveform youtube]]
+
 + script usage
 
 #+BEGIN_SRC sh
