@@ -404,6 +404,8 @@ find -s . -type f -name "*.mp4" -exec sh -c \
 
 fade video and audio in and out
 
+[[https://youtu.be/ea3aCK9htsE][fade-clip youtube]]
+
 + script usage
 
 #+BEGIN_SRC sh
