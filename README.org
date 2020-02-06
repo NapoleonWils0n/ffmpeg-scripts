@@ -27,6 +27,8 @@ A collection of ffmpeg shell scripts for basic editing tasks
 
 ** scripts install
 
+[[https://youtu.be/UHshlQvdwcQ][ffmpeg scripts install youtube]]
+
 *** create a bin directory
 
 create a bin directory in your home to add the scripts to
@@ -645,6 +647,8 @@ find -s . -type f -name "*.mp4" -exec sh -c \
 :END:
 
 trim video clip
+
+[[https://youtu.be/LoKloi5N5p0][trim-clip youtube]]
 
 + script usage
 
