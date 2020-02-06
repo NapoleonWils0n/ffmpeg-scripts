@@ -448,6 +448,8 @@ find -s . -type f -name "*.mp4" -exec sh -c \
 
 fade video and audio in and out and normalize
 
+[[https://youtu.be/jufGDRAn8Ec][fade-normalize youtube]]
+
 + script usage
 
 #+BEGIN_SRC sh
