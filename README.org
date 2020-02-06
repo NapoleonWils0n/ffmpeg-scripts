@@ -507,6 +507,8 @@ find -s . -type f -name "*.mp4" -exec sh -c \
 
 convert an image into a video file
 
+[[https://youtu.be/x_dVVvhKbJE][img2video youtube]]
+
 + script usage
 
 #+BEGIN_SRC sh
