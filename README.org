@@ -747,6 +747,8 @@ find -s . -type f -name "*.mp4" -exec sh -c \
 cross fade 2 video clips with either a 1 or 2 second cross fade
 the videos must have the same codecs, size and frame rate
 
+[[https://youtu.be/0HnUNVreMVk][xfade-clips youtube]]
+
 + script usage
 
 #+BEGIN_SRC sh
