@@ -345,6 +345,8 @@ find -s . -type f -name "*.mp4" -exec sh -c \
 
 ffplay ebu meter
 
+[[https://youtu.be/8qrT9TfKwUI][ebu-meter youtube]]
+
 + script usage
 
 #+BEGIN_SRC sh
