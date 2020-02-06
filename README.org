@@ -466,7 +466,7 @@ find -s . -type f -name "*.mp4" -exec sh -c \
 :END:
 
 fade video and audio in and out, 
-normalize and create vide title from filename
+normalize the audio and create video a lower third title from the filename
 
 + script usage
 
