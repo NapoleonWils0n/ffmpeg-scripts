@@ -556,6 +556,8 @@ loudnorm -i infile.(mkv|mp4|mov|m4v|m4a|aac|wav|mp3)
 
 normalize audio levels
 
+[[https://youtu.be/q_UjwuJmya4][normalize youtube]]
+
 + script usage
 
 #+BEGIN_SRC sh
