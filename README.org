@@ -541,6 +541,8 @@ find -s . -type f -name "*.png" -exec sh -c \
 
 ffmpeg loudnorm 
 
+[[https://youtu.be/8fQpbBCVCRc][loudnorm youtube]]
+
 + script usage
 
 #+BEGIN_SRC sh
