@@ -172,6 +172,8 @@ and adds a silent audio track to match the duration of the video and creates a n
 If the video has a video and audio track the script only copies the video track,
 and adds a silent audio track to match the duration of the video and creates a new video clip.
 
+[[https://youtu.be/OB8RvyenCLY][audio-silence youtube]]
+
 + script usage
 
 #+BEGIN_SRC sh
