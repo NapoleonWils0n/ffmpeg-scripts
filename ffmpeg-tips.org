@@ -8,8 +8,7 @@
 Extracting audio from a video file
 
 #+BEGIN_SRC sh
-ffmpeg -i infile.mp4 \
--f wav outfile.wav
+ffmpeg -i infile.mp4 -vn -c:a copy outfile.m4a
 #+END_SRC
 
 *** Batch extracting audio from video 
@@ -17,8 +16,28 @@ ffmpeg -i infile.mp4 \
 Batch extract audio from video with find
 
 #+BEGIN_SRC sh
-find . -type f -name "*.[mp4kv]*" -exec sh -c \
-'ffmpeg -i "$0" -f wav "${0%.*}.wav"' "{}" \;
+find -s . -type f -name "*.mp4" -exec sh -c \
+'ffmpeg -i "${0}" -vn -c:a copy "${0%.*}.m4a"' \
+"{}" \;
+#+END_SRC
+
+** Extract video tracks
+*** extract video with ffmpeg
+
+ffmpeg extract video
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.mp4 -an -c:v copy outfile.mp4
+#+END_SRC
+
+*** batch extract video with ffmpeg
+
+ffmpeg batch extract video
+
+#+BEGIN_SRC sh
+find -s . -type f -name "*.mp4" -exec sh -c \
+'ffmpeg -i "${0}" -an -c:v copy "${0%.*}-extracted.mp4"' \
+"{}" \;
 #+END_SRC
 
 ** Trim video
