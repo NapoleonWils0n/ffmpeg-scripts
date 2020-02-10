@@ -11,7 +11,7 @@ usage()
 echo "\
 # extract a frame froma a video as a png file
 
-$(basename "$0") -i infile.(mp4|mov|mkv|m4v) -s 00:00:00 -o outfile.png
+$(basename "$0") -i infile.(mp4|mov|mkv|m4v|webm) -s 00:00:00 -o outfile.png
 -i infile.(mp4|mov|mkv|m4v)
 -s 00:00:00    :optional argument # if option not provided defaults to 00:00:00
 -o outfile.png :optional agument # if option not provided defaults to infile-name-frame-date-time"
@@ -60,6 +60,7 @@ mov_mime='video/quicktime'
 mkv_mime='video/x-matroska'
 mp4_mime='video/mp4'
 m4v_mime='video/x-m4v'
+webm_mime='video/webm'
 
 # outfile file recording destination
 outfile_default="${infile_name}-frame-$(date +"%Y-%m-%d-%H-%M-%S").png"
@@ -79,6 +80,6 @@ extract () {
 
 # check the files mime type
 case "${filetype}" in
-    ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime}) extract "${infile}";;
+    ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime}|${webm_mime}) extract "${infile}";;
     *) usage "${infile} ${NOT_MEDIA_FILE_ERR}";;
 esac

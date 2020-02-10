@@ -369,11 +369,11 @@ extract a frame from a video and save as a png image
 + script usage
 
 #+BEGIN_SRC sh
-extract-frame -i infile.(mp4|mov|mkv|m4v) -s 00:00:00 -o outfile.mp4
+extract-frame -i infile.(mp4|mov|mkv|m4v|webm) -s 00:00:00 -o outfile.mp4
 #+END_SRC
 
 #+BEGIN_EXAMPLE
--i infile.(mp4|mov|mkv|m4v)
+-i infile.(mp4|mov|mkv|m4v|webm)
 -s 00:00:00    : optional argument # default is 00:00:00
 -o outfile.png : optional agument # default is infile-name-frame-date-time
 #+END_EXAMPLE
