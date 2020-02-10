@@ -718,11 +718,11 @@ create a waveform from an audio or video file and save as a png
 + script usage
 
 #+BEGIN_SRC sh
-waveform -i infile.(mp4|mkv|mov|m4v|wav|aac|m4a|mp3) -o oufile.png
+waveform -i infile.(mp4|mkv|mov|m4v|webm|wav|aac|m4a|mp3) -o oufile.png
 #+END_SRC
 
 #+BEGIN_EXAMPLE
--i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
+-i infile.(mp4|mkv|mov|m4v|webm|aac|m4a|wav|mp3)
 -o outfile.png : optional agument # default is infile-name-waveform-date-time
 #+END_EXAMPLE
 
