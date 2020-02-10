@@ -8,7 +8,7 @@ usage()
 echo "\
 # ffplay ebu meter
 
-$(basename "$0") -i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)"
+$(basename "$0") -i infile.(mp4|mkv|mov|m4v|webm|aac|m4a|wav|mp3)"
 exit 2
 }
 
@@ -47,6 +47,7 @@ mov_mime='video/quicktime'
 mkv_mime='video/x-matroska'
 mp4_mime='video/mp4'
 m4v_mime='video/x-m4v'
+webm_mime='video/webm'
 wav_mime='audio/x-wav'
 audio_mime='audio/mpeg'
 aac_mime='audio/x-hx-aac-adts'
@@ -72,7 +73,7 @@ ebu () {
 
 # check the files mime type
 case "${filetype}" in
-    ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime}| \
+    ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime}|${webm_mime}| \
     ${wav_mime}|${audio_mime}|${aac_mime}|${m4a_mime}) ebu "${infile}";;
     *) usage "${infile} ${NOT_MEDIA_FILE_ERR}";;
 esac
