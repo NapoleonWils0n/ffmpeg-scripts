@@ -1,12 +1,12 @@
 #!/bin/sh
 
-# tile screenshots from a video
+# tile thumbnails from a video
 
 # script usage
 usage()
 {
 echo "\
-# tile screenshot from a video into an image
+# tile thumbnails from a video into an image
 
 $(basename "$0") -i infile.(mp4|mkv|mov|m4v|webm) -s 00:00:00 -w 000 -t 0x0 -p 00 -m 00 -c color -o outfile.png
 -i infile.(mp4|mkv|mov|m4v|webm)
