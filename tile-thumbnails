@@ -10,12 +10,12 @@ echo "\
 
 $(basename "$0") -i infile.(mp4|mkv|mov|m4v|webm) -s 00:00:00 -w 000 -t 0x0 -p 00 -m 00 -c color -o outfile.png
 -i infile.(mp4|mkv|mov|m4v|webm)
--s seek into the video file
--w thumbnail width
--t tile layout format width x height : 4x3
--p padding between images
--m margin
--c color = https://ffmpeg.org/ffmpeg-utils.html#color-syntax
+-s seek into the video file                : default 00:00:05
+-w thumbnail width                         : 160
+-t tile layout format width x height : 4x3 : default 4x3
+-p padding between images                  : default 7
+-m margin                                  : default 2
+-c color = https://ffmpeg.org/ffmpeg-utils.html#color-syntax : default black
 -o outfile.png :optional agument 
 # if option not provided defaults to infile-name-tile-date-time.png"
 exit 2
