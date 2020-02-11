@@ -20,6 +20,7 @@ A collection of ffmpeg shell scripts for basic editing tasks
 + [[#overlay-clip][overlay-clip]]
 + [[#sub2transcript][subs2transcript]]
 + [[#subtitle-add][subtitle-add]]
++ [[#tile-thumbnails][tile-thumbnails]]
 + [[#trim-clip][trim-clip]]
 + [[#waveform][waveform]]
 + [[#xfade-clips][xfade-clips]]
@@ -664,6 +665,44 @@ file2.mp4 with file2.srt
 #+BEGIN_SRC sh
 find -s . -type f -name "*.mp4" -exec sh -c \
 'subtitle-add -i "${0}" -s "${0%.*}.srt"' \
+"{}" \;
+#+END_SRC
+
+** tile-thumbnails
+:PROPERTIES:
+:CUSTOM_ID: tile-thumbnails
+:END:
+
+create thumbnails froma a video and tile into an image
+
+[[https://ffmpeg.org/ffmpeg-utils.html#color-syntax][ffmpeg colour syntax]]
+
++ script usage
+
+#+BEGIN_SRC sh
+tile-thumbnails -i infile.(mp4|mkv|mov|m4v|webm) -s 00:00:00 -w 000 -t 0x0 -p 00 -m 00 -c color -o outfile.png
+#+END_SRC
+
+#+BEGIN_EXAMPLE
+tile-thumbnails -i infile.(mp4|mkv|mov|m4v|webm) -s 00:00:00 -w 000 -t 0x0 -p 00 -m 00 -c color -o outfile.png
+-i infile.(mp4|mkv|mov|m4v|webm)
+-s seek into the video file                : default 00:00:05
+-w thumbnail width                         : 160
+-t tile layout format width x height : 4x3 : default 4x3
+-p padding between images                  : default 7
+-m margin                                  : default 2
+-c color = https://ffmpeg.org/ffmpeg-utils.html#color-syntax : default black
+-o outfile.png :optional agument 
+# if option not provided defaults to infile-name-tile-date-time.png
+#+END_EXAMPLE
+
+*** tile-thumbnails batch process
+
+batch process videos and create thumbnails from the videos and tile into an image
+
+#+BEGIN_SRC sh
+find -s . -type f -name "*.mp4" -exec sh -c \
+'tile-thumbails -i "${0}" -s 00:00:10 -w 200 -t 4x4 -p 7 -m 2 -c white' \
 "{}" \;
 #+END_SRC
 
