@@ -40,6 +40,74 @@ find -s . -type f -name "*.mp4" -exec sh -c \
 "{}" \;
 #+END_SRC
 
+** change framerate with ffmpeg
+
+change a videos framerate to 30fps
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.mp4 -filter:v fps=fps=30 outfile.mp4
+#+END_SRC
+
+** change framereate batch process
+
+change frame batch process to 30fps
+
+#+BEGIN_SRC sh
+find -s . -type f -name "*.mp4" -exec sh -c \
+'ffmpeg -i "${0}" -filter:v fps=fps=30 "${0%.*}.mp4"' \
+"{}" \;
+#+END_SRC
+
+** convert stereo to mono
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.mp4 -ac 1 outfile.mp4
+#+END_SRC
+
+** convert stereo to mono batch process
+
+change frame batch process to 30fps
+
+#+BEGIN_SRC sh
+find -s . -type f -name "*.mp4" -exec sh -c \
+'ffmpeg -i "${0}" -filter:v fps=fps=30 "${0%.*}.mp4"' \
+"{}" \;
+#+END_SRC
+
+** change audio rate
+
+change audio rate to 44100
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.mp4 -ar 44100 outfile.mp4
+#+END_SRC
+** change audio rate batch process
+
+change audio rate to 44100 batch process
+
+#+BEGIN_SRC sh
+find -s . -type f -name "*.mp4" -exec sh -c \
+'ffmpeg -i "${0}" -ar 44100 "${0%.*}.mp4"' \
+"{}" \;
+#+END_SRC
+
+** scale and pad video to 1080
+
+scale and pad a video to 1080
+
+#+BEGIN_SRC sh
+ffmpeg -i fps.mp4 -vf "scale=-1:1080,pad=1920:ih:(ow-iw)/2" outfile.mp4
+#+END_SRC
+
+** scale and pad video to 1080 batch process
+
+scale and pad a video to 1080 batch process
+
+#+BEGIN_SRC sh
+find -s . -type f -name "*.mp4" -exec sh -c \
+'ffmpeg -i "${0}" -vf "scale=-1:1080,pad=1920:ih:(ow-iw)/2" "${0%.*}.mp4"' \
+"{}" \;
+#+END_SRC
 ** Trim video
 
 Trim a video clip with a new start and end point
