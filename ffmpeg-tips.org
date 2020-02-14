@@ -170,6 +170,12 @@ create a list of all the mp4s in the current directory
 printf "file '%s'\n" *.mp4 > list.txt
 #+END_SRC
 
+use ffplay to play the list of videos in the text file
+
+#+BEGIN_SRC sh
+ffmpeg -f concat -i list.txt -c copy outfile.mp4
+#+END_SRC
+
 use ffmpeg to concat the video file in the text file
 
 #+BEGIN_SRC sh
