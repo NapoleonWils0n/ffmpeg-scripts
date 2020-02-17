@@ -683,16 +683,22 @@ create thumbnails froma a video and tile into an image
 
 [[https://ffmpeg.org/ffmpeg-utils.html#color-syntax][ffmpeg colour syntax]]
 
+[[https://trac.ffmpeg.org/wiki/Seeking][ffmpeg wiki seeking]]
+
+Note that you can use two different time unit formats: sexagesimal (HOURS:MM:SS.MILLISECONDS, as in 01:23:45.678), or in seconds.
+If a fraction is used, such as 02:30.05, this is interpreted as "5 100ths of a second", not as frame 5. 
+For instance, 02:30.5 would be 2 minutes, 30 seconds, and a half a second, which would be the same as using 150.5 in seconds. 
+
 + script usage
 
 #+BEGIN_SRC sh
 tile-thumbnails -i infile.(mp4|mkv|mov|m4v|webm) \
--s 00:00:00 -w 000 -t 0x0 -p 00 -m 00 -c color -o outfile.png
+-s 00:00:00.000 -w 000 -t 0x0 -p 00 -m 00 -c color -o outfile.png
 #+END_SRC
 
 #+BEGIN_EXAMPLE
 tile-thumbnails -i infile.(mp4|mkv|mov|m4v|webm) \
--s 00:00:00 -w 000 -t 0x0 -p 00 -m 00 -c color -o outfile.png
+-s 00:00:00.000 -w 000 -t 0x0 -p 00 -m 00 -c color -o outfile.png
 
 -i infile.(mp4|mkv|mov|m4v|webm)
 -s seek into the video file                : default 00:00:05
