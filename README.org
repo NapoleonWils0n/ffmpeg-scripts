@@ -681,6 +681,8 @@ find -s . -type f -name "*.mp4" -exec sh -c \
 
 create thumbnails froma a video and tile into an image
 
+[[https://www.youtube.com/watch?v=gFFvKU9nvZE][tile-thumbnails youtube]]
+
 [[https://ffmpeg.org/ffmpeg-utils.html#color-syntax][ffmpeg colour syntax]]
 
 [[https://trac.ffmpeg.org/wiki/Seeking][ffmpeg wiki seeking]]
