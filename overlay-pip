@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# overlay one video clip on top of another video clip
+# create a picture in picture
 
 # script usage
 usage()
@@ -9,7 +9,7 @@ usage()
 [ -z "${1}" ] || echo "! ${1}"
 # display help
 echo "\
-# overlay one video clip on top of another video clip
+# create a picture in picture
 
 $(basename "$0") -i infile.(mp4|mkv|mov|m4v) -v infile.(mp4|mkv|mov|m4v) -p [0-999] 
 -m [00] -x (tl|tr|bl|br) -w [000] -f (0.1-9|1) -o outfile.mp4
