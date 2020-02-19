@@ -18,6 +18,7 @@ A collection of ffmpeg shell scripts for basic editing tasks
 + [[#loudnorm][loudnorm]]
 + [[#normalize][normalize]]
 + [[#overlay-clip][overlay-clip]]
++ [[#overlay-pip][overlay-pip]]
 + [[#sub2transcript][subs2transcript]]
 + [[#subtitle-add][subtitle-add]]
 + [[#tile-thumbnails][tile-thumbnails]]
