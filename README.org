@@ -637,7 +637,7 @@ create a picture in picture
 
 #+BEGIN_SRC sh
 overlay-pip -i infile.(mp4|mkv|mov|m4v) -v infile.(mp4|mkv|mov|m4v) -p [0-999] 
--m [00] -x (tl|tr|bl|br) -w [000] -f (0.1-9|1) -o outfile.mp4
+-m [00] -x (tl|tr|bl|br) -w [000] -f (0.1-9|1) -b [00] -c colour -o outfile.mp4
 #+END_SRC
 
 #+BEGIN_EXAMPLE
@@ -651,7 +651,9 @@ overlay-pip -i infile.(mp4|mkv|mov|m4v) -v infile.(mp4|mkv|mov|m4v) -p [0-999]
 -x (tl|tr|bl|br)            : pip postion - defaults to tr
 -w [000]                    : width - defaults to 1/4 of vide size
 -f (0.1-9|1)                : fade from 0.1 to 1 - defaults to 0.2
--o outfile.mp4              : optional agument # if option not provided defaults to infile-name-overlay-date-time"
+-b [00]                     : border
+-c colour                   : colour
+-o outfile.mp4              : optional agument # if option not provided defaults to infile-name-pip-date-time"
 #+END_EXAMPLE
 
 ** subtitle-add

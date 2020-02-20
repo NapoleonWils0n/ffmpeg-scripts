@@ -23,7 +23,7 @@ $(basename "$0") -i infile.(mp4|mkv|mov|m4v) -v infile.(mp4|mkv|mov|m4v) -p [0-9
 -f (0.1-9|1)                : fade from 0.1 to 1 - defaults to 0.2
 -b [00]                     : border
 -c colour                   : colour
--o outfile.mp4              : optional agument # if option not provided defaults to infile-name-overlay-date-time"
+-o outfile.mp4              : optional agument # if option not provided defaults to infile-name-pip-date-time"
 exit 2
 }
 
@@ -78,7 +78,8 @@ do
         expr "${fade}" : "${dur_short}" 1>/dev/null \
         || expr "${fade}" : "${dur_long}" 1>/dev/null;;
      c) colour="${OPTARG}";;
-     b) border="${OPTARG}";;
+     b) border="${OPTARG}"
+        expr "${border}" : "${border_regex}" 1>/dev/null || usage;;
      o) outfile="${OPTARG}";;
      h) usage;;
      \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
@@ -102,7 +103,7 @@ mp4_mime='video/mp4'
 m4v_mime='video/x-m4v'
 
 # defaults for variables if not defined
-outfile_default="${video_name}-overlay-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+outfile_default="${video_name}-pip-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
 
 # overlay video function
 overlay_video () {
