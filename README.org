@@ -633,6 +633,8 @@ overlay-clip -i infile.(mp4|mkv|mov|m4v) -v infile.(mp4|mkv|mov|m4v) -p [0-999] 
 
 create a picture in picture
 
+[[https://youtu.be/bufAVPT3Cvk][overlay-pip youtube]]
+
 + script usage
 
 #+BEGIN_SRC sh
