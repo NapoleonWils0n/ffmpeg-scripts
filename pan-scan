@@ -1,0 +1,115 @@
+#!/bin/sh
+
+# pan scan
+
+# script usage
+usage ()
+{
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+# pan scan image
+
+$(basename "$0") -i infile.(png|jpg|jpeg) -d (000) -p (l|r|u|d) -o outfile.mp4
+-i = infile.(png|jpg|jpeg)
+-d = duration : from 1-999
+-p = position : left, right, up, down
+-o = outfile.mp4 : optional agument # default is infile-name-pan-date-time"
+exit 2
+}
+
+# error messages
+NOTFILE_ERR='not a file'
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+NOT_MEDIA_FILE_ERR='is not a media file'
+
+# if script is run arguments pass and check the options with getopts,
+# else display script usage and exit
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+# duration regex match [1-9]
+dur_regex='^[0-9]\{1,2\}$'
+position_regex='^[a-z]\{1\}$'
+
+# getopts and check if input a file
+while getopts ':i:d:p:o:h' opt
+do
+  case ${opt} in
+     i) infile="${OPTARG}"
+	[ -f "${infile}" ] || usage "${infile} ${NOTFILE_ERR}";;
+     d) dur="${OPTARG}"
+        expr "${dur}" : "${dur_regex}" 1>/dev/null || usage "${dur} ${WRONG_ARGS_ERR}";;
+     p) position="${OPTARG}"
+        expr "${position}" : "${position_regex}" 1>/dev/null || usage "${position} ${WRONG_ARGS_ERR}";;
+     o) outfile="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+# infile, infile name and extension
+infile_nopath="${infile##*/}"
+infile_name="${infile_nopath%.*}"
+
+# file command check input file mime type
+filetype="$(file --mime-type -b "${infile}")"
+
+# image mimetypes
+png_mime='image/png'
+jpg_mime='image/jpeg'
+
+# check if tile is null
+if [ -z "${infile}" ]; then
+   : # tile variable not set : = pass
+else
+# ffprobe get image height
+   imgsize="$(ffprobe -v error -select_streams v:0 -show_entries stream=height,width -of csv=s=x:p=0  "${infile}")"
+   img_w=$(echo "${imgsize}" | awk -F'x' '{print $1}')
+   img_h=$(echo "${imgsize}" | awk -F'x' '{print $2}')
+fi
+
+# pan
+left="scale=w=-2:h=3*${img_h},crop=w=3*${img_w}/1.05:h=3*${img_h}/1.05:x=t*(in_w-out_w)/${dur},scale=w=${img_w}:h=${img_h},setsar=1" \
+right="scale=w=-2:h=3*${img_h},crop=w=3*${img_w}/1.05:h=3*${img_h}/1.05:x=(in_w-out_w)-t*(in_w-out_w)/${dur},scale=w=${img_w}:h=${img_h},setsar=1" \
+up="scale=w=-2:h=3*${img_h},crop=w=3*${img_w}/1.2:h=3*${img_h}/1.2:y=t*(in_h-out_h)/${dur},scale=w=${img_w}:h=${img_h},setsar=1" \
+down="scale=w=-2:h=3*${img_h},crop=w=3*${img_w}/1.2:h=3*${img_h}/1.2:y=(in_h-out_h)-t*(in_h-out_h)/${dur},scale=w=${img_w}:h=${img_h},setsar=1" \
+
+# outfile file recording destination
+outfile_default="${infile_name}-pan-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+
+# check the files mime type is a image
+case "${filetype}" in
+    ${png_mime}|${jpg_mime});;
+    *) { echo "${infile} ${NOT_MEDIA_FILE_ERR}" && usage; };;
+esac
+
+### zoom function
+pan_func () {
+  ffmpeg \
+  -hide_banner \
+  -stats -v panic \
+  -r 30 \
+  -y -loop 1 \
+  -i "${infile}" -ss 0 -t "${dur}" \
+  -filter_complex \
+  "${1}" \
+  -y -shortest \
+  -c:v libx264 -crf 18 -profile:v high \
+  -r 30 -pix_fmt yuv420p \
+  -movflags +faststart -f mp4 \
+  "${outfile:=${outfile_default}}"
+}
+
+# check zoom and position
+case "${position}" in
+     l) pan_func "${left}";;
+     r) pan_func "${right}" "${infile}";;
+     u) pan_func "${up}" "${infile}";;
+     d) pan_func "${down}" "${infile}";;
+     *) usage "${infile} ${NOT_MEDIA_FILE_ERR}";;
+esac
