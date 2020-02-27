@@ -46,7 +46,7 @@ do
      i) infile="${OPTARG}"
 	[ -f "${infile}" ] || usage "${infile} ${NOTFILE_ERR}";;
      s) seek="${OPTARG}"
-         expr "${seek}" : "${timecode}" 1>/dev/null || usage;; 
+         expr "${seek}" : "${timecode}" 1>/dev/null;; 
      w) scale="${OPTARG}"
          expr "${scale}" : "${scale_regex}" 1>/dev/null || usage;;
      t) tile="${OPTARG}"
