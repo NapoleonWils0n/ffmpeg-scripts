@@ -769,6 +769,21 @@ tile-thumbnails -i infile.(mp4|mkv|mov|m4v|webm) \
 # if option not provided defaults to infile-name-tile-date-time.png
 #+END_EXAMPLE
 
+If the tiled image only creates one thumbnail from the video and the rest of the image is black,
+then the issue may be the frame rate of the video
+
+you can check the videos frame rate with ffmpeg
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.mp4
+#+END_SRC
+
+if the framerate is 29.97 instead of 30 then you can use ffmpeg to change the framerate and fix the issue
+
+#+BEGIN_SRC sh
+ffmpeg -i infile.mp4 -vf fps=fps=30 outfile.mp4
+#+END_SRC
+
 *** tile-thumbnails batch process
 
 batch process videos and create thumbnails from the videos and tile into an image
