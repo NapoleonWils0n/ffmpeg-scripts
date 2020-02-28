@@ -24,6 +24,7 @@ A collection of ffmpeg shell scripts for basic editing tasks
 + [[#subtitle-add][subtitle-add]]
 + [[#tile-thumbnails][tile-thumbnails]]
 + [[#trim-clip][trim-clip]]
++ [[#vid2gif][vid2gif]]
 + [[#waveform][waveform]]
 + [[#xfade-clips][xfade-clips]]
 + [[#zoompan][zoompan]]
@@ -838,6 +839,30 @@ find -s . -type f -name "*.mp4" -exec sh -c \
 'trim-clip -s 00:00:00 -i "${0}" -t 00:00:30' \
 "{}" \;
 #+END_SRC
+
+** vid2gif
+:PROPERTIES:
+:CUSTOM_ID: vid2gif
+:END:
+
+create a gif animation from a video
+
++ script usage
+
+#+BEGIN_SRC sh
+vid2gif -s 00:00:00.000 -i infile.(mp4|mov|mkv|m4v) -t 00:00:00.000 -f [00] -w [0000] -o outfile.gif
+#+END_SRC
+
+#+BEGIN_EXAMPLE
+vid2gif -s 00:00:00.000 -i infile.(mp4|mov|mkv|m4v) -t 00:00:00.000 -f [00] -w [0000] -o outfile.gif
+-s 00:00:00.000 : start time
+-i infile.(mp4|mov|mkv|m4v)
+-t 00:00:00.000 : number of seconds after start time
+-f [00]         : framerate
+-w [0000]       : width
+-o outfile.gif  :optional agument 
+# if option not provided defaults infile-name-gif-date-time.gif
+#+END_EXAMPLE
 
 ** waveform
 :PROPERTIES:
