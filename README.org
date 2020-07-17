@@ -847,6 +847,8 @@ find -s . -type f -name "*.mp4" -exec sh -c \
 
 create a gif animation from a video
 
+[[https://www.youtube.com/watch?v=V59q5DC9y6A][vid2gif youtube]]
+
 + script usage
 
 #+BEGIN_SRC sh
