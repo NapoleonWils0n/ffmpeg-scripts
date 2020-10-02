@@ -17,9 +17,9 @@ echo "\
 # trim video or audio clip
 https://trac.ffmpeg.org/wiki/Seeking
 
-$(basename "$0") -s 00:00:00.000 -i infile.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3) -t 00:00:00.000 -o outfile.(mp4|aac|mp3|wav)
+$(basename "$0") -s 00:00:00.000 -i infile -t 00:00:00.000 -o outfile.(mp4|aac|mp3|wav)
 -s 00:00:00.000 : start time
--i infile.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3)
+-i infile.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3) or an http link
 -t 00:00:00.000 : number of seconds after start time
 -o outfile.(mp4|aac|mp3|wav) :optional agument 
 # if option not provided defaults infile-name-trimmed-date-time.(mp4|wav)"
