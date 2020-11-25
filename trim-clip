@@ -249,7 +249,7 @@ elif [ "${result}" -ne 0 ]; then
    # cannot open link with ffprobe, try and get the url with youtube-dl
    if [ -z "${file_check}" ]; then
        # get url and title
-       ytdl=$(youtube-dl -f best -e --restrict-filenames -g "${infile}")
+       ytdl=$(youtube-dl -f best -e --restrict-filenames --no-playlist -g "${infile}")
        # video title
        infile_name=$(echo "${ytdl}" | awk 'BEGIN{ RS ="" ; FS ="\n" }{print $1}')
        # video url
