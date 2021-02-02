@@ -1,0 +1,88 @@
+#!/bin/sh
+
+# ffplay ebu meter
+
+# script usage
+usage()
+{
+[ -z "${1}" ] || echo "! ${1}"
+echo "\
+# ffplay ebu meter
+
+$(basename "$0") -i infile.(mp4|mkv|mov|m4v|webm|aac|m4a|wav|mp3) -t (00)"
+exit 2
+}
+
+# error messages
+NOTFILE_ERR='not a file'
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+NOT_MEDIA_FILE_ERR='is not a media file'
+
+# if script is run arguments pass and check the options with getopts,
+# else display script usage and exit
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+# target luf regex
+target_regex='^[0-9]\{2\}$'
+
+# getopts check and validate options
+while getopts ':i:t:h' opt
+do
+  case ${opt} in
+     i) infile="${OPTARG}"
+	[ -f "${infile}" ] || usage "${infile} ${NOTFILE_ERR}";;
+     t) target="${OPTARG}"
+	expr "${target}" : "${target_regex}" 1>/dev/null || usage "${target} ${INVALID_OPT_ERR}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+# audio file extension
+infile_ext="${infile##*.}"
+
+# file command check input file mime type
+filetype="$(file --mime-type -b "${infile}")"
+
+# audio and video mimetypes
+mov_mime='video/quicktime'
+mkv_mime='video/x-matroska'
+mp4_mime='video/mp4'
+m4v_mime='video/x-m4v'
+webm_mime='video/webm'
+wav_mime='audio/x-wav'
+audio_mime='audio/mpeg'
+aac_mime='audio/x-hx-aac-adts'
+m4a_mime='audio/mp4'
+
+# the file command wrongly identifies .m4a audio as a video file
+# so we check if the file extension is .m4a and set the mime type to audio/mp4
+if [ "${infile_ext}" = 'm4a' ]; then
+    filetype="${m4a_mime}"
+fi
+
+# default target level
+target_default='16'
+
+# ebu function
+ebu () {
+    ffplay -hide_banner \
+    -f lavfi -i \
+    "amovie=${infile},
+    ebur128=video=1:
+    meter=18:
+    dualmono=true:
+    target=-${target:=${target_default}}:
+    size=1280x720 [out0][out1]"
+}
+
+# check the files mime type
+case "${filetype}" in
+    ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime}|${webm_mime}| \
+    ${wav_mime}|${audio_mime}|${aac_mime}|${m4a_mime}) ebu "${infile}";;
+    *) usage "${infile} ${NOT_MEDIA_FILE_ERR}";;
+esac
