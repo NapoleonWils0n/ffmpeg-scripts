@@ -358,8 +358,10 @@ ffplay ebu meter
 + script usage
 
 #+BEGIN_SRC sh
-ebu-meter -i infile.(mp4|mov|mkv|m4v|webm|m4a|aac|wav|mp3)
+ebu-meter -i infile.(mp4|mov|mkv|m4v|webm|m4a|aac|wav|mp3) -t (00)
 #+END_SRC
+
+-t = luf target, eg 16
 
 ** extract-frame
 :PROPERTIES:
