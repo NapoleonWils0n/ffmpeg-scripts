@@ -1,0 +1,147 @@
+#!/bin/sh
+
+# ffplay video scopes
+
+# script usage
+usage()
+{
+[ -z "${1}" ] || echo "! ${1}"
+echo "\
+# ffplay video scopes
+
+$(basename "$0") -i infile = histogram
+$(basename "$0") -o infile = rgb overlay
+$(basename "$0") -p infile = rgb parade
+$(basename "$0") -s infile = rgb overlay and parade
+$(basename "$0") -w infile = waveform
+$(basename "$0") -v infile = vector scope
+$(basename "$0") -h = help
+"
+exit 2
+}
+
+# error messages
+NOTFILE_ERR='not a file'
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+NOT_MEDIA_FILE_ERR='is not a media file'
+
+# if script is run arguments pass and check the options with getopts,
+# else display script usage and exit
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+# histogram overlay
+histogram_overlay () {
+    ffplay "${infile}" \
+    -vf \
+    "split=2[a][b],
+    [b]histogram,
+    format=yuva444p[hh],
+    [a][hh]overlay=x=W-w:y=H-h"
+}
+
+
+# rgb overlay
+rgb_overlay () {
+    ffplay "${infile}" \
+    -vf \
+    "format=gbrp,
+    split=2[a][b],
+    [b]waveform=g=green:
+    s=ire:
+    fl=numbers:
+    filter=lowpass:
+    components=7:
+    display=overlay[bb],
+    [a][bb]vstack"
+}
+
+
+# rgb parade
+rgb_parade () {
+    ffplay "${infile}" \
+    -vf \
+    "format=gbrp,
+    split=2[a][b],
+    [b]waveform=g=green:
+    s=ire:
+    fl=numbers:
+    filter=lowpass:
+    components=7[bb],
+    [a][bb]vstack"
+}
+
+
+# rgb overlay and parade stacked
+rgb_stacked () {
+    ffplay "${infile}" \
+    -vf \
+    "format=gbrp,
+    split=3[a][b][c],
+    [b]waveform=g=green:
+    s=ire:
+    fl=numbers:
+    filter=lowpass:
+    components=7:
+    display=overlay[bb],
+    [c]waveform=g=green:
+    s=ire:
+    fl=numbers:
+    filter=lowpass:
+    components=7[cc],
+    [bb][cc]vstack[d],
+    [a][d]vstack"
+}
+
+
+# waveform lowpass
+waveform_lowpass () {
+    ffplay "${infile}" \
+    -vf \
+    "split=2[a][b],
+    [b]waveform=f=lowpass:
+    s=ire:
+    g=green:
+    e=instant[bb],
+    [a][bb]vstack"
+}
+
+
+# vectorscope
+vectorscope () {
+    ffplay "${infile}" \
+    -vf \
+    "format=yuva444p9,
+    split=2[m][v],
+    [v]vectorscope=b=0.7:
+    m=color4:
+    e=peak+instant:
+    f=name:
+    g=color[v],
+    [m][v]overlay=x=W-w:y=H-h"
+}
+
+
+# getopts check and validate options
+while getopts ':i:o:p:s:w:v:h' opt
+do
+  case ${opt} in
+     i) infile="${OPTARG}"
+	histogram_overlay;;
+     o) infile="${OPTARG}"
+	rgb_overlay;;
+     p) infile="${OPTARG}"
+	rgb_parade;;
+     s) infile="${OPTARG}"
+	rgb_stacked;;
+     w) infile="${OPTARG}"
+	waveform_lowpass;;
+     v) infile="${OPTARG}"
+	vectorscope;;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
