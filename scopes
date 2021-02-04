@@ -14,6 +14,7 @@ $(basename "$0") -o infile = rgb overlay
 $(basename "$0") -p infile = rgb parade
 $(basename "$0") -s infile = rgb overlay and parade
 $(basename "$0") -w infile = waveform
+$(basename "$0") -v infile = vector scope
 $(basename "$0") -h = help
 "
 exit 2
