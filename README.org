@@ -22,6 +22,7 @@ A collection of ffmpeg shell scripts for basic editing tasks
 + [[#pan-scan][pan-scan]]
 + [[#sub2transcript][subs2transcript]]
 + [[#subtitle-add][subtitle-add]]
++ [[scopes][scopes]]
 + [[#tile-thumbnails][tile-thumbnails]]
 + [[#trim-clip][trim-clip]]
 + [[#vid2gif][vid2gif]]
@@ -732,6 +733,34 @@ find -s . -type f -name "*.mp4" -exec sh -c \
 'subtitle-add -i "${0}" -s "${0%.*}.srt"' \
 "{}" \;
 #+END_SRC
+
+** scopes
+:PROPERTIES:
+:CUSTOM_ID: scopes
+:END:
+
+ffplay video scopes
+
++ script usage
+
+#+BEGIN_SRC sh
+scopes -i infile
+scopes -o infile
+scopes -p infile
+scopes -s infile
+scopes -w infile
+scopes -v infile
+#+END_SRC
+
+#+BEGIN_EXAMPLE
+-i infile = histogram
+-o infile = rgb overlay
+-p infile = rgb parade
+-s infile = rgb overlay and parade
+-w infile = waveform
+-v infile = vector scope
+-h = help
+#+END_EXAMPLE
 
 ** tile-thumbnails
 :PROPERTIES:
