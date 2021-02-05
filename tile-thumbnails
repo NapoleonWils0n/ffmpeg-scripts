@@ -77,6 +77,7 @@ mkv_mime='video/x-matroska'
 mp4_mime='video/mp4'
 m4v_mime='video/x-m4v'
 webm_mime='video/webm'
+avi_mime='video/x-msvideo'
 
 # ffprobe get fps and duration
 videostats=$(ffprobe \
@@ -130,6 +131,6 @@ ffmpeg \
 
 # check the files mime type
 case "${filetype}" in
-    ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime}|${webm_mime})tilevideo "${infile}";;
+    ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime}|${webm_mime}|${avi_mime})tilevideo "${infile}";;
     *) usage "${infile} ${NOT_MEDIA_FILE_ERR}";;
 esac
