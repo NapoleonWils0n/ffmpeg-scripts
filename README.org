@@ -22,7 +22,7 @@ A collection of ffmpeg shell scripts for basic editing tasks
 + [[#pan-scan][pan-scan]]
 + [[#sub2transcript][subs2transcript]]
 + [[#subtitle-add][subtitle-add]]
-+ [[scopes][scopes]]
++ [[#scopes][scopes]]
 + [[#tile-thumbnails][tile-thumbnails]]
 + [[#trim-clip][trim-clip]]
 + [[#vid2gif][vid2gif]]
@@ -739,7 +739,7 @@ find -s . -type f -name "*.mp4" -exec sh -c \
 :CUSTOM_ID: scopes
 :END:
 
-ffplay video scopes
+[[https://www.youtube.com/watch?v=K-ifmNiyFRU][ffplay video scopes youtube video]]
 
 + script usage
 
