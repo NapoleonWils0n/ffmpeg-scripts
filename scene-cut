@@ -1,0 +1,98 @@
+#!/bin/sh
+
+#===============================================================================
+# ffmpeg scene cut
+#===============================================================================
+
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage () {
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+$(basename "$0") -i input -c cutfile
+
+-i input.(mp4|mov|mkv|m4v)
+-c cutfile"
+exit 2
+}
+
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+NOT_MEDIA_FILE_ERR='is not a media file'
+NOTFILE_ERR='not a file'
+
+#===============================================================================
+# check number of aruments passed to script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check options passed to script
+#===============================================================================
+
+while getopts ':i:c:h' opt
+do
+  case ${opt} in
+     i) input="${OPTARG}"
+	[ -f "${input}" ] || usage "${input} ${NOTFILE_ERR}";;
+     c) cutfile="${OPTARG}"
+	[ -f "${cutfile}" ] || usage "${cutfile} ${NOTFILE_ERR}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+#===============================================================================
+# variables
+#===============================================================================
+
+# get the input file name
+input_nopath="${input##*/}"
+input_name="${input_nopath%.*}"
+
+#===============================================================================
+# ffmpeg create clips - nostdin needed to avoid clash with read command
+#===============================================================================
+
+trim_video () {
+    output="${input_name}-${count}.mp4" 
+    ffmpeg \
+    -nostdin \
+    -hide_banner \
+    -stats -v panic \
+    -ss "${start}" \
+    -i "${input}" \
+    -t "${duration}" \
+    -c:a aac \
+    -c:v libx264 -profile:v high \
+    -pix_fmt yuv420p -movflags +faststart \
+    -f mp4 \
+    "${output}"
+}
+
+
+#===============================================================================
+# read file and set IFS=, read = input before , duration = input after ,
+#===============================================================================
+
+count=1
+while IFS=, read -r start duration; do
+  trim_video
+  count="$(expr ${count} + 1)"
+done < "${cutfile}"

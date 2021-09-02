@@ -1,0 +1,154 @@
+#!/bin/sh
+
+#===============================================================================
+# ffmpeg scene detection
+#===============================================================================
+
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage () {
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+$(basename "$0") -i input -t (0.1 - 0.9) -f seconds
+
+-i input.(mp4|mov|mkv|m4v)
+-t (0.1 - 0.9) # threshold
+-f seconds # output in seconds
+-o output.txt"
+exit 2
+}
+
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+NOT_MEDIA_FILE_ERR='is not a media file'
+
+
+#===============================================================================
+# check number of aruments passed to script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# regular expressions for the expr command
+#===============================================================================
+
+# threshold_regex - match 0.1-9
+threshold_regex='^[0]\{1\}[.]\{1\}[1-9]\{1\}$'
+
+# format_regex
+format_regex='^seconds$'
+
+#===============================================================================
+# getopts check options passed to script
+#===============================================================================
+
+while getopts ':i:f:t:o:h' opt
+do
+  case ${opt} in
+     i) input="${OPTARG}";;
+     f) format="${OPTARG}"
+        expr "${format}" : "${format_regex}" 1>/dev/null || usage;;
+     t) threshold="${OPTARG}"
+        expr "${threshold}" : "${threshold_regex}" 1>/dev/null || usage;;
+     h) usage;;
+     o) output="${OPTARG}";;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+#===============================================================================
+# variables
+#===============================================================================
+
+# get the input file name
+input_nopath="${input##*/}"
+input_name="${input_nopath%.*}"
+
+# output file name
+output_default="${input_name}-detection-$(date +"%Y-%m-%d-%H-%M-%S").txt"
+
+# threshold default
+threshold_default='0.3'
+
+#===============================================================================
+# ffprobe scene detection
+#===============================================================================
+
+# seconds output
+
+ffdetect () {
+# video duration to append to cutfile
+duration=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${input}")
+
+# if video duration is empty exit
+[ ! -z "${duration}" ] || usage "${input} ${NOT_MEDIA_FILE_ERR}"
+
+detection=$(ffprobe -hide_banner -v panic \
+-show_entries packet=pts_time \
+-of default=noprint_wrappers=1:nokey=1 -f lavfi "movie=${input},select='gt(scene,"${threshold:=${threshold_default}}")'")
+}
+
+
+# minutes output
+
+ffdetect_sexagesimal () {
+# video duration to append to cutfile
+duration=$(ffprobe -v error -sexagesimal -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${input}")
+
+# if video duration is empty exit
+[ ! -z "${duration}" ] || usage "${input} ${NOT_MEDIA_FILE_ERR}"
+
+# add double quotes around string
+duration="\"${duration}"\"
+
+detection=$(ffprobe -hide_banner -v panic \
+-sexagesimal \
+-show_entries packet=pts_time \
+-of default=noprint_wrappers=1:nokey=1 -f lavfi "movie=${input},select='gt(scene,"${threshold:=${threshold_default}}")'")
+}
+
+
+#===============================================================================
+# run ffprobe function
+#===============================================================================
+
+
+# if -f format is not specified run ffdetect function
+# otherwise run ffdetect_sexagesimal function
+
+if [ -z "${format}" ]; then
+  # minutes
+  echo "scene detection with threshold set to ${threshold:=${threshold_default}}"
+  start='"0:00:00"'
+  ffdetect_sexagesimal
+else 
+  # seconds
+  echo "scene detection with threshold set to ${threshold:=${threshold_default}}"
+  start='"0.0"'
+  ffdetect
+fi
+
+
+#===============================================================================
+# create cutfile - prepend 0.0 or 00:00:00 and append duration
+#===============================================================================
+
+echo "${detection}" \
+| awk 'BEGIN { printf("%s\n", '"${start}"') }{ printf("%s\n", $0) } END { printf("%s\n", '"${duration}"') }' \
+> "${output:=${output_default}}"
