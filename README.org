@@ -685,6 +685,143 @@ pan-scan -i infile.(png|jpg|jpeg) -d (000) -p (l|r|u|d) -o outfile.mp4
 -o = outfile.mp4 : optional agument # default is infile-name-pan-date-time
 #+END_EXAMPLE
 
+** scene-cut
+:PROPERTIES:
+:CUSTOM_ID: scene-cut
+:END:
+
+scene-cut takes a cut file and video and cuts the video into clips
+
++ script usage
+
+#+BEGIN_SRC sh
+scene-cut -i input -c cutfile
+#+END_SRC
+
++ example usage
+
+#+BEGIN_EXAMPLE
+scene-cut -i input -c cutfile
+
+-i input.(mp4|mov|mkv|m4v)
+-c cutfile
+#+END_EXAMPLE
+
+ffmpeg requires a start point and a duration, not an end point
+
+cut file - hours, minutes, seconds
+in this example we create 2 - 30 seconds clips
+
+a 30 second clip that starts at 00:00:00
+and another 30 second clip that starts at 00:01:00
+
+#+begin_example
+00:00:00,00:00:30
+00:01:00,00:00:30
+#+end_example
+
+cut file - seconds
+in this example we create 2 - 30 seconds clips
+
+a 30 second clip that starts at 0
+and another 30 second clip that starts at 60
+
+#+begin_example
+0,30
+60,30
+#+end_example
+
+** scene-detect
+:PROPERTIES:
+:CUSTOM_ID: scene-detect
+:END:
+
+scene-detect takes a video file and a threshold for the scene detection
+from 0.1 to 0.9 and the -f seconds option to output the cut points in seconds
+by default the script outputs the cut points in sexagesimal format,
+hours minutes seconds, 00:00:00
+
++ script usage
+
+#+BEGIN_SRC sh
+scene-detect -i input -t (0.1 - 0.9) -f seconds
+#+END_SRC
+
++ example usage
+
+#+BEGIN_EXAMPLE
+scene-detect -i input -t (0.1 - 0.9) -f seconds
+
+-i input.(mp4|mov|mkv|m4v)
+-t (0.1 - 0.9) # threshold
+-f seconds # output in seconds
+-o output.txt
+#+END_EXAMPLE
+
+** scene-images
+:PROPERTIES:
+:CUSTOM_ID: scene-images
+:END:
+
+scene-images takes a video file and a cut file,
+created with the scene-detect script either in seconds or sexagesimal format
+and then creates an image for each cut point
+
++ script usage
+
+#+BEGIN_SRC sh
+scene-images -i input -c cutfile
+#+END_SRC
+
++ example usage
+
+#+BEGIN_EXAMPLE
+scene-images -i input -c cutfile
+
+-i input.(mp4|mov|mkv|m4v)
+-c cutfile
+#+END_EXAMPLE
+
+** scene-time
+:PROPERTIES:
+:CUSTOM_ID: scene-time
+:END:
+
+scene-time takes a cut file,
+created with the scene-detect script either in seconds or sexagesimal format
+
+#+begin_example
+0:00:00
+0:00:11.875000
+0:00:15.750000
+#+end_example
+
+The script creates clips by subtracting the cut point from the start point
+and converts sexagesimal format and then creates a file with the start point
+a comma and then the duration of the clip
+
+the output of the scene-time script is used with the scene-cut script to create the clips
+
+#+begin_example
+0,11.875
+11.875,3.875
+#+end_example
+
++ script usage
+
+#+BEGIN_SRC sh
+scene-time -i input -o output
+#+END_SRC
+
++ example usage
+
+#+BEGIN_EXAMPLE
+scene-time -i input -o output
+
+-i input
+-o output
+#+END_EXAMPLE
+
 ** subtitle-add
 :PROPERTIES:
 :CUSTOM_ID: subtitle-add
