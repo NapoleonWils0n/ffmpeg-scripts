@@ -744,6 +744,8 @@ scene-detect takes a video file and a threshold for the scene detection from 0.1
 you can also use the -s and -e options to set a range for thew scene detection,
 if you dont specify a range scene detection will be perform on the whole video
 
+[[https://www.youtube.com/watch?v=nOeaFEHuFyM][ffmpeg scene detection - automatically cut videos into separate scenes]]
+
 + script usage
 
 #+BEGIN_SRC sh
