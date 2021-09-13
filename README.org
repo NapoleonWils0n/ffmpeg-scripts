@@ -740,26 +740,27 @@ and another 30 second clip that starts at 60
 :CUSTOM_ID: scene-detect
 :END:
 
-scene-detect takes a video file and a threshold for the scene detection
-from 0.1 to 0.9 and the -f seconds option to output the cut points in seconds
-by default the script outputs the cut points in sexagesimal format,
-hours minutes seconds, 00:00:00
+scene-detect takes a video file and a threshold for the scene detection from 0.1 to 0.9
+you can also use the -s and -e options to set a range for thew scene detection,
+if you dont specify a range scene detection will be perform on the whole video
 
 + script usage
 
 #+BEGIN_SRC sh
-scene-detect -i input -t (0.1 - 0.9) -f seconds
+scene-detect -s 00:00:00.000 -i infile -e 00:00:00.000 -t (0.1 - 0.9) -o outfile
 #+END_SRC
 
 + example usage
 
 #+BEGIN_EXAMPLE
-scene-detect -i input -t (0.1 - 0.9) -f seconds
+scene-detect -s 00:00:00.000 -i infile -e 00:00:00.000 -t (0.1 - 0.9) -o outfile
 
+-s 00:00:00.000 : start time
 -i input.(mp4|mov|mkv|m4v)
+-e 00:00:00.000 : end time
 -t (0.1 - 0.9) # threshold
--f seconds # output in seconds
 -o output.txt
+
 #+END_EXAMPLE
 
 ** scene-images
