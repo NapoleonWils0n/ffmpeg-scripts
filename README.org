@@ -746,6 +746,8 @@ if you dont specify a range scene detection will be perform on the whole video
 
 [[https://www.youtube.com/watch?v=nOeaFEHuFyM][ffmpeg scene detection - automatically cut videos into separate scenes]]
 
+[[https://youtu.be/SqvDCpWad9M][ffmpeg scene detection - version 2 - specify a range in the video and cut into separate scenes]]
+
 + script usage
 
 #+BEGIN_SRC sh
