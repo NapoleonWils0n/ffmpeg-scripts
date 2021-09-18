@@ -748,6 +748,8 @@ if you dont specify a range scene detection will be perform on the whole video
 
 [[https://youtu.be/SqvDCpWad9M][ffmpeg scene detection - version 2 - specify a range in the video and cut into separate scenes]]
 
+[[https://youtu.be/GZgE6fYd_wg][ffmpeg scene detect - version 3 - sexagesimal format - hours, minutes, seconds]]
+
 + script usage
 
 #+BEGIN_SRC sh
