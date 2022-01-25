@@ -9,6 +9,7 @@ A collection of ffmpeg shell scripts for basic editing tasks
 + [[#audio-silence][audio-silence]]
 + [[#combine-clips][combine-clips]]
 + [[#correct-clip][correct-clip]]
++ [[#crossfade-clips][crossfade-clips]]
 + [[#ebu-meter][ebu-meter]]
 + [[#extract-frame][extract-frame]]
 + [[#fade-clip][fade-clip]]
@@ -31,7 +32,6 @@ A collection of ffmpeg shell scripts for basic editing tasks
 + [[#trim-clip][trim-clip]]
 + [[#vid2gif][vid2gif]]
 + [[#waveform][waveform]]
-+ [[#xfade-clips][xfade-clips]]
 + [[#zoompan][zoompan]]
 
 ** scripts install
@@ -1080,7 +1080,7 @@ find -s . -type f -name "*.mp4" -exec sh -c \
 "{}" \;
 #+END_SRC
 
-** xfade-clips
+** crossfade-clips
 :PROPERTIES:
 :CUSTOM_ID: xfade-clips
 :END:
@@ -1093,7 +1093,7 @@ the videos must have the same codecs, size and frame rate
 + script usage
 
 #+BEGIN_SRC sh
-xfade-clips -a clip1.(mp4|mkv|mov|m4v) -b clip2.(mp4|mkv|mov|m4v) -d (1|2) -o outfile.mp4
+crossfade-clips -a clip1.(mp4|mkv|mov|m4v) -b clip2.(mp4|mkv|mov|m4v) -d (1|2) -o outfile.mp4
 #+END_SRC
 
 #+BEGIN_EXAMPLE
