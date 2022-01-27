@@ -1,0 +1,108 @@
+#!/bin/sh
+
+# ffmpeg xfade transitions
+
+# script usage
+usage()
+{
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+# ffmpeg xfade transitions
+
+$(basename "$0") -a clip1.(mp4|mkv|mov|m4v) -b clip2.(mp4|mkv|mov|m4v) -d duration -t transition -f offset -o outfile.mp4
+-a clip1.(mp4|mkv|mov|m4v) : first clip
+-b clip2.(mp4|mkv|mov|m4v) : second clip
+-d duration                : transition duration
+-t transition              : transition
+-f offset                  : offset
+-o outfile.mp4             : optional agument # if option not provided defaults to infile-name-xfade-date-time
+
++ transitions
+
+circleclose, circlecrop, circleopen, diagbl, diagbr, diagtl, diagtr, dissolve, distance
+fade, fadeblack, fadegrays, fadewhite, hblur, hlslice, horzclose, horzopen, hrslice
+pixelize, radial, rectcrop, slidedown, slideleft, slideright, slideup, smoothdown
+smoothleft, smoothright, smoothup, squeezeh, squeezev, vdslice, vertclose, vertopen, vuslice
+wipebl, wipebr, wipedown, wipeleft, wiperight, wipetl, wipetr, wipeup"
+exit 2
+}
+
+# error messages
+NOTFILE_ERR='not a file'
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+
+# if script is run arguments pass and check the options with getopts,
+# else display script usage and exit
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+# getopts check and validate options
+while getopts ':a:b:d:t:f:o:h' opt
+do
+  case ${opt} in
+     a) clip1="${OPTARG}"
+        [ -f "${clip1}" ] || usage "${clip1} ${NOTFILE_ERR}";;
+     b) clip2="${OPTARG}"
+        [ -f "${clip2}" ] || usage "${clip2} ${NOTFILE_ERR}";;
+     d) dur="${OPTARG}";;
+     t) transition="${OPTARG}";;
+     f) offset="${OPTARG}";;
+     o) outfile="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+# infile, infile name and extension
+clip1_nopath="${clip1##*/}"
+clip1_name="${clip1_nopath%.*}"
+
+# defaults
+duration_default='0.5'
+transition_default='fade'
+outfile_default="${clip1_name}-xfade-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+
+# offset and duration options not set
+if [ -z "${offset}" ];then
+    # clip 1 duration to calculate default transition offset
+    clip1_dur=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${clip1}")
+    
+    # round down decinal point
+    clip1_time=$(printf "%.1f\n" "${clip1_dur}")
+    
+    # clip1 duration minus duration default and 0.1 seconds which is needed for the transition
+    offset_default=$(echo "${clip1_time}" - "${dur:=${duration_default}}" - 0.1 | bc -l)
+    
+    # audio trim default match offset default
+    audio_trim_default=$(echo "${clip1_time}" - 0.1 | bc -l)
+else
+    # offset and duration options set
+    # trim audio to match length of the duration and offset
+    audio_trim=$(echo "${dur} + ${offset}" | bc -l)
+fi
+
+# cross fade video and audio
+xfade_va () {
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -i "${clip1}" -i "${clip2}" \
+    -filter_complex \
+    "[0:v][1:v]xfade=transition='${transition:=${transition_default}}':duration='${dur:=${duration_default}}':offset='${offset:=${offset_default}}'[xfade];
+    [0:a]atrim=0:'${audio_trim:=${audio_trim_default}}'[atrim];
+    [atrim][1:a]acrossfade=d='${dur:=${duration_default}}'[afade]
+    " \
+    -map "[xfade]" -map "[afade]" \
+    -pix_fmt yuv420p \
+    -movflags +faststart -f mp4 \
+    "${outfile:=${outfile_default}}"
+}
+
+
+# run the xfade_va function
+xfade_va "${clip1}" "${clip2}"
