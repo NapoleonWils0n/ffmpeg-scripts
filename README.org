@@ -32,6 +32,7 @@ A collection of ffmpeg shell scripts for basic editing tasks
 + [[#trim-clip][trim-clip]]
 + [[#vid2gif][vid2gif]]
 + [[#waveform][waveform]]
++ [[#xfade][xfade]]
 + [[#zoompan][zoompan]]
 
 ** scripts install
@@ -1104,6 +1105,9 @@ find -s . -type f -name "*.mp4" -exec sh -c \
 #+END_SRC
 
 ** xfade
+:PROPERTIES:
+:CUSTOM_ID: xfade
+:END:
 
 apply a transition between two clips with the xfade filters
 
