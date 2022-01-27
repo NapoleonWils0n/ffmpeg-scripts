@@ -1103,6 +1103,41 @@ find -s . -type f -name "*.mp4" -exec sh -c \
 "{}" \;
 #+END_SRC
 
+** xfade
+
+apply a transition between two clips with the xfade filters
+
+[[https://trac.ffmpeg.org/wiki/Xfade][xfade ffmpeg wiki]]
+
++ script usage
+
+#+begin_src sh
+xfade -a clip1.(mp4|mkv|mov|m4v) -b clip2.(mp4|mkv|mov|m4v) -d duration -t transition -f offset -o outfile.mp4
+#+end_src
+
++ help
+
+#+begin_example
+# ffmpeg xfade transitions
+
+xfade -a clip1.(mp4|mkv|mov|m4v) -b clip2.(mp4|mkv|mov|m4v) -d duration -t transition -f offset -o outfile.mp4
+-a clip1.(mp4|mkv|mov|m4v) : first clip
+-b clip2.(mp4|mkv|mov|m4v) : second clip
+-d duration                : transition duration
+-t transition              : transition
+-f offset                  : offset
+-o outfile.mp4             : optional agument # if option not provided defaults to infile-name-xfade-date-time
+
++ transitions
+
+circleclose, circlecrop, circleopen, diagbl, diagbr, diagtl, diagtr, dissolve, distance
+fade, fadeblack, fadegrays, fadewhite, hblur, hlslice, horzclose, horzopen, hrslice
+pixelize, radial, rectcrop, slidedown, slideleft, slideright, slideup, smoothdown
+smoothleft, smoothright, smoothup, squeezeh, squeezev, vdslice, vertclose, vertopen, vuslice
+wipebl, wipebr, wipedown, wipeleft, wiperight, wipetl, wipetr, wipeup
+#+end_example
+
+
 ** zoompan
 :PROPERTIES:
 :CUSTOM_ID: zoompan
