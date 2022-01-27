@@ -47,13 +47,21 @@ create a bin directory in your home to add the scripts to
 mkdir -p ~/bin
 #+END_SRC
 
-add the following code to your ~/.bashrc or ~/.zhrc file
+if you are using bash add the following code to your ~/.bashrc
 
 #+BEGIN_SRC sh
 if [ -d "$HOME/bin" ]; then
    PATH="$HOME/bin:$PATH"
 fi
 #+END_SRC
+
+if you are using zsh add the following code to your ~/.zshenv file
+
+#+begin_src sh
+typeset -U PATH path
+path=("$HOME/bin" "$path[@]")
+export PATH
+#+end_src
 
 + source your ~/.bashrc if you are using the bash shell
 
