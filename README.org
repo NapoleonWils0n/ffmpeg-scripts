@@ -69,10 +69,10 @@ export PATH
 source ~/.bashrc
 #+END_SRC
 
-+ source your ~/.zshrc if you are using the zsh shell
++ source your ~/.zshenv if you are using the zsh shell
 
 #+BEGIN_SRC sh
-source ~/.zshrc
+source ~/.zshenv
 #+END_SRC
 
 *** clone the git repository
