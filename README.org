@@ -1117,6 +1117,8 @@ find -s . -type f -name "*.mp4" -exec sh -c \
 :CUSTOM_ID: xfade
 :END:
 
++ [[https://www.youtube.com/watch?v=McQM3ooNx-4][xfade script demo youtube]]
+
 apply a transition between two clips with the xfade filters
 
 [[https://trac.ffmpeg.org/wiki/Xfade][xfade ffmpeg wiki]]
