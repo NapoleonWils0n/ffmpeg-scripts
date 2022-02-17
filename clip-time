@@ -1,0 +1,124 @@
+#!/bin/sh
+
+#===============================================================================
+# clip time - create ffmpeg cutlist
+#===============================================================================
+
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage () {
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+$(basename "$0") -i input -o output
+
+-i input
+-o output"
+exit 2
+}
+
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+NOTFILE_ERR='not a file'
+
+#===============================================================================
+# check number of aruments passed to script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check options passed to script
+#===============================================================================
+
+while getopts ':i:o:h' opt
+do
+  case ${opt} in
+     i) input="${OPTARG}"
+	[ -f "${input}" ] || usage "${input} ${NOTFILE_ERR}";;
+     h) usage;;
+     o) output="${OPTARG}";;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+#===============================================================================
+# variables
+#===============================================================================
+
+# get the input file name
+input_nopath="${input##*/}"
+input_name="${input_nopath%.*}"
+
+# output file name
+output_default="${input_name}-cutlist-$(date +"%Y-%m-%d-%H-%M-%S").txt"
+
+
+#===============================================================================
+# awk subtract 2nd line from first line - print start and duration
+#===============================================================================
+
+seconds () {
+awk -F. 'NR > 1 && NR%2 == 0 {printf("%s%s%s\n"), prev, ",", $0-prev}; {prev = $0}' < "${input}" > "${output:=${output_default}}"
+}
+
+#===============================================================================
+# convert sexagesimal to seconds - and subtract 2nd line from first line
+# convert from seconds back to sexagesimal 
+#===============================================================================
+
+minutes () {
+awk -F: 'NF==3 { printf("%s\n"), ($1 * 3600) + ($2 * 60) + $3 } NF==2 { print ($1 * 60) + $2 } NF==1 { printf("$s\n"), 0 + $1 }' < "${input}" \
+| awk 'NR > 1 && NR%2 == 0 {printf("%s%s%s\n"), prev, "\n", $0-prev}; {prev = $0}' \
+| awk -F. 'NF==1 { printf("%02d:%02d:%02d\n"), ($1 / 3600), ($1 % 3600 / 60), ($1 % 60) }\
+NF==2 { printf("%02d:%02d:%02d.%s\n"), ($1 / 3600), ($1 % 3600 / 60), ($1 % 60), ($2) }' \
+| awk '{ORS = NR%2 ? "," : "\n"} 1' > "${output:=${output_default}}"
+}
+
+
+#===============================================================================
+# timecode regex
+#===============================================================================
+
+# grab the first line of the file
+check=$(head -n1 "${input}")
+
+# minutes - match 00:00:00.000
+minutes_regex='^[0-9]{1,2}:[0-9]{2}:[0-9]{2}([.]{1}[0-9]{1,6})?$'
+
+# seconds - match 00:00:00.000
+seconds_regex='^[0-9]{1,8}([.]{1}[0-9]{1,6})?$'
+
+# grep for the minutes
+minutes=$(echo "${check}" | grep -E "${minutes_regex}")
+
+# grep for the seconds
+seconds=$(echo "${check}" | grep -E "${seconds_regex}")
+
+
+#===============================================================================
+# check timecode and run function
+#===============================================================================
+
+if [ ! -z "${minutes}" ]; then
+  minutes
+elif [ ! -z "${seconds}" ]; then
+  seconds
+else 
+    usage
+fi
+
