@@ -8,6 +8,7 @@ A collection of ffmpeg shell scripts for basic editing tasks
 
 + [[#audio-silence][audio-silence]]
 + [[#combine-clips][combine-clips]]
++ [[#clip-time][clip-time]]
 + [[#correct-clip][correct-clip]]
 + [[#crossfade-clips][crossfade-clips]]
 + [[#ebu-meter][ebu-meter]]
@@ -228,6 +229,19 @@ with the -c and -r options
 find -s . -type f -name "*.mp4" -exec sh -c \
 'audio-silence -i "${0}" -c stereo -r 48000'     
 "{}" \;
+#+END_SRC
+
+** clip-time
+:PROPERTIES:
+:CUSTOM_ID: clip-time
+:END:
+
+convert timestamps into start and duration
+
++ script usage
+
+#+BEGIN_SRC sh
+clip-time -i input -o output
 #+END_SRC
 
 ** combine-clips
