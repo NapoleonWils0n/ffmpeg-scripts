@@ -16,7 +16,7 @@ ffmpeg -i infile.mp4 -vn -c:a copy outfile.m4a
 Batch extract audio from video with find
 
 #+BEGIN_SRC sh
-find -s . -type f -name "*.mp4" -exec sh -c \
+find . -type f -name "*.mp4" -exec sh -c \
 'ffmpeg -i "${0}" -vn -c:a copy "${0%.*}.m4a"' \
 "{}" \;
 #+END_SRC
@@ -35,7 +35,7 @@ ffmpeg -i infile.mp4 -an -c:v copy outfile.mp4
 ffmpeg batch extract video
 
 #+BEGIN_SRC sh
-find -s . -type f -name "*.mp4" -exec sh -c \
+find . -type f -name "*.mp4" -exec sh -c \
 'ffmpeg -i "${0}" -an -c:v copy "${0%.*}-extracted.mp4"' \
 "{}" \;
 #+END_SRC
@@ -53,7 +53,7 @@ ffmpeg -i infile.mp4 -filter:v fps=fps=30 outfile.mp4
 change frame batch process to 30fps
 
 #+BEGIN_SRC sh
-find -s . -type f -name "*.mp4" -exec sh -c \
+find . -type f -name "*.mp4" -exec sh -c \
 'ffmpeg -i "${0}" -filter:v fps=fps=30 "${0%.*}-framerate.mp4"' \
 "{}" \;
 #+END_SRC
@@ -69,7 +69,7 @@ ffmpeg -i infile.mp4 -ac 1 outfile.mp4
 change frame batch process to 30fps
 
 #+BEGIN_SRC sh
-find -s . -type f -name "*.mp4" -exec sh -c \
+find . -type f -name "*.mp4" -exec sh -c \
 'ffmpeg -i "${0}" -ac 1 "${0%.*}-mono.mp4"' \
 "{}" \;
 #+END_SRC
@@ -86,7 +86,7 @@ ffmpeg -i infile.mp4 -ar 44100 outfile.mp4
 change audio rate to 44100 batch process
 
 #+BEGIN_SRC sh
-find -s . -type f -name "*.mp4" -exec sh -c \
+find . -type f -name "*.mp4" -exec sh -c \
 'ffmpeg -i "${0}" -ar 44100 "${0%.*}-audiorate.mp4"' \
 "{}" \;
 #+END_SRC
@@ -104,7 +104,7 @@ ffmpeg -i fps.mp4 -vf "scale=-1:1080,pad=1920:ih:(ow-iw)/2" outfile.mp4
 scale and pad a video to 1080 batch process
 
 #+BEGIN_SRC sh
-find -s . -type f -name "*.mp4" -exec sh -c \
+find . -type f -name "*.mp4" -exec sh -c \
 'ffmpeg -i "${0}" -vf "scale=-1:1080,pad=1920:ih:(ow-iw)/2" "${0%.*}-1080.mp4"' \
 "{}" \;
 #+END_SRC
