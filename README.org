@@ -1134,6 +1134,8 @@ find -s . -type f -name "*.mp4" -exec sh -c \
 
 create a animated webp image from a video with ffmpeg
 
+[[https://www.youtube.com/watch?v=5iXjbQ7uDiM][webp animated images youtube]]
+
 + script usage
 
 #+BEGIN_SRC sh
