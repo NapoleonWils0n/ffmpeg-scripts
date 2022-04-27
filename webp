@@ -17,7 +17,7 @@ echo "\
 # webp animated image
 
 $(basename "$0") -i input -c 0-6 -q 0-100 -f 15 -w 600 -p none -o output.webp
--i input.webp
+-i input
 -c compression level: 0 - 6 : default 4
 -q quality: 0 - 100 : default 80
 -f framerate: default 15
