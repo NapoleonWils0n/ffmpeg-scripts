@@ -1,0 +1,114 @@
+#!/bin/sh
+
+#===============================================================================
+# ffmpeg libwebp_anim
+#===============================================================================
+
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage () {
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+# webp animated image
+
+$(basename "$0") -i input -c 0-6 -q 0-100 -f 15 -w 600 -p none -o output.webp
+-i input.webp
+-c compression level: 0 - 6 : default 4
+-q quality: 0 - 100 : default 80
+-f framerate: default 15
+-w width: default 600px
+-p preset: none|default|picture|photo|drawing|icon|text : default none
+-o output.webp :optional agument 
+# if option not provided defaults infile-name.webp"
+exit 2
+}
+
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+
+
+#===============================================================================
+# check number of aruments passed to script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check options passed to script
+#===============================================================================
+
+while getopts ':i:c:q:f:w:p:o:h' opt
+do
+  case ${opt} in
+     i) input="${OPTARG}";;
+     c) compression="${OPTARG}";;
+     q) quality="${OPTARG}";;
+     f) framerate="${OPTARG}";;
+     w) width="${OPTARG}";;
+     p) preset="${OPTARG}";;
+     o) output="${OPTARG}";;
+     h) usage;;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+#===============================================================================
+# variables
+#===============================================================================
+
+# input name
+input_nopath="${input##*/}"
+input_name="${input_nopath%.*}"
+
+# defaults for variables if not defined
+compression_default='4'
+quality_default='80'
+preset_default='none'
+framerate_default='15'
+width_default='600'
+output_default="${input_name}.webp"
+
+
+#===============================================================================
+# ffmpeg webp animation function
+#===============================================================================
+
+animation () {
+ffmpeg \
+-hide_banner \
+-stats -v panic \
+-i "${input}" \
+-c:v libwebp_anim \
+-lossless 0 \
+-compression_level "${compression:=${compression_default}}" \
+-quality "${quality:=${quality_default}}" \
+-cr_threshold 0 \
+-cr_size 16 \
+-preset "${preset:=${preset_default}}" \
+-loop 1 \
+-an -vsync 0 \
+-vf "fps=fps=${framerate:=${framerate_default}},scale=${width:=${width_default}}:-1:flags=lanczos" \
+"${output:=${output_default}}"
+}
+
+
+#===============================================================================
+# run ffmpeg webp animation function
+#===============================================================================
+
+animation
