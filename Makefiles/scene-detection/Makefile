@@ -36,4 +36,4 @@ cut: time
 # make clean - prompt to remove text files and video clips, except the input file
 .PHONY: clean
 clean:
-	rm -fI cutlist.txt detection.txt $(wildcard *-[0-9].mp4)
+	rm -fI cutlist.txt detection.txt $(wildcard *-[0-9]*.mp4)
