@@ -20,7 +20,7 @@ all: cut
 
 # scene-detect - input is the prerequisite
 detect: $(input)
-	@scene-detect -s 00:00:00 -i $(input) -e 00:00:20 -o detection.txt
+	@scene-detect -i $(input) -o detection.txt
 
 
 # scene-time - detect is the prerequisite
