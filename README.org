@@ -218,7 +218,7 @@ audio-silence batch process without specifying the -c and -r options
 using the defaults of -c mono and -r 44100
 
 #+BEGIN_SRC sh
-find -s . -type f -name "*.mp4" -exec sh -c \
+find . -type f -name "*.mp4" -exec sh -c \
 'audio-silence -i "${0}"'     
 "{}" \;
 #+END_SRC
@@ -227,7 +227,7 @@ audio-silence batch process and override the defaults
 with the -c and -r options
 
 #+BEGIN_SRC sh
-find -s . -type f -name "*.mp4" -exec sh -c \
+find . -type f -name "*.mp4" -exec sh -c \
 'audio-silence -i "${0}" -c stereo -r 48000'     
 "{}" \;
 #+END_SRC
@@ -291,7 +291,7 @@ file1.mp4 with file1.wav and
 file2.mp4 with file2.wav
 
 #+BEGIN_SRC sh
-find -s . -type f -name "*.mp4" -exec sh -c \
+find . -type f -name "*.mp4" -exec sh -c \
 'combine-clip -i "${0}" -a "${0%.*}.wav"' \
 "{}" \;
 #+END_SRC
@@ -370,7 +370,7 @@ file1.mp4 with file1.txt gimp curve file and
 file2.mp4 with file2.txt gimp curve file
 
 #+BEGIN_SRC sh
-find -s . -type f -name "*.mp4" -exec sh -c \
+find . -type f -name "*.mp4" -exec sh -c \
 'correct-clip -i "${0}" -c "${0%.*}.txt"' \
 "{}" \;
 #+END_SRC
@@ -452,7 +452,7 @@ infile-name-frame-date-time
 + extract frame with default option of 00:00:00
 
 #+BEGIN_SRC sh
-find -s . -type f -name "*.mp4" -exec sh -c \
+find . -type f -name "*.mp4" -exec sh -c \
 'extract-frame -i "${0}"' \
 "{}" \;
 #+END_SRC
@@ -460,7 +460,7 @@ find -s . -type f -name "*.mp4" -exec sh -c \
 + extract frame at 30 seconds into the video
 
 #+BEGIN_SRC sh
-find -s . -type f -name "*.mp4" -exec sh -c \
+find . -type f -name "*.mp4" -exec sh -c \
 'extract-frame -i "${0}" -s 00:00:30' \
 "{}" \;
 #+END_SRC
@@ -496,7 +496,7 @@ infile-name-fade-date-time
 + fade-clip with default option of 0.5
 
 #+BEGIN_SRC sh
-find -s . -type f -name "*.mp4" -exec sh -c \
+find . -type f -name "*.mp4" -exec sh -c \
 'fade-clip -i "${0}"' \
 "{}" \;
 #+END_SRC
@@ -504,7 +504,7 @@ find -s . -type f -name "*.mp4" -exec sh -c \
 + fade-clip and override the default option of 0.5 with -d 1 for a 1 second fade
 
 #+BEGIN_SRC sh
-find -s . -type f -name "*.mp4" -exec sh -c \
+find . -type f -name "*.mp4" -exec sh -c \
 'fade-clip -i "${0}" -d 1' \
 "{}" \;
 #+END_SRC
@@ -535,7 +535,7 @@ fade-normalize -i video.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -o outfile.mp4
 Batch process files in the current working directory
   
 #+BEGIN_SRC sh
-find -s . -type f -name "*.mp4" -exec sh -c \
+find . -type f -name "*.mp4" -exec sh -c \
 'fade-normalize -i "${0}" -d 0.5' \
 "{}" \;
 #+END_SRC
@@ -569,7 +569,7 @@ fade-title -i infile.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -s 000 -e 000 -o outfile.m
 Batch process files in the current working directory
   
 #+BEGIN_SRC sh
-find -s . -type f -name "*.mp4" -exec sh -c \
+find . -type f -name "*.mp4" -exec sh -c \
 'fade-title -i "${0}" -d 0.5 -s 10 -e 20' \
 "{}" \;
 #+END_SRC
@@ -605,7 +605,7 @@ infile-name-video-date-time
 Batch convert png in the current directory into video clips with a 30 second duration
 
 #+BEGIN_SRC sh
-find -s . -type f -name "*.png" -exec sh -c \
+find . -type f -name "*.png" -exec sh -c \
 'img2video -i "${0}" -d 30' \
 "{}" \;
 #+END_SRC
@@ -655,7 +655,7 @@ infile-name-normalize-date-time
 Batch normalize mp4 videos in the current directory
 
 #+BEGIN_SRC sh
-find -s . -type f -name "*.mp4" -exec sh -c \
+find . -type f -name "*.mp4" -exec sh -c \
 'normalize -i "${0}"' \
 "{}" \;
 #+END_SRC
@@ -924,7 +924,7 @@ file1.mp4 with file1.srt and
 file2.mp4 with file2.srt
 
 #+BEGIN_SRC sh
-find -s . -type f -name "*.mp4" -exec sh -c \
+find . -type f -name "*.mp4" -exec sh -c \
 'subtitle-add -i "${0}" -s "${0%.*}.srt"' \
 "{}" \;
 #+END_SRC
@@ -1016,7 +1016,7 @@ ffmpeg -i infile.mp4 -vf fps=fps=30 outfile.mp4
 batch process videos and create thumbnails from the videos and tile into an image
 
 #+BEGIN_SRC sh
-find -s . -type f -name "*.mp4" -exec sh -c \
+find . -type f -name "*.mp4" -exec sh -c \
 'tile-thumbails -i "${0}" -s 00:00:10 -w 200 -t 4x4 -p 7 -m 2 -c white' \
 "{}" \;
 #+END_SRC
@@ -1061,7 +1061,7 @@ Batch trim all the mp4 files in the current directory,
 from 00:00:00 to 00:00:30
 
 #+BEGIN_SRC sh
-find -s . -type f -name "*.mp4" -exec sh -c \
+find . -type f -name "*.mp4" -exec sh -c \
 'trim-clip -s 00:00:00 -i "${0}" -t 00:00:30' \
 "{}" \;
 #+END_SRC
@@ -1122,7 +1122,7 @@ infile-name-waveform-date-time
 Create waveform images from all the mp4 fies in the current directory
 
 #+BEGIN_SRC sh
-find -s . -type f -name "*.mp4" -exec sh -c \
+find . -type f -name "*.mp4" -exec sh -c \
 'waveform -i "${0}"' \
 "{}" \;
 #+END_SRC
@@ -1244,7 +1244,7 @@ Batch process all the png files in the current working directory,
 apply the zoompan script with a 5 second duration, zoom in to the center of the image
 
 #+BEGIN_SRC sh
-find -s . -type f -name "*.png" -exec sh -c \
+find . -type f -name "*.png" -exec sh -c \
 'zoompan -i "${0}" -d 5 -z in -p c' \
 "{}" \;
 #+END_SRC
