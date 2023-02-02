@@ -1,8 +1,16 @@
 #!/bin/sh
 
+#===============================================================================
 # create a picture in picture
+#===============================================================================
 
+# dependencies:
+# ffmpeg ffprobe cut expr bc
+
+#===============================================================================
 # script usage
+#===============================================================================
+
 usage()
 {
 # if argument passed to function echo it
@@ -27,16 +35,26 @@ $(basename "$0") -i infile.(mp4|mkv|mov|m4v) -v infile.(mp4|mkv|mov|m4v) -p [0-9
 exit 2
 }
 
+
+#===============================================================================
 # error messages
+#===============================================================================
+
 NOTFILE_ERR='not a file'
 INVALID_OPT_ERR='Invalid option:'
 REQ_ARG_ERR='requires an argument'
 WRONG_ARGS_ERR='wrong number of arguments passed to script'
-NOT_MEDIA_FILE_ERR='is not a media file'
 
-# if script is run arguments pass and check the options with getopts,
-# else display script usage and exit
+#===============================================================================
+# check number of aruments passed to script
+#===============================================================================
+
 [ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check options passed to script
+#===============================================================================
 
 # position regex
 position_regex='^[0-9]\{1,3\}$'
@@ -88,22 +106,22 @@ do
 done
 shift $((OPTIND-1))
 
+
+#===============================================================================
+# variables
+#===============================================================================
+
 # video name extension and overlay video extensions
 video_nopath="${video##*/}"
 video_name="${video_nopath%.*}"
 
-# file command check input file mime type
-video_filetype="$(file --mime-type -b "${video}")"
-overlay_filetype="$(file --mime-type -b "${overlay}")"
-
-# audio and video mimetypes
-mov_mime='video/quicktime'
-mkv_mime='video/x-matroska'
-mp4_mime='video/mp4'
-m4v_mime='video/x-m4v'
-
 # defaults for variables if not defined
 outfile_default="${video_name}-pip-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+
+
+#===============================================================================
+# functions
+#===============================================================================
 
 # overlay video function
 overlay_video () {
@@ -126,12 +144,6 @@ overlay_video () {
   -f mp4 \
   "${outfile:=${outfile_default}}"
 }
-
-# check the overlay mime type
-case "${overlay_filetype}" in
-    ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime});;
-    *) usage "${overlay} ${NOT_MEDIA_FILE_ERR}";;
-esac
 
 # get overlay videos duration with ffprobe
 duration="$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${overlay}" | cut -d\. -f1)"
@@ -187,8 +199,5 @@ case "${pip}" in
     *) pip="${tr}";;
 esac
 
-# check the video mime type and run overlay function
-case "${video_filetype}" in
-    ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime}) overlay_video "${video}" "${overlay}";;
-    *) usage "${video} ${NOT_MEDIA_FILE_ERR}";;
-esac
+# run the overlay_video function
+overlay_video "${video}" "${overlay}"

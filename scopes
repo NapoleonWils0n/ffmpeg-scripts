@@ -1,8 +1,16 @@
 #!/bin/sh
 
+#===============================================================================
 # ffplay video scopes
+#===============================================================================
 
+# dependencies:
+# ffplay
+
+#===============================================================================
 # script usage
+#===============================================================================
+
 usage()
 {
 [ -z "${1}" ] || echo "! ${1}"
@@ -20,16 +28,26 @@ $(basename "$0") -h = help
 exit 2
 }
 
+
+#===============================================================================
 # error messages
-NOTFILE_ERR='not a file'
+#===============================================================================
+
 INVALID_OPT_ERR='Invalid option:'
 REQ_ARG_ERR='requires an argument'
 WRONG_ARGS_ERR='wrong number of arguments passed to script'
-NOT_MEDIA_FILE_ERR='is not a media file'
 
-# if script is run arguments pass and check the options with getopts,
-# else display script usage and exit
+
+#===============================================================================
+# check number of aruments passed to script
+#===============================================================================
+
 [ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# functions
+#===============================================================================
 
 # histogram overlay
 histogram_overlay () {
@@ -123,7 +141,10 @@ vectorscope () {
 }
 
 
-# getopts check and validate options
+#===============================================================================
+# getopts check options passed to script
+#===============================================================================
+
 while getopts ':i:o:p:s:w:v:h' opt
 do
   case ${opt} in

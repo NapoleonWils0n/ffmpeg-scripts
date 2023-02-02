@@ -1,8 +1,16 @@
 #!/bin/sh
 
+#===============================================================================
 # ffmpeg xfade transitions
+#===============================================================================
 
+# dependencies:
+# ffmpeg ffprobe bc
+
+#===============================================================================
 # script usage
+#===============================================================================
+
 usage()
 {
 # if argument passed to function echo it
@@ -29,17 +37,28 @@ wipebl, wipebr, wipedown, wipeleft, wiperight, wipetl, wipetr, wipeup"
 exit 2
 }
 
+
+#===============================================================================
 # error messages
+#===============================================================================
+
 NOTFILE_ERR='not a file'
 INVALID_OPT_ERR='Invalid option:'
 REQ_ARG_ERR='requires an argument'
 WRONG_ARGS_ERR='wrong number of arguments passed to script'
 
-# if script is run arguments pass and check the options with getopts,
-# else display script usage and exit
+
+#===============================================================================
+# check number of aruments passed to script
+#===============================================================================
+
 [ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
 
-# getopts check and validate options
+
+#===============================================================================
+# getopts check options passed to script
+#===============================================================================
+
 while getopts ':a:b:d:t:f:o:h' opt
 do
   case ${opt} in
@@ -57,6 +76,11 @@ do
   esac
 done
 shift $((OPTIND-1))
+
+
+#===============================================================================
+# variables
+#===============================================================================
 
 # infile, infile name and extension
 clip1_nopath="${clip1##*/}"
@@ -85,6 +109,11 @@ else
     # trim audio to match length of the duration and offset
     audio_trim=$(echo "${dur} + ${offset}" | bc -l)
 fi
+
+
+#===============================================================================
+# function
+#===============================================================================
 
 # cross fade video and audio
 xfade_va () {

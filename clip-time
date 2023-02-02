@@ -4,6 +4,8 @@
 # clip time - create ffmpeg cutlist
 #===============================================================================
 
+# dependencies:
+# ffmpeg ffprobe
 
 #===============================================================================
 # script usage
@@ -114,9 +116,9 @@ seconds=$(echo "${check}" | grep -E "${seconds_regex}")
 # check timecode and run function
 #===============================================================================
 
-if [ ! -z "${minutes}" ]; then
+if [ -n "${minutes}" ]; then
   minutes
-elif [ ! -z "${seconds}" ]; then
+elif [ -n "${seconds}" ]; then
   seconds
 else 
     usage

@@ -1,8 +1,16 @@
 #!/bin/sh
 
+#===============================================================================
 # normalize audio levels
+#===============================================================================
 
+# dependencies:
+# ffmpeg file awk tail
+
+#===============================================================================
 # script usage
+#===============================================================================
+
 usage()
 {
 echo "\
@@ -15,18 +23,28 @@ $(basename "$0") -i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3) -o outfile.(mp4|mkv
 exit 2
 }
 
+#===============================================================================
 # error messages
+#===============================================================================
+
 NOTFILE_ERR='not a file'
 INVALID_OPT_ERR='Invalid option:'
 REQ_ARG_ERR='requires an argument'
 WRONG_ARGS_ERR='wrong number of arguments passed to script'
 NOT_MEDIA_FILE_ERR='is not a media file'
 
-# if script is run arguments pass and check the options with getopts,
-# else display script usage and exit
+
+#===============================================================================
+# check number of aruments passed to script
+#===============================================================================
+
 [ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
 
-# getopts check and validate options
+
+#===============================================================================
+# getopts check options passed to script
+#===============================================================================
+
 while getopts ':i:o:h' opt
 do
   case ${opt} in
@@ -39,6 +57,11 @@ do
   esac
 done
 shift $((OPTIND-1))
+
+
+#===============================================================================
+# variables
+#===============================================================================
 
 # infile, infile name
 infile_nopath="${infile##*/}"
@@ -93,6 +116,11 @@ done
 # defaults for variables if not defined
 audio_default="${infile_name}-normalized-$(date +"%Y-%m-%d-%H-%M-%S").${infile_ext}"
 video_default="${infile_name}-normalized-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+
+
+#===============================================================================
+# functions
+#===============================================================================
 
 # audio function
 audio () {

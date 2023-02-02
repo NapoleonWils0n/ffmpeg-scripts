@@ -4,6 +4,8 @@
 # ffmpeg scene cut
 #===============================================================================
 
+# dependencies:
+# ffmpeg expr
 
 #===============================================================================
 # script usage
@@ -29,7 +31,6 @@ exit 2
 INVALID_OPT_ERR='Invalid option:'
 REQ_ARG_ERR='requires an argument'
 WRONG_ARGS_ERR='wrong number of arguments passed to script'
-NOT_MEDIA_FILE_ERR='is not a media file'
 NOTFILE_ERR='not a file'
 
 #===============================================================================

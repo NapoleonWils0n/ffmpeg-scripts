@@ -4,6 +4,8 @@
 # ffmpeg scene detection
 #===============================================================================
 
+# dependencies:
+# ffmpeg ffprobe awk
 
 #===============================================================================
 # script usage
@@ -110,7 +112,7 @@ ffduration () {
 duration_default=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${input}")
 
 # if video duration is empty exit
-[ ! -z "${duration_default}" ] || usage "${input} ${NOT_MEDIA_FILE_ERR}"
+[ -n "${duration_default}" ] || usage "${input} ${NOT_MEDIA_FILE_ERR}"
 }
 
 
@@ -162,24 +164,24 @@ NF==2 { printf("%02d:%02d:%02d.%s\n"), ($1 / 3600), ($1 % 3600 / 60), ($1 % 60),
 # run function
 #===============================================================================
 
-if [ ! -z "${start}" ] && [ ! -z "${end}" ]; then
+if [ -n "${start}" ] && [ -n "${end}" ]; then
 # scene detect range in video
   checktime
   ffdetection_range
-  if [ ! -z "${format}" ]; then
+  if [ -n "${format}" ]; then
   cutfile_seconds
   else
   cutfile_minutes
   fi
-elif [ ! -z "${start}" ]; then
+elif [ -n "${start}" ]; then
   usage "${start} ${WRONG_ARGS_ERR}"
-elif [ ! -z "${end}" ]; then
+elif [ -n "${end}" ]; then
   usage "${end} ${WRONG_ARGS_ERR}"
 else 
 # scene detect entire video
   ffduration
   ffdetection
-  if [ ! -z "${format}" ]; then
+  if [ -n "${format}" ]; then
   cutfile_seconds
   else
   cutfile_minutes

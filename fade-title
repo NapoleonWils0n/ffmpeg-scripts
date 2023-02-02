@@ -1,8 +1,16 @@
 #!/bin/sh
 
+#===============================================================================
 # fade video, audio add title from video filename
+#===============================================================================
 
+# dependencies:
+# ffmpeg file awk grep bc cut tail
+
+#===============================================================================
 # script usage
+#===============================================================================
+
 usage ()
 {
 # if argument passed to function echo it
@@ -21,7 +29,11 @@ $(basename "$0") -i infile.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -s 000 -e 000 -o out
 exit 2
 }
 
+
+#===============================================================================
 # error messages
+#===============================================================================
+
 NOTFILE_ERR='not a file'
 INVALID_OPT_ERR='Invalid option:'
 REQ_ARG_ERR='requires an argument'
@@ -29,9 +41,17 @@ WRONG_ARGS_ERR='wrong number of arguments passed to script'
 NOT_MEDIA_FILE_ERR='is not a media file'
 TITLE_FADE_ERR='title end must be after title start'
 
-# if script is run arguments pass and check the options with getopts,
-# else display script usage and exit
+
+#===============================================================================
+# check number of aruments passed to script
+#===============================================================================
+
 [ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check options passed to script
+#===============================================================================
 
 # duration regex match 0.[1-9]
 dur_short='^[0]\{1\}\.[1-9]\{1\}$'
@@ -63,6 +83,11 @@ do
   esac
 done
 shift $((OPTIND-1))
+
+
+#===============================================================================
+# variables
+#===============================================================================
 
 # infile, infile name and file extension
 infile_nopath="${infile##*/}"
@@ -163,6 +188,11 @@ if [ -z "${aac_check}" ]; then
 else
    aac='aac' # libfdk_aac codec isnt installed, fall back to aac codec
 fi
+
+
+#===============================================================================
+# functions
+#===============================================================================
 
 # video function
 video () {

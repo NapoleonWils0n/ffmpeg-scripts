@@ -1,8 +1,16 @@
 #!/bin/sh
 
+#===============================================================================
 # add subtitles to a video
+#===============================================================================
 
+# dependencies:
+# ffmpeg
+
+#===============================================================================
 # script usage
+#===============================================================================
+
 usage()
 {
 # if argument passed to function echo it
@@ -18,19 +26,28 @@ $(basename "$0") -i infile.(mp4|mkv|mov|m4v) -s subtitle.srt -o outfile.mp4
 exit 2
 }
 
+
+#===============================================================================
 # error messages
+#===============================================================================
+
 NOTFILE_ERR='not a file'
 INVALID_OPT_ERR='Invalid option:'
 REQ_ARG_ERR='requires an argument'
 WRONG_ARGS_ERR='wrong number of arguments passed to script'
-FILE_EXT_ERR='has the wrong file extension'
-NOT_MEDIA_FILE_ERR='is not a media file'
 
-# if script is run arguments pass and check the options with getopts,
-# else display script usage and exit
+
+#===============================================================================
+# check number of aruments passed to script
+#===============================================================================
+
 [ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
 
-# getopts check and validate options
+
+#===============================================================================
+# getopts check options passed to script
+#===============================================================================
+
 while getopts ':i:s:o:h' opt
 do
   case ${opt} in
@@ -46,38 +63,22 @@ do
 done
 shift $((OPTIND-1))
 
+
+#===============================================================================
+# variables
+#===============================================================================
+
 # infile, infile name and extension
-subs_ext="${subs##*.}"
 video_nopath="${video##*/}"
 video_name="${video_nopath%.*}"
 
-# run the ffmpeg function based on the audio file extension
-case "$subs_ext" in
-    srt);;
-    *) usage "${subs} ${FILE_EXT_ERR}";;
-esac
-
-# file command check input file mime type
-video_filetype="$(file --mime-type -b "${video}")"
-subs_filetype="$(file --mime-type -b "${subs}")"
-
-# video mimetypes
-mov_mime='video/quicktime'
-mkv_mime='video/x-matroska'
-mp4_mime='video/mp4'
-m4v_mime='video/x-m4v'
-
-# srt subtitles mime type
-srt_mime='text/plain'
-
-# check the subtitles mime type
-case "${subs_filetype}" in
-    ${srt_mime});;
-    *) usage "${subs} ${NOT_MEDIA_FILE_ERR}";;
-esac
-
 # defaults for variables if not defined
 outfile_default="${video_name}-subs-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+
+
+#===============================================================================
+# functions
+#===============================================================================
 
 # audio is aac, copy audio stream
 addsubs () {
@@ -96,8 +97,5 @@ addsubs () {
     "${outfile:=${outfile_default}}"
 }
 
-# check the video mime type
-case "${video_filetype}" in
-    ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime}) addsubs "$video" "$subs";;
-    *) usage "${video} ${NOT_MEDIA_FILE_ERR}";;
-esac
+# run the addsubs function
+addsubs "$video" "$subs"
