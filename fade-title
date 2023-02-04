@@ -104,7 +104,7 @@ m4v_mime='video/x-m4v'
 
 # check the files mime type
 case "${filetype}" in
-    ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime});;
+    "${mov_mime}"|"${mkv_mime}"|"${mp4_mime}"|"${m4v_mime}");;
     *) usage "${infile} ${NOT_MEDIA_FILE_ERR}";;
 esac
 
@@ -245,6 +245,6 @@ video () {
 
 # check the files mime type
 case "${filetype}" in
-    ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime}) video "${infile}";;
+    "${mov_mime}"|"${mkv_mime}"|"${mp4_mime}"|"${m4v_mime}") video "${infile}";;
     *) usage "${infile} ${NOT_MEDIA_FILE_ERR}";;
 esac

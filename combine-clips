@@ -85,8 +85,6 @@ mov_mime='video/quicktime'
 mkv_mime='video/x-matroska'
 mp4_mime='video/mp4'
 m4v_mime='video/x-m4v'
-wav_mime='audio/x-wav'
-audio_mime='audio/mpeg'
 aac_mime='audio/x-hx-aac-adts'
 m4a_mime='audio/mp4'
 
@@ -126,9 +124,10 @@ record_copy () {
     -stats -v panic \
     -i "${infile}" \
     -i "${audio}" \
+    -shortest -fflags shortest -max_interleave_delta 100M \
     -c:a copy \
     -c:v copy \
-    -map 0:v -map 1:a \
+    -map 0:0 -map 1:0 \
     -pix_fmt yuv420p \
     -movflags +faststart \
     -f mp4 \
@@ -142,9 +141,10 @@ record_aac () {
     -stats -v panic \
     -i "${infile}" \
     -i "${audio}" \
+    -shortest -fflags shortest -max_interleave_delta 100M \
     -c:a "${aac}" \
     -c:v copy \
-    -map 0:v -map 1:a \
+    -map 0:0 -map 1:0 \
     -pix_fmt yuv420p \
     -movflags +faststart \
     -f mp4 \
@@ -153,57 +153,58 @@ record_aac () {
 
 # image - audio is aac, copy audio stream
 record_img_copy () {
+  dur="$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${audio}")"
   ffmpeg \
   -hide_banner \
   -stats -v panic \
-  -loop 1 \
+  -framerate 1/"${dur}" \
   -i "${infile}" \
   -i "${audio}" \
   -c:a copy \
   -c:v libx264 -crf 18 -profile:v high \
-  -map 0:v -map 1:a \
   -r 30 -pix_fmt yuv420p \
-  -shortest \
   -movflags +faststart -f mp4 \
   "${outfile:=${outfile_default}}"
 }
 
 # image - audio isnt aac, encode audio as aac
 record_img_aac () {
+  dur="$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${audio}")"
   ffmpeg \
   -hide_banner \
   -stats -v panic \
-  -loop 1 \
+  -framerate 1/"${dur}" \
   -i "${infile}" \
   -i "${audio}" \
   -c:a "${aac}" \
   -c:v libx264 -crf 18 -profile:v high \
-  -map 0:v -map 1:a \
   -r 30 -pix_fmt yuv420p \
-  -shortest \
   -movflags +faststart -f mp4 \
   "${outfile:=${outfile_default}}"
 }
 
-#===============================================================================
-# check the infile mime type
-#===============================================================================
 
-case "${infile_filetype}" in
-    ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime});;
-    ${png_mime}|${jpg_mime})
-    case "${audio_filetype}" in
-        ${aac_mime}|${m4a_mime}) record_img_copy "${infile}" "${audio}" && exit;;
-        ${wav_mime}|${audio_mime}) record_img_aac "${infile}" "${audio}" && exit;;
-        *) usage "${audio} ${NOT_MEDIA_FILE_ERR}";;
-    esac
-    ;;
-    *) usage "${infile} ${NOT_MEDIA_FILE_ERR}";;
-esac
+#===============================================================================
+# case statement
+#===============================================================================
 
 # run the ffmpeg function based on the audio mime type
-case "${audio_filetype}" in
-    ${aac_mime}|${m4a_mime}) record_copy "${infile}" "${audio}";;
-    ${wav_mime}|${audio_mime}) record_aac "${infile}" "${audio}";;
-    *) usage "${audio} ${NOT_MEDIA_FILE_ERR}";;
+case "${infile_filetype}" in
+    "${mov_mime}"|"${mkv_mime}"|"${mp4_mime}"|"${m4v_mime}")
+        if [ "${audio_filetype}" = 'audio/x-hx-aac-adts' ]; then
+          # video - audio is aac, copy audio stream
+          record_copy
+            else
+          # video - audio isnt aac, encode audio as aac
+          record_aac
+        fi;;
+    "${png_mime}"|"${jpg_mime}")
+        if [ "${audio_filetype}" = "${aac_mime}" ]; then
+          # image - audio is aac, copy audio stream
+          record_img_copy
+            else
+          # image - audio isnt aac, encode audio as aac
+          record_img_aac
+        fi;;
+    *) usage "${infile} ${NOT_MEDIA_FILE_ERR}";;
 esac

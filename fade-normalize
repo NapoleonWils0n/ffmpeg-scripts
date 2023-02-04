@@ -93,7 +93,7 @@ normalize=$(ffmpeg \
 -f null - 2>&1 | tail -n 12)
 
 # read the output of normalize line by line and store in variables
-for line in "{$normalize}"; do
+for line in "${normalize}"; do
     measured_I=$(echo "${line}" | awk -F' ' '/Input Integrated:/ {print $3}')
     measured_TP=$(echo "${line}" | awk -F' ' '/Input True Peak:/ {print $4}')
     measured_LRA=$(echo "${line}" | awk -F' ' '/Input LRA:/ {print $3}')

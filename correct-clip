@@ -155,13 +155,13 @@ txt_mime='text/plain'
 
 # check the files mime type is a video
 case "${filetype}" in
-    ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime});;
+    "${mov_mime}"|"${mkv_mime}"|"${mp4_mime}"|"${m4v_mime}");;
     *) usage "${infile} ${NOT_MEDIA_FILE_ERR}";;
 esac
 
 # check the text file mime type is a text
 case "${textfile}" in
-    ${txt_mime});;
+    "${txt_mime}");;
     *) usage "${textfile} ${NOT_TEXT_FILE_ERR}";;
 esac
 

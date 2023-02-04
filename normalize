@@ -89,8 +89,8 @@ fi
 
 # check the files mime type
 case "${filetype}" in
-    ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime}| \
-    ${wav_mime}|${audio_mime}|${aac_mime}|${m4a_mime});;
+    "${mov_mime}"|"${mkv_mime}"|"${mp4_mime}"|"${m4v_mime}"| \
+    "${wav_mime}"|"${audio_mime}"|"${aac_mime}"|"${m4a_mime}");;
     *) usage "${infile} ${NOT_MEDIA_FILE_ERR}";;
 esac
 
@@ -174,7 +174,7 @@ video () {
 
 # check if the mime type is audio or video then run the correct function
 case "${filetype}" in
-    ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime}) video "${infile}";;
-    ${wav_mime}|${audio_mime}|${aac_mime}|${m4a_mime}) audio "${infile}";;
+    "${mov_mime}"|"${mkv_mime}"|"${mp4_mime}"|"${m4v_mime}") video "${infile}";;
+    "${wav_mime}"|"${audio_mime}"|"${aac_mime}"|"${m4a_mime}") audio "${infile}";;
     *) usage "${infile} ${NOT_MEDIA_FILE_ERR}";;
 esac

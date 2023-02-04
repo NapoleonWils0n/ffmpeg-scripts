@@ -207,10 +207,10 @@ trim_wav () {
 #===============================================================================
 
 case "${filetype}" in
-    ${mov_mime}|${mkv_mime}|${mp4_mime}|${m4v_mime}) trim_video "${infile}";;
-    ${aac_mime}) trim_aac "${infile}";;
-    ${m4a_mime}) trim_m4a "${infile}";;
-    ${audio_mime}) trim_mp3 "${infile}";;
-    ${wav_mime}) trim_wav "${infile}";;
+    "${mov_mime}"|"${mkv_mime}"|"${mp4_mime}"|"${m4v_mime}") trim_video "${infile}";;
+    "${aac_mime}") trim_aac "${infile}";;
+    "${m4a_mime}") trim_m4a "${infile}";;
+    "${audio_mime}") trim_mp3 "${infile}";;
+    "${wav_mime}") trim_wav "${infile}";;
     *) usage "${infile} ${NOT_MEDIA_FILE_ERR}";;
 esac

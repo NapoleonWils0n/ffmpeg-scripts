@@ -119,7 +119,7 @@ video_audio_silence () {
   -i anullsrc=channel_layout="${channel:=${channel_default}}":sample_rate="${rate:=${rate_default}}" \
   -i "${infile}" \
   -shortest -c:v copy -c:a "${aac}" \
-  -map 0:v -map 1:a \
+  -map 0:0 -map 1:0 \
   -movflags +faststart -f mp4 \
   "${outfile:=${outfile_default}}"
 }

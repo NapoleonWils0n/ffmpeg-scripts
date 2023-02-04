@@ -123,4 +123,3 @@ elif [ -n "${seconds}" ]; then
 else 
     usage
 fi
-
