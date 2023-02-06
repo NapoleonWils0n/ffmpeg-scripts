@@ -49,9 +49,6 @@ WRONG_ARGS_ERR='wrong number of arguments passed to script'
 # getopts check options passed to script
 #===============================================================================
 
-# duration regex match 1
-dur_long='^[1-2]\{1\}$'
-
 while getopts ':a:b:d:o:h' opt
 do
   case ${opt} in
@@ -59,8 +56,7 @@ do
 	[ -f "${clip1}" ] || usage "${clip1} ${NOTFILE_ERR}";;
      b) clip2="${OPTARG}"
 	[ -f "${clip2}" ] || usage "${clip2} ${NOTFILE_ERR}";;
-     d) dur="${OPTARG}"
-        expr "${dur}" : "${dur_long}" 1>/dev/null;;
+     d) dur="${OPTARG}";;
      o) outfile="${OPTARG}";;
      h) usage;;
      \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
