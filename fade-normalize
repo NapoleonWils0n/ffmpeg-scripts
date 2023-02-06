@@ -43,11 +43,6 @@ WRONG_ARGS_ERR='wrong number of arguments passed to script'
 
 [ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
 
-# duration regex match 0.[1-9]
-dur_short='^[0]\{1\}\.[1-9]\{1\}$'
-# duration regex match 1
-dur_long='^[1]\{1\}$'
-
 
 #===============================================================================
 # getopts check options passed to script
@@ -58,9 +53,7 @@ do
   case ${opt} in
      i) infile="${OPTARG}"
 	[ -f "${infile}" ] || usage "${infile} ${NOTFILE_ERR}";;
-     d) dur="${OPTARG}"
-        expr "${dur}" : "${dur_short}" 1>/dev/null \
-        || expr "${dur}" : "${dur_long}" 1>/dev/null;;
+     d) dur="${OPTARG}";;
      o) outfile="${OPTARG}";;
      h) usage;;
      \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;

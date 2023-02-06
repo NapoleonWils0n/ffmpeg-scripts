@@ -53,29 +53,14 @@ TITLE_FADE_ERR='title end must be after title start'
 # getopts check options passed to script
 #===============================================================================
 
-# duration regex match 0.[1-9]
-dur_short='^[0]\{1\}\.[1-9]\{1\}$'
-
-# duration regex match 1
-dur_long='^[1]\{1\}$'
-
-# title start, end, duration regex
-title_start_reg='^[0-9]\{1,3\}$'
-title_end_reg='^[0-9]\{1,3\}$'
-
-# getopts check and validate options
 while getopts ':i:d:s:e:o:h' opt
 do
   case ${opt} in
      i) infile="${OPTARG}"
 	[ -f "${infile}" ] || usage "${infile} ${NOTFILE_ERR}";;
-     d) dur="${OPTARG}"
-	expr "${dur}" : "${dur_short}" 1>/dev/null \
-	|| expr "${dur}" : "${dur_long}" 1>/dev/null;;
-     s) title_start="${OPTARG}"
-        expr "${title_start}" : "${title_start_reg}" 1>/dev/null;;
-     e) title_end="${OPTARG}"
-        expr "${title_end}" : "${title_end_reg}" 1>/dev/null;;
+     d) dur="${OPTARG}";;
+     s) title_start="${OPTARG}";;
+     e) title_end="${OPTARG}";;
      o) outfile="${OPTARG}";;
      h) usage;;
      \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;

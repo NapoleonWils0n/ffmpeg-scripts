@@ -56,24 +56,6 @@ WRONG_ARGS_ERR='wrong number of arguments passed to script'
 # getopts check options passed to script
 #===============================================================================
 
-# position regex
-position_regex='^[0-9]\{1,3\}$'
-
-# duration regex match 0.[1-9]
-dur_short='^[0]\{1\}\.[1-9]\{1\}$'
-# duration regex match 1
-dur_long='^[1]\{1\}$'
-
-# margin regex
-margin_regex='^[0-9]\{1,2\}$'
-
-# width regex
-width_regex='^[0-9]\{3\}$'
-
-# border regex
-border_regex='^[0-9]\{1,2\}$'
-
-# getopts check and validate options
 while getopts ':i:v:p:m:x:w:f:c:b:o:h' opt
 do
   case ${opt} in
@@ -81,23 +63,17 @@ do
 	[ -f "${video}" ] || usage "${video} ${NOTFILE_ERR}";;
      v) overlay="${OPTARG}"
 	[ -f "${overlay}" ] || usage "${overlay} ${NOTFILE_ERR}";;
-     p) position="${OPTARG}"
-        expr "${position}" : "${position_regex}" 1>/dev/null || usage;;
-     m) margin="${OPTARG}"
-        expr "${margin}" : "${margin_regex}" 1>/dev/null || usage;;
+     p) position="${OPTARG}";;
+     m) margin="${OPTARG}";;
      x) pip="${OPTARG}"
         case "${pip}" in
             tl|tr|bl|br);;
             *) usage "${pip} ${INVALID_OPT_ERR}";;
         esac;;
-     w) width="${OPTARG}"
-        expr "${width}" : "${width_regex}" 1>/dev/null || usage;;
-     f) fade="${OPTARG}"
-        expr "${fade}" : "${dur_short}" 1>/dev/null \
-        || expr "${fade}" : "${dur_long}" 1>/dev/null;;
+     w) width="${OPTARG}";;
+     f) fade="${OPTARG}";;
      c) colour="${OPTARG}";;
-     b) border="${OPTARG}"
-        expr "${border}" : "${border_regex}" 1>/dev/null || usage;;
+     b) border="${OPTARG}";;
      o) outfile="${OPTARG}";;
      h) usage;;
      \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;

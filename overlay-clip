@@ -49,10 +49,6 @@ WRONG_ARGS_ERR='wrong number of arguments passed to script'
 # getopts check options passed to script
 #===============================================================================
 
-# position regex
-position_regex='^[0-9]\{1,3\}$'
-
-# getopts check and validate options
 while getopts ':i:v:p:o:h' opt
 do
   case ${opt} in
@@ -60,8 +56,7 @@ do
 	[ -f "${video}" ] || usage "${video} ${NOTFILE_ERR}";;
      v) overlay="${OPTARG}"
 	[ -f "${overlay}" ] || usage "${overlay} ${NOTFILE_ERR}";;
-     p) position="${OPTARG}"
-        expr "${position}" : "${position_regex}" 1>/dev/null;;
+     p) position="${OPTARG}";;
      o) outfile="${OPTARG}";;
      h) usage;;
      \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;

@@ -60,21 +60,15 @@ NOT_MEDIA_FILE_ERR='is not a media file'
 # getopts check options passed to script
 #===============================================================================
 
-# duration regex match [1-9]
-dur_regex='^[0-9]\{1,2\}$'
-position_regex='^[a-z]\{1,2\}$'
-
 while getopts ':i:d:z:p:o:h' opt
 do
   case ${opt} in
      i) infile="${OPTARG}"
 	[ -f "${infile}" ] || usage "${infile} ${NOTFILE_ERR}";;
-     d) dur="${OPTARG}"
-        expr "${dur}" : "${dur_regex}" 1>/dev/null;;
+     d) dur="${OPTARG}";;
      z) zoom="${OPTARG}"
         [ "${zoom}" = 'in' ] || [ "${zoom}" = 'out' ];;
-     p) position="${OPTARG}"
-        expr "${position}" : "${position_regex}" 1>/dev/null;;
+     p) position="${OPTARG}";;
      o) outfile="${OPTARG}";;
      h) usage;;
      \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
