@@ -43,17 +43,13 @@ WRONG_ARGS_ERR='wrong number of arguments passed to script'
 # getopts check options passed to script
 #===============================================================================
 
-# target luf regex
-target_regex='^[0-9]\{2\}$'
-
 # getopts check and validate options
 while getopts ':i:t:h' opt
 do
   case ${opt} in
      i) infile="${OPTARG}"
 	[ -f "${infile}" ] || usage "${infile} ${NOTFILE_ERR}";;
-     t) target="${OPTARG}"
-	expr "${target}" : "${target_regex}" 1>/dev/null || usage "${target} ${INVALID_OPT_ERR}";;
+     t) target="${OPTARG}";;
      h) usage;;
      \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
      :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
