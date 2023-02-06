@@ -5,7 +5,7 @@
 #===============================================================================
 
 # dependencies:
-# ffmpeg ffprobe cut expr bc
+# ffmpeg ffprobe cut bc
 
 #===============================================================================
 # script usage
@@ -125,7 +125,7 @@ overlay_video () {
 duration="$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${overlay}" | cut -d\. -f1)"
 
 # postion + duration
-dp="$(expr "${position}" + "${duration}")"
+dp="$((position+duration))"
 
 # fade default
 fade_default='0.2'
@@ -158,7 +158,7 @@ fi
 border_default='4'
 offset_default='2'
 colour_default='#2f2f2f'
-offset="$(expr "${border:=${border_default}}" / 2)"
+offset="$((${border:=${border_default}}/2))"
 draw_border=",pad=w=${border:=${border_default}}+iw:h=${border:=${border_default}}+ih:x=${offset:=${offset_default}}:y=${offset:=${offset_default}}:color=${colour:=${colour_default}}"
 
 # dont show border if border set to 0
