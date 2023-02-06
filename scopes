@@ -52,6 +52,8 @@ WRONG_ARGS_ERR='wrong number of arguments passed to script'
 # histogram overlay
 histogram_overlay () {
     ffplay "${infile}" \
+    -hide_banner \
+    -stats -v panic \
     -vf \
     "split=2[a][b],
     [b]histogram,
@@ -63,6 +65,8 @@ histogram_overlay () {
 # rgb overlay
 rgb_overlay () {
     ffplay "${infile}" \
+    -hide_banner \
+    -stats -v panic \
     -vf \
     "format=gbrp,
     split=2[a][b],
@@ -79,6 +83,8 @@ rgb_overlay () {
 # rgb parade
 rgb_parade () {
     ffplay "${infile}" \
+    -hide_banner \
+    -stats -v panic \
     -vf \
     "format=gbrp,
     split=2[a][b],
@@ -94,6 +100,8 @@ rgb_parade () {
 # rgb overlay and parade stacked
 rgb_stacked () {
     ffplay "${infile}" \
+    -hide_banner \
+    -stats -v panic \
     -vf \
     "format=gbrp,
     split=3[a][b][c],
@@ -116,6 +124,8 @@ rgb_stacked () {
 # waveform lowpass
 waveform_lowpass () {
     ffplay "${infile}" \
+    -hide_banner \
+    -stats -v panic \
     -vf \
     "split=2[a][b],
     [b]waveform=f=lowpass:
@@ -129,6 +139,8 @@ waveform_lowpass () {
 # vectorscope
 vectorscope () {
     ffplay "${infile}" \
+    -hide_banner \
+    -stats -v panic \
     -vf \
     "format=yuva444p9,
     split=2[m][v],
