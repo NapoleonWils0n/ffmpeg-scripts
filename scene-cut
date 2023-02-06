@@ -5,7 +5,7 @@
 #===============================================================================
 
 # dependencies:
-# ffmpeg expr
+# ffmpeg 
 
 #===============================================================================
 # script usage
@@ -95,5 +95,5 @@ trim_video () {
 count=1
 while IFS=, read -r start duration; do
   trim_video
-  count="$(expr ${count} + 1)"
+  count="$((count+1))"
 done < "${cutfile}"
