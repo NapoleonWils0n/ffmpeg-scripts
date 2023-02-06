@@ -5,7 +5,7 @@
 #===============================================================================
 
 # dependencies:
-# ffmpeg ffprobe cut expr
+# ffmpeg ffprobe cut 
 
 #===============================================================================
 # script usage
@@ -105,7 +105,7 @@ overlay_video () {
 duration="$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${overlay}" | cut -d\. -f1)"
 
 # postion + duration
-dp="$(expr "${position}" + "${duration}")"
+dp="$((position+duration))"
 
 # run the overlay_video function
 overlay_video "${video}" "${overlay}"
