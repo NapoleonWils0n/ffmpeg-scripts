@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #===============================================================================
-# extract a frame froma a video as a png file
+# extract a frame from a video as a png file
 #===============================================================================
 
 # dependencies:
@@ -17,7 +17,7 @@ usage()
 [ -z "${1}" ] || echo "! ${1}"
 # display help
 echo "\
-# extract a frame froma a video as a png file
+# extract a frame from a video as a png file
 https://trac.ffmpeg.org/wiki/Seeking
 
 $(basename "$0") -i infile.(mp4|mov|mkv|m4v|webm) -s 00:00:00.000 -o outfile.png
