@@ -36,8 +36,6 @@ INVALID_OPT_ERR='Invalid option:'
 REQ_ARG_ERR='requires an argument'
 WRONG_ARGS_ERR='wrong number of arguments passed to script'
 NOT_MEDIA_FILE_ERR='is not a media file'
-NOTFILE_ERR='not a file'
-
 
 #===============================================================================
 # check number of aruments passed to script
@@ -54,8 +52,7 @@ while getopts ':s:i:e:t:o:f:h' opt
 do
   case ${opt} in
      s) start="${OPTARG}";;
-     i) input="${OPTARG}"
-	[ -f "${input}" ] || usage "${input} ${NOTFILE_ERR}";;
+     i) input="${OPTARG}";;
      e) end="${OPTARG}";;
      t) threshold="${OPTARG}";;
      o) output="${OPTARG}";;

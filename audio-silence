@@ -32,7 +32,6 @@ exit 2
 # error messages
 #===============================================================================
 
-NOTFILE_ERR='not a file'
 INVALID_OPT_ERR='Invalid option:'
 REQ_ARG_ERR='requires an argument'
 WRONG_ARGS_ERR='wrong number of arguments passed to script'
@@ -52,8 +51,7 @@ WRONG_ARGS_ERR='wrong number of arguments passed to script'
 while getopts ':i:c:r:o:h' opt
 do
   case ${opt} in
-     i) infile="${OPTARG}"
-	[ -f "${infile}" ] || usage "${infile} ${NOTFILE_ERR}";;
+     i) infile="${OPTARG}";;
      c) channel="${OPTARG}"
         { [ "${channel}" = 'mono' ] || [ "${channel}" = 'stereo' ]; } || usage;;
      r) rate="${OPTARG}"

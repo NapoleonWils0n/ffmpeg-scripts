@@ -32,7 +32,6 @@ exit 2
 # error messages
 #===============================================================================
 
-NOTFILE_ERR='not a file'
 INVALID_OPT_ERR='Invalid option:'
 REQ_ARG_ERR='requires an argument'
 WRONG_ARGS_ERR='wrong number of arguments passed to script'
@@ -52,10 +51,8 @@ WRONG_ARGS_ERR='wrong number of arguments passed to script'
 while getopts ':i:v:p:o:h' opt
 do
   case ${opt} in
-     i) video="${OPTARG}"
-	[ -f "${video}" ] || usage "${video} ${NOTFILE_ERR}";;
-     v) overlay="${OPTARG}"
-	[ -f "${overlay}" ] || usage "${overlay} ${NOTFILE_ERR}";;
+     i) video="${OPTARG}";;
+     v) overlay="${OPTARG}";;
      p) position="${OPTARG}";;
      o) outfile="${OPTARG}";;
      h) usage;;

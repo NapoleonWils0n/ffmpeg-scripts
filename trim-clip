@@ -54,8 +54,7 @@ while getopts ':s:i:t:o:h' opt
 do
   case ${opt} in
      s) start="${OPTARG}";;
-     i) infile="${OPTARG}"
-	[ -f "${infile}" ] || usage "${infile} ${NOTFILE_ERR}";;
+     i) infile="${OPTARG}";;
      t) end="${OPTARG}";;
      h) usage;;
      o) outfile="${OPTARG}";;

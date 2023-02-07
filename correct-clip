@@ -42,7 +42,6 @@ exit 2
 # error messages
 #===============================================================================
 
-NOTFILE_ERR='not a file'
 INVALID_OPT_ERR='Invalid option:'
 REQ_ARG_ERR='requires an argument'
 WRONG_ARGS_ERR='wrong number of arguments passed to script'
@@ -64,10 +63,8 @@ NOT_TEXT_FILE_ERR='is not a text file'
 while getopts ':i:c:o:h' opt
 do
   case ${opt} in
-     i) infile="${OPTARG}"
-	[ -f "${infile}" ] || { echo "${infile} ${NOTFILE_ERR}" && usage; };;
-     c) text="${OPTARG}"
-	[ -f "${text}" ] || { echo "${text} ${NOTFILE_ERR}" && usage; };;
+     i) infile="${OPTARG}";;
+     c) text="${OPTARG}";;
      o) outfile="${OPTARG}";;
      h) usage;;
      \?) echo "${INVALID_OPT_ERR} ${OPTARG}" 1>&2 && usage;;

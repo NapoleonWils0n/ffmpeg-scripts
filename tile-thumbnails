@@ -34,7 +34,6 @@ exit 2
 # error messages
 #===============================================================================
 
-NOTFILE_ERR='not a file'
 INVALID_OPT_ERR='Invalid option:'
 REQ_ARG_ERR='requires an argument'
 WRONG_ARGS_ERR='wrong number of arguments passed to script'
@@ -54,8 +53,7 @@ WRONG_ARGS_ERR='wrong number of arguments passed to script'
 while getopts ':i:s:w:t:p:m:c:o:h' opt
 do
   case ${opt} in
-     i) infile="${OPTARG}"
-	[ -f "${infile}" ] || usage "${infile} ${NOTFILE_ERR}";;
+     i) infile="${OPTARG}";;
      s) seek="${OPTARG}";;
      w) scale="${OPTARG}";;
      t) tile="${OPTARG}";;
