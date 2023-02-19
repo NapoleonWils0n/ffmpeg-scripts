@@ -1,6 +1,7 @@
 #!/bin/sh
 
 #===============================================================================
+# nomalize
 # normalize audio levels
 #===============================================================================
 
@@ -16,10 +17,10 @@ usage()
 echo "\
 # normalize audio levels
 
-$(basename "$0") -i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3) -o outfile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
--i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
--o outfile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3) :optional agument 
-# if option not provided defaults to infile-name-normalized-date-time-extension"
+$(basename "$0") -i input.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3) -o output.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
+-i input.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
+-o output.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3) :optional argument 
+# if option not provided defaults to input-name-normalized-date-time-extension"
 exit 2
 }
 
@@ -34,14 +35,14 @@ NOT_MEDIA_FILE_ERR='is not a media file'
 
 
 #===============================================================================
-# check number of aruments passed to script
+# check the number of arguments passed to the script
 #===============================================================================
 
 [ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
 
 
 #===============================================================================
-# getopts check options passed to script
+# getopts check the options passed to the script
 #===============================================================================
 
 while getopts ':i:o:h' opt
@@ -61,7 +62,7 @@ shift $((OPTIND-1))
 # variables
 #===============================================================================
 
-# infile, infile name
+# input, input name
 infile_nopath="${infile##*/}"
 infile_name="${infile_nopath%.*}"
 infile_ext="${infile##*.}"

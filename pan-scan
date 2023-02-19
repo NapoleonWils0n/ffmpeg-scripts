@@ -1,7 +1,8 @@
 #!/bin/sh
 
 #===============================================================================
-# pan scan
+# pan-scan
+# pan scan over an image
 #===============================================================================
 
 # dependencies:
@@ -19,11 +20,11 @@ usage ()
 echo "\
 # pan scan image
 
-$(basename "$0") -i infile.(png|jpg|jpeg) -d (000) -p (l|r|u|d) -o outfile.mp4
--i = infile.(png|jpg|jpeg)
+$(basename "$0") -i input.(png|jpg|jpeg) -d (000) -p (l|r|u|d) -o output.mp4
+-i = input.(png|jpg|jpeg)
 -d = duration : from 1-999
 -p = position : left, right, up, down
--o = outfile.mp4 : optional agument # default is infile-name-pan-date-time"
+-o = output.mp4 : optional argument # default is input-name-pan-date-time"
 exit 2
 }
 
@@ -39,14 +40,14 @@ NOT_MEDIA_FILE_ERR='is not a media file'
 
 
 #===============================================================================
-# check number of aruments passed to script
+# check the number of arguments passed to the script
 #===============================================================================
 
 [ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
 
 
 #===============================================================================
-# getopts check options passed to script
+# getopts check the options passed to the script
 #===============================================================================
 
 while getopts ':i:d:p:o:h' opt
@@ -68,7 +69,7 @@ shift $((OPTIND-1))
 # variables
 #===============================================================================
 
-# infile, infile name and extension
+# input, input name and extension
 infile_nopath="${infile##*/}"
 infile_name="${infile_nopath%.*}"
 
@@ -88,7 +89,7 @@ right="scale=w=-2:h=3*${img_h},crop=w=3*${img_w}/1.05:h=3*${img_h}/1.05:x=(in_w-
 up="scale=w=-2:h=3*${img_h},crop=w=3*${img_w}/1.2:h=3*${img_h}/1.2:y=t*(in_h-out_h)/${dur},scale=w=${img_w}:h=${img_h},setsar=1" \
 down="scale=w=-2:h=3*${img_h},crop=w=3*${img_w}/1.2:h=3*${img_h}/1.2:y=(in_h-out_h)-t*(in_h-out_h)/${dur},scale=w=${img_w}:h=${img_h},setsar=1" \
 
-# outfile file recording destination
+# output file recording destination
 outfile_default="${infile_name}-pan-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
 
 

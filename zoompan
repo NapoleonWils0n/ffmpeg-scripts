@@ -1,7 +1,8 @@
 #!/bin/sh
 
 #===============================================================================
-# zoompan, ken burns effect
+# zoompan
+# ken burns effect
 #===============================================================================
 
 # dependencies:
@@ -20,12 +21,12 @@ usage ()
 echo "\
 # zoompan, ken burns effect
 
-$(basename "$0") -i infile.(png|jpg|jpeg) -d (000) -z (in|out) -p (tl|c|tc|tr|bl|br) -o outfile.mp4
--i = infile.(png|jpg|jpeg)
+$(basename "$0") -i input.(png|jpg|jpeg) -d (000) -z (in|out) -p (tl|c|tc|tr|bl|br) -o output.mp4
+-i = input.(png|jpg|jpeg)
 -d = duration : from 1-999
 -z = zoom : in or out
 -p = position : zoom to location listed below
--o = outfile.mp4 : optional agument # default is infile-name-zoompan-date-time
+-o = outfile.mp4 : optional argument # default is input-name-zoompan-date-time
 
 +------------------------------+
 +tl            tc            tr+
@@ -49,14 +50,14 @@ NOT_MEDIA_FILE_ERR='is not a media file'
 
 
 #===============================================================================
-# check number of aruments passed to script
+# check the number of arguments passed to the script
 #===============================================================================
 
 [ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
 
 
 #===============================================================================
-# getopts check options passed to script
+# getopts check the options passed to the script
 #===============================================================================
 
 while getopts ':i:d:z:p:o:h' opt
@@ -80,7 +81,7 @@ shift $((OPTIND-1))
 # variables
 #===============================================================================
 
-# infile, infile name and extension
+# input, input name and extension
 infile_nopath="${infile##*/}"
 infile_name="${infile_nopath%.*}"
 

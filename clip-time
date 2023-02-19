@@ -1,7 +1,8 @@
 #!/bin/sh
 
 #===============================================================================
-# clip time - create ffmpeg cutlist
+# clip-time
+# create ffmpeg cutlist
 #===============================================================================
 
 # dependencies:
@@ -33,14 +34,14 @@ REQ_ARG_ERR='requires an argument'
 WRONG_ARGS_ERR='wrong number of arguments passed to script'
 
 #===============================================================================
-# check number of aruments passed to script
+# check the number of arguments passed to the script
 #===============================================================================
 
 [ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
 
 
 #===============================================================================
-# getopts check options passed to script
+# getopts check the options passed to the script
 #===============================================================================
 
 while getopts ':i:o:h' opt

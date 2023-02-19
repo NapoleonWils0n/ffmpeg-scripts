@@ -1,6 +1,7 @@
 #!/bin/sh
 
 #===============================================================================
+# fade-clip
 # fade video and audio in and out
 #===============================================================================
 
@@ -17,10 +18,10 @@ usage()
 echo "\
 # fade video and audio in and out
 
-$(basename "$0") -i infile.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -o outfile.mp4
+$(basename "$0") -i input.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -o output.mp4
 -i infile.(mp4|mkv|mov|m4v)
--d (0.[0-9]|1) :optional agument # if option not provided defaults to 0.5
--o outfile.mp4 :optional agument # if option not provided defaults to infile-name-fade-date-time"
+-d (0.[0-9]|1) :optional argument # if option not provided defaults to 0.5
+-o output.mp4  :optional argument # if option not provided defaults to input-name-fade-date-time"
 exit 2
 }
 
@@ -35,14 +36,14 @@ WRONG_ARGS_ERR='wrong number of arguments passed to script'
 
 
 #===============================================================================
-# check number of aruments passed to script
+# check the number of arguments passed to the script
 #===============================================================================
 
 [ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
 
 
 #===============================================================================
-# getopts check options passed to script
+# getopts check the options passed to the script
 #===============================================================================
 
 while getopts ':i:d:o:h' opt
@@ -63,7 +64,7 @@ shift $((OPTIND-1))
 # variables
 #===============================================================================
 
-# infile, infile name and extension
+# input, input name and extension
 infile_nopath="${infile##*/}"
 infile_name="${infile_nopath%.*}"
 

@@ -1,6 +1,7 @@
 #!/bin/sh
 
 #===============================================================================
+# vid2gif
 # convert a video into a gif animation
 #===============================================================================
 
@@ -19,14 +20,14 @@ usage()
 echo "\
 # convert a video into a gif animation
 
-$(basename "$0") -s 00:00:00.000 -i infile.(mp4|mov|mkv|m4v) -t 00:00:00.000 -f [00] -w [0000] -o outfile.gif
+$(basename "$0") -s 00:00:00.000 -i input.(mp4|mov|mkv|m4v) -t 00:00:00.000 -f [00] -w [0000] -o output.gif
 -s 00:00:00.000 : start time
--i infile.(mp4|mov|mkv|m4v)
+-i input.(mp4|mov|mkv|m4v)
 -t 00:00:00.000 : number of seconds after start time
 -f [00]         : framerate
 -w [0000]       : width
--o outfile.gif  :optional agument 
-# if option not provided defaults infile-name-gif-date-time.gif"
+-o output.gif   :optional agument 
+# if option not provided defaults input-name-gif-date-time.gif"
 exit 2
 }
 
@@ -41,14 +42,14 @@ WRONG_ARGS_ERR='wrong number of arguments passed to script'
 
 
 #===============================================================================
-# check number of aruments passed to script
+# check the number of arguments passed to the script
 #===============================================================================
 
 [ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
 
 
 #===============================================================================
-# getopts check options passed to script
+# getopts check the options passed to the script
 #===============================================================================
 
 while getopts ':s:i:t:f:w:o:h' opt
@@ -72,7 +73,7 @@ shift $((OPTIND-1))
 # variables
 #===============================================================================
 
-# infile name
+# input name
 infile_nopath="${infile##*/}"
 infile_name="${infile_nopath%.*}"
 
@@ -82,6 +83,7 @@ end_default=$(ffprobe -v error -sexagesimal -show_entries format=duration -of de
 framerate_default='15'
 width_default='320'
 outfile_default="${infile_name}-gif-$(date +"%Y-%m-%d-%H-%M-%S").gif"
+
 
 #===============================================================================
 # functions

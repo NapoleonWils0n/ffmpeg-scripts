@@ -1,6 +1,7 @@
 #!/bin/sh
 
 #===============================================================================
+# webp
 # ffmpeg libwebp_anim
 #===============================================================================
 
@@ -26,7 +27,7 @@ $(basename "$0") -i input -c 0-6 -q 0-100 -f 15 -w 600 -p none -o output.webp
 -w width: default 600px
 -p preset: none|default|picture|photo|drawing|icon|text : default none
 -o output.webp :optional agument 
-# if option not provided defaults infile-name.webp"
+# if option not provided defaults input-name.webp"
 exit 2
 }
 
@@ -41,14 +42,14 @@ WRONG_ARGS_ERR='wrong number of arguments passed to script'
 
 
 #===============================================================================
-# check number of aruments passed to script
+# check the number of arguments passed to the script
 #===============================================================================
 
 [ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
 
 
 #===============================================================================
-# getopts check options passed to script
+# getopts check the options passed to the script
 #===============================================================================
 
 while getopts ':i:c:q:f:w:p:o:h' opt

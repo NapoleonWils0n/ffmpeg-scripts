@@ -1,7 +1,8 @@
 #!/bin/sh
 
 #===============================================================================
-# tile thumbnails from a video
+# tile-thumbnails
+# create an image with thumbnails from a video
 #===============================================================================
 
 # dependencies:
@@ -16,16 +17,16 @@ usage()
 echo "\
 # tile thumbnails from a video into an image
 
-$(basename "$0") -i infile.(mp4|mkv|mov|m4v|webm) -s 00:00:00.000 -w 000 -t 0x0 -p 00 -m 00 -c color -o outfile.png
--i infile.(mp4|mkv|mov|m4v|webm)
+$(basename "$0") -i input.(mp4|mkv|mov|m4v|webm) -s 00:00:00.000 -w 000 -t 0x0 -p 00 -m 00 -c color -o output.png
+-i input.(mp4|mkv|mov|m4v|webm)
 -s seek into the video file                : default 00:00:05
 -w thumbnail width                         : 160
 -t tile layout format width x height : 4x3 : default 4x3
 -p padding between images                  : default 7
 -m margin                                  : default 2
 -c color = https://ffmpeg.org/ffmpeg-utils.html#color-syntax : default black
--o outfile.png :optional agument 
-# if option not provided defaults to infile-name-tile-date-time.png"
+-o output.png :optional argument 
+# if option not provided defaults to input-name-tile-date-time.png"
 exit 2
 }
 
@@ -40,14 +41,14 @@ WRONG_ARGS_ERR='wrong number of arguments passed to script'
 
 
 #===============================================================================
-# check number of aruments passed to script
+# check the number of arguments passed to the script
 #===============================================================================
 
 [ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
 
 
 #===============================================================================
-# getopts check options passed to script
+# getopts check the options passed to the script
 #===============================================================================
 
 while getopts ':i:s:w:t:p:m:c:o:h' opt
@@ -73,7 +74,7 @@ shift $((OPTIND-1))
 # variables
 #===============================================================================
 
-# infile, infile name
+# input, input name
 infile_nopath="${infile##*/}"
 infile_name="${infile_nopath%.*}"
 

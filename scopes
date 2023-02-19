@@ -1,6 +1,7 @@
 #!/bin/sh
 
 #===============================================================================
+# scopes
 # ffplay video scopes
 #===============================================================================
 
@@ -17,12 +18,12 @@ usage()
 echo "\
 # ffplay video scopes
 
-$(basename "$0") -i infile = histogram
-$(basename "$0") -o infile = rgb overlay
-$(basename "$0") -p infile = rgb parade
-$(basename "$0") -s infile = rgb overlay and parade
-$(basename "$0") -w infile = waveform
-$(basename "$0") -v infile = vector scope
+$(basename "$0") -i input = histogram
+$(basename "$0") -o input = rgb overlay
+$(basename "$0") -p input = rgb parade
+$(basename "$0") -s input = rgb overlay and parade
+$(basename "$0") -w input = waveform
+$(basename "$0") -v input = vector scope
 $(basename "$0") -h = help
 "
 exit 2
@@ -39,7 +40,7 @@ WRONG_ARGS_ERR='wrong number of arguments passed to script'
 
 
 #===============================================================================
-# check number of aruments passed to script
+# check the number of arguments passed to the script
 #===============================================================================
 
 [ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
@@ -154,7 +155,7 @@ vectorscope () {
 
 
 #===============================================================================
-# getopts check options passed to script
+# getopts check the options passed to the script
 #===============================================================================
 
 while getopts ':i:o:p:s:w:v:h' opt

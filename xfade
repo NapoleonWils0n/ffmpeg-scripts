@@ -1,6 +1,7 @@
 #!/bin/sh
 
 #===============================================================================
+# xfade
 # ffmpeg xfade transitions
 #===============================================================================
 
@@ -19,13 +20,13 @@ usage()
 echo "\
 # ffmpeg xfade transitions
 
-$(basename "$0") -a clip1.(mp4|mkv|mov|m4v) -b clip2.(mp4|mkv|mov|m4v) -d duration -t transition -f offset -o outfile.mp4
+$(basename "$0") -a clip1.(mp4|mkv|mov|m4v) -b clip2.(mp4|mkv|mov|m4v) -d duration -t transition -f offset -o output.mp4
 -a clip1.(mp4|mkv|mov|m4v) : first clip
 -b clip2.(mp4|mkv|mov|m4v) : second clip
 -d duration                : transition duration
 -t transition              : transition
 -f offset                  : offset
--o outfile.mp4             : optional agument # if option not provided defaults to infile-name-xfade-date-time
+-o output.mp4              : optional argument # if option not provided defaults to input-name-xfade-date-time
 
 + transitions
 
@@ -48,14 +49,14 @@ WRONG_ARGS_ERR='wrong number of arguments passed to script'
 
 
 #===============================================================================
-# check number of aruments passed to script
+# check the number of arguments passed to the script
 #===============================================================================
 
 [ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
 
 
 #===============================================================================
-# getopts check options passed to script
+# getopts check the options passed to the script
 #===============================================================================
 
 while getopts ':a:b:d:t:f:o:h' opt
@@ -79,7 +80,7 @@ shift $((OPTIND-1))
 # variables
 #===============================================================================
 
-# infile, infile name and extension
+# input, input name and extension
 clip1_nopath="${clip1##*/}"
 clip1_name="${clip1_nopath%.*}"
 

@@ -1,6 +1,7 @@
 #!/bin/sh
 
 #===============================================================================
+# scene-detect
 # ffmpeg scene detection
 #===============================================================================
 
@@ -16,7 +17,7 @@ usage () {
 [ -z "${1}" ] || echo "! ${1}"
 # display help
 echo "\
-$(basename "$0") -s 00:00:00 -i infile -e 00:00:00 -t (0.1 - 0.9) -f sec -o outfile
+$(basename "$0") -s 00:00:00 -i input -e 00:00:00 -t (0.1 - 0.9) -f sec -o output
 
 -s 00:00:00 : start time
 -i input.(mp4|mov|mkv|m4v)
@@ -37,15 +38,16 @@ REQ_ARG_ERR='requires an argument'
 WRONG_ARGS_ERR='wrong number of arguments passed to script'
 NOT_MEDIA_FILE_ERR='is not a media file'
 
+
 #===============================================================================
-# check number of aruments passed to script
+# check the number of arguments passed to the script
 #===============================================================================
 
 [ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
 
 
 #===============================================================================
-# getopts check options passed to script
+# getopts check the options passed to the script
 #===============================================================================
 
 while getopts ':s:i:e:t:o:f:h' opt

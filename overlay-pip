@@ -1,6 +1,7 @@
 #!/bin/sh
 
 #===============================================================================
+# overlay-pip
 # create a picture in picture
 #===============================================================================
 
@@ -19,19 +20,19 @@ usage()
 echo "\
 # create a picture in picture
 
-$(basename "$0") -i infile.(mp4|mkv|mov|m4v) -v infile.(mp4|mkv|mov|m4v) -p [0-999] 
--m [00] -x (tl|tr|bl|br) -w [000] -f (0.1-9|1) -b [00] -c colour -o outfile.mp4
+$(basename "$0") -i input.(mp4|mkv|mov|m4v) -v input.(mp4|mkv|mov|m4v) -p [0-999] 
+-m [00] -x (tl|tr|bl|br) -w [000] -f (0.1-9|1) -b [00] -c colour -o output.mp4
 
--i infile.(mp4|mkv|mov|m4v) : bottom video
--v infile.(mp4|mkv|mov|m4v) : overlay video
--p [0-999]                  : time to overlay the video
--m [00]                     : margin defaults to 0
--x (tl|tr|bl|br)            : pip postion - defaults to tr
--w [000]                    : width - defaults to 1/4 of vide size
--f (0.1-9|1)                : fade from 0.1 to 1 - defaults to 0.2
--b [00]                     : border
--c colour                   : colour
--o outfile.mp4              : optional agument # if option not provided defaults to infile-name-pip-date-time"
+-i input.(mp4|mkv|mov|m4v) : bottom video
+-v input.(mp4|mkv|mov|m4v) : overlay video
+-p [0-999]                 : time to overlay the video
+-m [00]                    : margin defaults to 0
+-x (tl|tr|bl|br)           : pip postion - defaults to tr
+-w [000]                   : width - defaults to 1/4 of vide size
+-f (0.1-9|1)               : fade from 0.1 to 1 - defaults to 0.2
+-b [00]                    : border
+-c colour                  : colour
+-o output.mp4              : optional argument # if option not provided defaults to input-name-pip-date-time"
 exit 2
 }
 
@@ -44,15 +45,16 @@ INVALID_OPT_ERR='Invalid option:'
 REQ_ARG_ERR='requires an argument'
 WRONG_ARGS_ERR='wrong number of arguments passed to script'
 
+
 #===============================================================================
-# check number of aruments passed to script
+# check the number of arguments passed to the script
 #===============================================================================
 
 [ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
 
 
 #===============================================================================
-# getopts check options passed to script
+# getopts check the options passed to the script
 #===============================================================================
 
 while getopts ':i:v:p:m:x:w:f:c:b:o:h' opt
