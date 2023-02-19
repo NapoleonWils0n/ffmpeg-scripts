@@ -23,7 +23,7 @@ echo "\
 $(basename "$0") -a clip1.(mp4|mkv|mov|m4v) -b clip2.(mp4|mkv|mov|m4v) -d (1|2) -o output.mp4
 -a clip1.(mp4|mkv|mov|m4v) : first clip
 -b clip2.(mp4|mkv|mov|m4v) : second clip
--d (1|2)                   : cross fade duration :optional agument # if option not provided defaults to 1 second
+-d (1|2)                   : cross fade duration :optional argument # if option not provided defaults to 1 second
 -o output.mp4              : optional argument # if option not provided defaults to input-name-xfade-date-time"
 exit 2
 }
