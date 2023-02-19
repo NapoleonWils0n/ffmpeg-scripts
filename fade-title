@@ -26,7 +26,7 @@ $(basename "$0") -i input.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -s 000 -e 000 -o outp
 -d (0.[0-9]|1) : from 0.1 to 0.9 or 1 :optional argument # if option not provided defaults to 0.5
 -s 000         : from 000 to 999
 -e 000         : from 000 to 999
--o output.mp4  :optional argument # if option not provided defaults to input-name-title-date-time"
+-o output.mp4  : optional argument # if option not provided defaults to input-name-title-date-time"
 exit 2
 }
 

@@ -22,8 +22,8 @@ echo "\
 
 $(basename "$0") -i input.(png|jpg|jpeg) -d (000) -p (l|r|u|d) -o output.mp4
 -i = input.(png|jpg|jpeg)
--d = duration : from 1-999
--p = position : left, right, up, down
+-d = duration   : from 1-999
+-p = position   : left, right, up, down
 -o = output.mp4 : optional argument # default is input-name-pan-date-time"
 exit 2
 }

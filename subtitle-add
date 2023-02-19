@@ -23,7 +23,7 @@ echo "\
 $(basename "$0") -i input.(mp4|mkv|mov|m4v) -s subtitle.srt -o output.mp4
 -i input.(mp4|mkv|mov|m4v)
 -s subtitle.srt
--o output.mp4 :optional argument # if option not provided defaults to input-name-subs-date-time"
+-o output.mp4 : optional argument # if option not provided defaults to input-name-subs-date-time"
 exit 2
 }
 

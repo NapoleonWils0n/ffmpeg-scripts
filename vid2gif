@@ -26,7 +26,7 @@ $(basename "$0") -s 00:00:00.000 -i input.(mp4|mov|mkv|m4v) -t 00:00:00.000 -f [
 -t 00:00:00.000 : number of seconds after start time
 -f [00]         : framerate
 -w [0000]       : width
--o output.gif   :optional agument 
+-o output.gif   : optional agument 
 # if option not provided defaults input-name-gif-date-time.gif"
 exit 2
 }

@@ -23,9 +23,9 @@ echo "\
 
 $(basename "$0") -i input.(png|jpg|jpeg) -d (000) -z (in|out) -p (tl|c|tc|tr|bl|br) -o output.mp4
 -i = input.(png|jpg|jpeg)
--d = duration : from 1-999
--z = zoom : in or out
--p = position : zoom to location listed below
+-d = duration    : from 1-999
+-z = zoom        : in or out
+-p = position    : zoom to location listed below
 -o = outfile.mp4 : optional argument # default is input-name-zoompan-date-time
 
 +------------------------------+

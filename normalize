@@ -19,7 +19,7 @@ echo "\
 
 $(basename "$0") -i input.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3) -o output.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
 -i input.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
--o output.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3) :optional argument 
+-o output.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3) : optional argument 
 # if option not provided defaults to input-name-normalized-date-time-extension"
 exit 2
 }

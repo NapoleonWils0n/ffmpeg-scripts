@@ -25,7 +25,7 @@ $(basename "$0") -i input.(mp4|mkv|mov|m4v|webm) -s 00:00:00.000 -w 000 -t 0x0 -
 -p padding between images                  : default 7
 -m margin                                  : default 2
 -c color = https://ffmpeg.org/ffmpeg-utils.html#color-syntax : default black
--o output.png :optional argument 
+-o output.png : optional argument 
 # if option not provided defaults to input-name-tile-date-time.png"
 exit 2
 }

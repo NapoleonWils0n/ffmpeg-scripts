@@ -22,7 +22,7 @@ echo "\
 
 $(basename "$0") -i input.(mp4|mkv|mov|m4v|webm|aac|m4a|wav|mp3) -o output.png
 -i output.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
--o output.png :optional argument # if option not provided defaults to input-name-waveform-date-time"
+-o output.png : optional argument # if option not provided defaults to input-name-waveform-date-time"
 exit 2
 }
 

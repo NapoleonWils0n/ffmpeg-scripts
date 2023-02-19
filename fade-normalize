@@ -22,8 +22,8 @@ echo "\
 
 $(basename "$0") -i input.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -o output.mp4
 
--d (0.[0-9]|1) :optional argument # if option not provided defaults to 0.5
--o output.mp4  :optional argument # if option not provided defaults to input-name-normalized-date-time"
+-d (0.[0-9]|1) : optional argument # if option not provided defaults to 0.5
+-o output.mp4  : optional argument # if option not provided defaults to input-name-normalized-date-time"
 exit 2
 }
 
