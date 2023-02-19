@@ -27,7 +27,7 @@ $(basename "$0") -i input.(mp4|mkv|mov|m4v) -v input.(mp4|mkv|mov|m4v) -p [0-999
 -v input.(mp4|mkv|mov|m4v) : overlay video
 -p [0-999]                 : time to overlay the video
 -m [00]                    : margin defaults to 0
--x (tl|tr|bl|br)           : pip postion - defaults to tr
+-x (tl|tr|bl|br)           : pip position - defaults to tr
 -w [000]                   : width - defaults to 1/4 of vide size
 -f (0.1-9|1)               : fade from 0.1 to 1 - defaults to 0.2
 -b [00]                    : border
