@@ -102,7 +102,7 @@ overlay_video () {
 # get overlay videos duration with ffprobe
 duration="$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${overlay}" | cut -d\. -f1)"
 
-# postion + duration
+# position + duration
 dp="$((position+duration))"
 
 # run the overlay_video function
