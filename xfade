@@ -94,7 +94,7 @@ if [ -z "${offset}" ];then
     # clip 1 duration to calculate default transition offset
     clip1_dur=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${clip1}")
     
-    # round down decinal point
+    # round down decimal point
     clip1_time=$(printf "%.1f\n" "${clip1_dur}")
     
     # clip1 duration minus duration default and 0.1 seconds which is needed for the transition
