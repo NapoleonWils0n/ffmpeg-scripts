@@ -2,7 +2,7 @@
 
 #===============================================================================
 # trim-clip
-# trim video or audio clip
+# trim video or audio clips with millisecond accuracy
 #===============================================================================
 
 # dependencies:
