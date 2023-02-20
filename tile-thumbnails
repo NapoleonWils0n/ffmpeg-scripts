@@ -15,7 +15,7 @@
 usage()
 {
 echo "\
-# tile thumbnails from a video into an image
+# create an image with thumbnails from a video
 
 $(basename "$0") -i input.(mp4|mkv|mov|m4v|webm) -s 00:00:00.000 -w 000 -t 0x0 -p 00 -m 00 -c color -o output.png
 -i input.(mp4|mkv|mov|m4v|webm)
