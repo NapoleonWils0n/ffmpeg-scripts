@@ -1,10 +1,8 @@
 #+STARTUP: content
 #+OPTIONS: num:nil author:nil
-
 * ffmpeg scripts
 
 A collection of ffmpeg shell scripts for basic editing tasks
-
 
 + [[#audio-silence][audio-silence]]
 + [[#combine-clips][combine-clips]]
@@ -197,14 +195,23 @@ and adds a silent audio track to match the duration of the video and creates a n
 + script usage
 
 #+BEGIN_SRC sh
-audio-silence -i infile.(mp4|mkv|mov|m4v) -c (mono|stereo) -r (44100|48000) -o outfile.mp4
+audio-silence -i input.(mp4|mkv|mov|m4v) -c (mono|stereo) -r (44100|48000) -o output.mp4
 #+END_SRC
 
++ script help
+
+#+begin_src sh
+audio-silence -h
+#+end_src
+
 #+BEGIN_EXAMPLE
--i infile.(mp4|mkv|mov|m4v)
--c (mono|stereo) : optional agument # default is mono
--r (44100|48000) : optional agument # default is 44100
--o outfile.mp4   : optional agument # default is infile-name-silence-date-time
+# audio-silence add silent audio to a video clip
+
+audio-silence -i input.(mp4|mkv|mov|m4v) -c (mono|stereo) -r (44100|48000) -o output.mp4
+-i input.(mp4|mkv|mov|m4v)
+-c (mono|stereo) : optional argument # if option not provided defaults to mono
+-r (44100|48000) : optional argument # if option not provided defaults to 44100
+-o output.mp4    : optional argument # if option not provided defaults to input-name-silence-date-time
 #+END_EXAMPLE
 
 *** audio-silence batch process
@@ -245,6 +252,19 @@ convert timestamps into start and duration
 clip-time -i input -o output
 #+END_SRC
 
++ script help
+
+#+begin_src sh
+clip-time -h
+#+end_src
+
+#+begin_example
+clip-time -i input -o output
+
+-i input
+-o output
+#+end_example
+
 ** combine-clips
 :PROPERTIES:
 :CUSTOM_ID: combine-clips
@@ -257,13 +277,22 @@ combine an image or video file with an audio clip
 + script usage
 
 #+BEGIN_SRC sh
-combine-clip -i infile.(mp4|mov|mkv|m4v|png|jpg) -a audio.(m4a|aac|wav|mp3) -o outfile.mp4
+combine-clips -i input.(mp4|mkv|mov|m4v|png|jpg) -a audio.(m4a|aac|wav|mp3) -o output.mp4
 #+END_SRC
 
++ script help
+
+#+begin_src sh
+combine-clips -h
+#+end_src
+
 #+BEGIN_EXAMPLE
--i infile.(mp4|mkv|mov|m4v|png|jpg)
+# combine an image or video file with an audio clip
+
+combine-clips -i input.(mp4|mkv|mov|m4v|png|jpg) -a audio.(m4a|aac|wav|mp3) -o output.mp4
+-i input.(mp4|mkv|mov|m4v|png|jpg)
 -a audio.(m4a|aac|wav|mp3)
--o outfile.mp4 : optional agument # defaults is infile-name-combined-date-time
+-o output.mp4 : optional argument # if option not provided defaults to input-name-combined-date-time
 #+END_EXAMPLE
 
 *** combine-clips batch process
@@ -338,13 +367,25 @@ to adjust the levels and white balance
 + script usage
 
 #+BEGIN_SRC sh
-correct-clip -i infile.(mp4|mkv|mov|m4v) -c curve.txt -o outfile.mp4
+correct-clip -i input.(mp4|mkv|mov|m4v) -c curve.txt -o output.mp4
 #+END_SRC
 
++ script help
+
+#+begin_src sh
+correct-clip -h
+#+end_src
+
 #+BEGIN_EXAMPLE
--i infile.(mp4|mkv|mov|m4v)
+# correct a video clip by using a gimp curve
+
+# requires a curve file created with the following script
+# https://github.com/NapoleonWils0n/curve2ffmpeg
+
+correct-clip -i input.(mp4|mkv|mov|m4v) -c curve.txt -o output.mp4
+-i input.(mp4|mkv|mov|m4v)
 -c curve.txt
--o outfile.mp4 :optional agument # default is infile-name-corrected-date-time
+-o output.mp4 : optional argument # if option not provided defaults to input-name-corrected-date-time
 #+END_EXAMPLE
 
 *** correct-clip batch process
@@ -388,14 +429,23 @@ the videos must have the same codecs, size and frame rate
 + script usage
 
 #+BEGIN_SRC sh
-crossfade-clips -a clip1.(mp4|mkv|mov|m4v) -b clip2.(mp4|mkv|mov|m4v) -d (1|2) -o outfile.mp4
+crossfade-clips -a clip1.(mp4|mkv|mov|m4v) -b clip2.(mp4|mkv|mov|m4v) -d (1|2) -o output.mp4
 #+END_SRC
 
++ script help
+
+#+begin_src sh
+crossfade-clips -h
+#+end_src
+
 #+BEGIN_EXAMPLE
+# ffmpeg cross fade clips
+
+crossfade-clips -a clip1.(mp4|mkv|mov|m4v) -b clip2.(mp4|mkv|mov|m4v) -d (1|2) -o output.mp4
 -a clip1.(mp4|mkv|mov|m4v) : first clip
 -b clip2.(mp4|mkv|mov|m4v) : second clip
--d (1|2)                   : cross fade duration :optional agument # default is 1 second
--o outfile.mp4             : optional agument # default is infile-name-xfade-date-time
+-d (1|2)                   : cross fade duration :optional argument # if option not provided defaults to 1 second
+-o output.mp4              : optional argument # if option not provided defaults to input-name-xfade-date-time
 #+END_EXAMPLE
 
 ** ebu-meter
@@ -410,10 +460,20 @@ ffplay ebu meter
 + script usage
 
 #+BEGIN_SRC sh
-ebu-meter -i infile.(mp4|mov|mkv|m4v|webm|m4a|aac|wav|mp3) -t (00)
+ebu-meter -i input.(mp4|mkv|mov|m4v|webm|aac|m4a|wav|mp3) -t (00)
 #+END_SRC
 
 -t = luf target, eg 16
+
++ script help
+
+#+begin_src sh
+ebu-meter -h
+#+end_src
+
+#+begin_example
+ebu-meter -i input.(mp4|mkv|mov|m4v|webm|aac|m4a|wav|mp3) -t (00)
+#+end_example
 
 ** extract-frame
 :PROPERTIES:
@@ -433,13 +493,23 @@ For instance, 02:30.5 would be 2 minutes, 30 seconds, and a half a second, which
 + script usage
 
 #+BEGIN_SRC sh
-extract-frame -i infile.(mp4|mov|mkv|m4v|webm) -s 00:00:00.000 -o outfile.mp4
+extract-frame -i input.(mp4|mov|mkv|m4v|webm) -s 00:00:00.000 -o output.png
 #+END_SRC
 
++ script help
+
+#+begin_src sh
+extract-frame -h
+#+end_src
+
 #+BEGIN_EXAMPLE
--i infile.(mp4|mov|mkv|m4v|webm)
--s 00:00:00.000    : optional argument # default is 00:00:00
--o outfile.png     : optional agument # default is infile-name-frame-date-time
+# extract a frame from a video as a png file
+https://trac.ffmpeg.org/wiki/Seeking
+
+extract-frame -i input.(mp4|mov|mkv|m4v|webm) -s 00:00:00.000 -o output.png
+-i input.(mp4|mov|mkv|m4v)
+-s 00:00:00.000    : optional argument # if option not provided defaults to 00:00:00
+-o outfile.png     : optional argument # if option not provided defaults to input-name-frame-date-time
 #+END_EXAMPLE
 
 *** extract-frame batch process
@@ -477,13 +547,22 @@ fade video and audio in and out
 + script usage
 
 #+BEGIN_SRC sh
-fade-clip -i video.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -o outfile.mp4
+fade-clip -i input.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -o output.mp4
 #+END_SRC
 
++ script help
+
+#+begin_src sh
+fade-clip -h
+#+end_src
+
 #+BEGIN_EXAMPLE
+# fade video and audio in and out
+
+fade-clip -i input.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -o output.mp4
 -i infile.(mp4|mkv|mov|m4v)
--d (0.[0-9]|1) : optional agument # default is 0.5
--o outfile.mp4 : optional agument # default is infile-name-fade-date-time
+-d (0.[0-9]|1) : optional argument # if option not provided defaults to 0.5
+-o output.mp4  : optional argument # if option not provided defaults to input-name-fade-date-time
 #+END_EXAMPLE
 
 *** fade-clip batch process
@@ -521,13 +600,22 @@ fade video and audio in and out and normalize
 + script usage
 
 #+BEGIN_SRC sh
-fade-normalize -i video.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -o outfile.mp4
+fade-normalize -i input.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -o output.mp4
 #+END_SRC
 
++ script help
+
+#+begin_src sh
+fade-normalize -h
+#+end_src
+
 #+BEGIN_EXAMPLE
--i infile.(mp4|mkv|mov|m4v)
--d (0.[0-9]|1) : optional agument # default is 0.5
--o outfile.mp4 : optional agument # default is infile-name-normalized-date-time
+# fade video and normalize audio levels
+
+fade-normalize -i input.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -o output.mp4
+
+-d (0.[0-9]|1) : optional argument # if option not provided defaults to 0.5
+-o output.mp4  : optional argument # if option not provided defaults to input-name-normalized-date-time
 #+END_EXAMPLE
 
 *** fade-normalize batch process
@@ -553,15 +641,25 @@ normalize the audio and create video a lower third title from the filename
 + script usage
 
 #+BEGIN_SRC sh
-fade-title -i infile.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -s 000 -e 000 -o outfile.mp4
+fade-title -i input.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -s 000 -e 000 -o output.mp4
 #+END_SRC
 
++ script help
+
+#+begin_src sh
+fade-title -h
+#+end_src
+
 #+BEGIN_EXAMPLE
--i infile.(mp4|mkv|mov|m4v)
--d (0.[0-9]|1) : from 0.1 to 0.9 or 1 : optional agument # default is 0.5
+# fade video, audio add title from video filename
+
+fade-title -i input.(mp4|mkv|mov|m4v) -d (0.[0-9]|1) -s 000 -e 000 -o output.mp4
+
+-i input.(mp4|mkv|mov|m4v)
+-d (0.[0-9]|1) : from 0.1 to 0.9 or 1 :optional argument # if option not provided defaults to 0.5
 -s 000         : from 000 to 999
 -e 000         : from 000 to 999
--o outfile.mp4 : optional agument # default is infile-name-title-date-time
+-o output.mp4  : optional argument # if option not provided defaults to input-name-title-date-time
 #+END_EXAMPLE
 
 *** fade-title batch process
@@ -586,13 +684,22 @@ convert an image into a video file
 + script usage
 
 #+BEGIN_SRC sh
-img2video -i infile.(png|jpg|jpeg) -d (000) -o outfile.mp4
+img2video -i input.(png|jpg|jpeg) -d (000) -o output.mp4
 #+END_SRC
 
++ script help
+
+#+begin_src sh
+img2video -h
+#+end_src
+
 #+BEGIN_EXAMPLE
--i infile.(mp4|mkv|mov|m4v)
+# image to video
+
+img2video -i input.(png|jpg|jpeg) -d (000) -o output.mp4
+-i input.(mp4|mkv|mov|m4v)
 -d (000)       : duration
--o outfile.mp4 : optional agument # default is infile-name-video-date-time
+-o output.mp4  : optional argument # if option not provided defaults to input-name-video-date-time
 #+END_EXAMPLE
 
 *** img2video batch process
@@ -625,6 +732,18 @@ ffmpeg loudnorm
 loudnorm -i infile.(mkv|mp4|mov|m4v|m4a|aac|wav|mp3)
 #+END_SRC
 
++ script help
+
+#+begin_src sh
+loudnorm -h
+#+end_src
+
+#+begin_example
+# ffmpeg loudnorm
+
+loudnorm -i input.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
+#+end_example
+
 ** normalize
 :PROPERTIES:
 :CUSTOM_ID: normalize
@@ -637,12 +756,22 @@ normalize audio levels
 + script usage
 
 #+BEGIN_SRC sh
-normalize -i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3) -o outfile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
+normalize -i input.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3) -o output.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
 #+END_SRC
 
++ script help
+
+#+begin_src sh
+normalize -h
+#+end_src
+
 #+BEGIN_EXAMPLE
--i infile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
--o outfile.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3) : optional agument # default is infile-name-normalize-date-time-extension
+# normalize audio levels
+
+normalize -i input.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3) -o output.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
+-i input.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
+-o output.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3) : optional argument
+# if option not provided defaults to input-name-normalized-date-time-extension
 #+END_EXAMPLE
 
 *** normalize batch process
@@ -672,14 +801,23 @@ overlay one video clip on top of another video clip
 + script usage
 
 #+BEGIN_SRC sh
-overlay-clip -i infile.(mp4|mkv|mov|m4v) -v infile.(mp4|mkv|mov|m4v) -p [0-999] -o oufile.mp4
+overlay-clip -i input.(mp4|mkv|mov|m4v) -v input.(mp4|mkv|mov|m4v) -p [0-999] -o output.mp4
 #+END_SRC
 
++ script help
+
+#+begin_src sh
+overlay-clip -h
+#+end_src
+
 #+BEGIN_EXAMPLE
-+ -i infile.(mp4|mkv|mov|m4v) : bottom video
-+ -v infile.(mp4|mkv|mov|m4v) : overlay video
-+ -p [0-999]                  : time to overlay the video
-+ -o outfile.mp4              : optional agument # default is infile-name-overlay-date-time
+# overlay one video clip on top of another video clip
+
+overlay-clip -i input.(mp4|mkv|mov|m4v) -v input.(mp4|mkv|mov|m4v) -p [0-999] -o output.mp4
+-i input.(mp4|mkv|mov|m4v) : bottom video
+-v input.(mp4|mkv|mov|m4v) : overlay video
+-p [0-999]                 : time to overlay the video
+-o output.mp4              : optional argument # if option not provided defaults to input-name-overlay-date-time
 #+END_EXAMPLE
 
 ** overlay-pip
@@ -694,24 +832,32 @@ create a picture in picture
 + script usage
 
 #+BEGIN_SRC sh
-overlay-pip -i infile.(mp4|mkv|mov|m4v) -v infile.(mp4|mkv|mov|m4v) -p [0-999] 
--m [00] -x (tl|tr|bl|br) -w [000] -f (0.1-9|1) -b [00] -c colour -o outfile.mp4
+overlay-pip -i input.(mp4|mkv|mov|m4v) -v input.(mp4|mkv|mov|m4v) -p [0-999]
+-m [00] -x (tl|tr|bl|br) -w [000] -f (0.1-9|1) -b [00] -c colour -o output.mp4
 #+END_SRC
 
-#+BEGIN_EXAMPLE
-overlay-pip -i infile.(mp4|mkv|mov|m4v) -v infile.(mp4|mkv|mov|m4v) -p [0-999] 
--m [00] -x (tl|tr|bl|br) -w [000] -f (0.1-9|1) -o outfile.mp4
++ script help
 
--i infile.(mp4|mkv|mov|m4v) : bottom video
--v infile.(mp4|mkv|mov|m4v) : overlay video
--p [0-999]                  : time to overlay the video
--m [00]                     : margin defaults to 0
--x (tl|tr|bl|br)            : pip postion - defaults to tr
--w [000]                    : width - defaults to 1/4 of vide size
--f (0.1-9|1)                : fade from 0.1 to 1 - defaults to 0.2
--b [00]                     : border
--c colour                   : colour
--o outfile.mp4              : optional agument # if option not provided defaults to infile-name-pip-date-time"
+#+begin_src sh
+overlay-pip -h
+#+end_src
+
+#+BEGIN_EXAMPLE
+# create a picture in picture
+
+overlay-pip -i input.(mp4|mkv|mov|m4v) -v input.(mp4|mkv|mov|m4v) -p [0-999]
+-m [00] -x (tl|tr|bl|br) -w [000] -f (0.1-9|1) -b [00] -c colour -o output.mp4
+
+-i input.(mp4|mkv|mov|m4v) : bottom video
+-v input.(mp4|mkv|mov|m4v) : overlay video
+-p [0-999]                 : time to overlay the video
+-m [00]                    : margin defaults to 0
+-x (tl|tr|bl|br)           : pip position - defaults to tr
+-w [000]                   : width - defaults to 1/4 of video size
+-f (0.1-9|1)               : fade from 0.1 to 1 - defaults to 0.2
+-b [00]                    : border
+-c colour                  : colour
+-o output.mp4              : optional argument # if option not provided defaults to input-name-pip-date-time
 #+END_EXAMPLE
 
 ** pan-scan
@@ -724,16 +870,23 @@ pan image
 + script usage
 
 #+BEGIN_SRC sh
-pan-scan -i infile.(png|jpg|jpeg) -d (000) -p (l|r|u|d) -o outfile.mp4
+pan-scan -i input.(png|jpg|jpeg) -d (000) -p (l|r|u|d) -o output.mp4
 #+END_SRC
 
-#+BEGIN_EXAMPLE
-pan-scan -i infile.(png|jpg|jpeg) -d (000) -p (l|r|u|d) -o outfile.mp4
++ script help
 
--i = infile.(png|jpg|jpeg)
--d = duration : from 1-999
--p = position : left, right, up, down
--o = outfile.mp4 : optional agument # default is infile-name-pan-date-time
+#+begin_src sh
+pan-scan -h
+#+end_src
+
+#+BEGIN_EXAMPLE
+# pan scan image
+
+pan-scan -i input.(png|jpg|jpeg) -d (000) -p (l|r|u|d) -o output.mp4
+-i = input.(png|jpg|jpeg)
+-d = duration   : from 1-999
+-p = position   : left, right, up, down
+-o = output.mp4 : optional argument # default is input-name-pan-date-time
 #+END_EXAMPLE
 
 ** scene-cut
@@ -749,7 +902,11 @@ scene-cut takes a cut file and video and cuts the video into clips
 scene-cut -i input -c cutfile
 #+END_SRC
 
-+ example usage
++ script help
+
+#+begin_src sh
+scene-cut -h
+#+end_src
 
 #+BEGIN_EXAMPLE
 scene-cut -i input -c cutfile
@@ -800,13 +957,17 @@ if you dont specify a range scene detection will be perform on the whole video
 + script usage
 
 #+BEGIN_SRC sh
-scene-detect -s 00:00:00 -i infile -e 00:00:00 -t (0.1 - 0.9) -f sec -o outfile
+scene-detect -s 00:00:00 -i input -e 00:00:00 -t (0.1 - 0.9) -f sec -o output
 #+END_SRC
 
-+ example usage
++ script help
+
+#+begin_src sh
+scene-detect -h
+#+end_src
 
 #+BEGIN_EXAMPLE
-scene-detect -s 00:00:00 -i infile -e 00:00:00 -t (0.1 - 0.9) -f sec -o outfile
+scene-detect -s 00:00:00 -i input -e 00:00:00 -t (0.1 - 0.9) -f sec -o output
 
 -s 00:00:00 : start time
 -i input.(mp4|mov|mkv|m4v)
@@ -831,7 +992,11 @@ and then creates an image for each cut point
 scene-images -i input -c cutfile
 #+END_SRC
 
-+ example usage
++ script help
+
+#+begin_src sh
+scene-images -h
+#+end_src
 
 #+BEGIN_EXAMPLE
 scene-images -i input -c cutfile
@@ -871,7 +1036,11 @@ the output of the scene-time script is used with the scene-cut script to create 
 scene-time -i input -o output
 #+END_SRC
 
-+ example usage
++ script help
+
+#+begin_src sh
+scene-time -h
+#+end_src
 
 #+BEGIN_EXAMPLE
 scene-time -i input -o output
@@ -892,13 +1061,22 @@ add subtitles to a video file
 + script usage
 
 #+BEGIN_SRC sh
-subtitle-add -i video.(mp4|mov|mkv|m4v) -s subtitle.srt -o outfile.mp4
+subtitle-add -i input.(mp4|mkv|mov|m4v) -s subtitle.srt -o output.mp4
 #+END_SRC
 
++ script help
+
+#+begin_src sh
+subtitle-add -h
+#+end_src
+
 #+BEGIN_EXAMPLE
--i infile.(mp4|mkv|mov|m4v)
+# add subtitles to a video
+
+subtitle-add -i input.(mp4|mkv|mov|m4v) -s subtitle.srt -o output.mp4
+-i input.(mp4|mkv|mov|m4v)
 -s subtitle.srt
--o outfile.mp4 : optional agument # default is infile-name-subs-date-time
+-o output.mp4 : optional argument # if option not provided defaults to input-name-subs-date-time
 #+END_EXAMPLE
 
 *** subtitle-add batch process
@@ -939,22 +1117,30 @@ find . -type f -name "*.mp4" -exec sh -c \
 + script usage
 
 #+BEGIN_SRC sh
-scopes -i infile
-scopes -o infile
-scopes -p infile
-scopes -s infile
-scopes -w infile
-scopes -v infile
+scopes -i input = histogram
+scopes -o input = rgb overlay
+scopes -p input = rgb parade
+scopes -s input = rgb overlay and parade
+scopes -w input = waveform
+scopes -v input = vector scope
 #+END_SRC
 
++ script help
+
+#+begin_src sh
+scopes -h
+#+end_src
+
 #+BEGIN_EXAMPLE
--i infile = histogram
--o infile = rgb overlay
--p infile = rgb parade
--s infile = rgb overlay and parade
--w infile = waveform
--v infile = vector scope
--h = help
+# ffplay video scopes
+
+scopes -i input = histogram
+scopes -o input = rgb overlay
+scopes -p input = rgb parade
+scopes -s input = rgb overlay and parade
+scopes -w input = waveform
+scopes -v input = vector scope
+scopes -h = help
 #+END_EXAMPLE
 
 ** tile-thumbnails
@@ -977,23 +1163,28 @@ For instance, 02:30.5 would be 2 minutes, 30 seconds, and a half a second, which
 + script usage
 
 #+BEGIN_SRC sh
-tile-thumbnails -i infile.(mp4|mkv|mov|m4v|webm) \
--s 00:00:00.000 -w 000 -t 0x0 -p 00 -m 00 -c color -o outfile.png
+tile-thumbnails -i input.(mp4|mkv|mov|m4v|webm) -s 00:00:00.000 -w 000 -t 0x0 -p 00 -m 00 -c color -o output.png
 #+END_SRC
 
-#+BEGIN_EXAMPLE
-tile-thumbnails -i infile.(mp4|mkv|mov|m4v|webm) \
--s 00:00:00.000 -w 000 -t 0x0 -p 00 -m 00 -c color -o outfile.png
++ script help
 
--i infile.(mp4|mkv|mov|m4v|webm)
+#+begin_src sh
+tile-thumbnails -h
+#+end_src
+
+#+BEGIN_EXAMPLE
+# create an image with thumbnails from a video
+
+tile-thumbnails -i input.(mp4|mkv|mov|m4v|webm) -s 00:00:00.000 -w 000 -t 0x0 -p 00 -m 00 -c color -o output.png
+-i input.(mp4|mkv|mov|m4v|webm)
 -s seek into the video file                : default 00:00:05
 -w thumbnail width                         : 160
 -t tile layout format width x height : 4x3 : default 4x3
 -p padding between images                  : default 7
 -m margin                                  : default 2
 -c color = https://ffmpeg.org/ffmpeg-utils.html#color-syntax : default black
--o outfile.png :optional agument 
-# if option not provided defaults to infile-name-tile-date-time.png
+-o output.png : optional argument
+# if option not provided defaults to input-name-tile-date-time.png
 #+END_EXAMPLE
 
 If the tiled image only creates one thumbnail from the video and the rest of the image is black,
@@ -1039,15 +1230,25 @@ For instance, 02:30.5 would be 2 minutes, 30 seconds, and a half a second, which
 + script usage
 
 #+BEGIN_SRC sh
-trim-clip -s 00:00:00.000 -i infile.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3) \
--t 00:00:00.000 -o outfile.(mp4|aac|mp3|wav)
+trim-clip -s 00:00:00.000 -i input.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3) -t 00:00:00.000 -o output.(mp4|aac|mp3|wav)
 #+END_SRC
 
++ script help
+
+#+begin_src sh
+trim-clip -h
+#+end_src
+
 #+BEGIN_EXAMPLE
+# trim video or audio clips with millisecond accuracy
+https://trac.ffmpeg.org/wiki/Seeking
+
+trim-clip -s 00:00:00.000 -i input.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3) -t 00:00:00.000 -o output.(mp4|aac|mp3|wav)
 -s 00:00:00.000 : start time
--i infile.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3)
--t 00:00:00.000              : number of seconds after start time
--o outfile.(mp4|aac|mp3|wav) : optional agument # default infile-name-trimmed-date-time.(mp4|aac|mp3|wav)
+-i input.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3)
+-t 00:00:00.000 : number of seconds after start time
+-o output.(mp4|aac|mp3|wav) : optional argument
+# if option not provided defaults input-name-trimmed-date-time.(mp4|wav)
 #+END_EXAMPLE
 
 *** trim-clip batch process
@@ -1078,18 +1279,26 @@ create a gif animation from a video
 + script usage
 
 #+BEGIN_SRC sh
-vid2gif -s 00:00:00.000 -i infile.(mp4|mov|mkv|m4v) -t 00:00:00.000 -f [00] -w [0000] -o outfile.gif
+vid2gif -s 00:00:00.000 -i input.(mp4|mov|mkv|m4v) -t 00:00:00.000 -f [00] -w [0000] -o output.gif
 #+END_SRC
 
++ script help
+
+#+begin_src sh
+vid2gif -h
+#+end_src
+
 #+BEGIN_EXAMPLE
-vid2gif -s 00:00:00.000 -i infile.(mp4|mov|mkv|m4v) -t 00:00:00.000 -f [00] -w [0000] -o outfile.gif
+# convert a video into a gif animation
+
+vid2gif -s 00:00:00.000 -i input.(mp4|mov|mkv|m4v) -t 00:00:00.000 -f [00] -w [0000] -o output.gif
 -s 00:00:00.000 : start time
--i infile.(mp4|mov|mkv|m4v)
+-i input.(mp4|mov|mkv|m4v)
 -t 00:00:00.000 : number of seconds after start time
 -f [00]         : framerate
 -w [0000]       : width
--o outfile.gif  :optional agument 
-# if option not provided defaults infile-name-gif-date-time.gif
+-o output.gif   : optional argument
+# if option not provided defaults input-name-gif-date-time.gif
 #+END_EXAMPLE
 
 ** waveform
@@ -1104,12 +1313,21 @@ create a waveform from an audio or video file and save as a png
 + script usage
 
 #+BEGIN_SRC sh
-waveform -i infile.(mp4|mkv|mov|m4v|webm|wav|aac|m4a|mp3) -o oufile.png
+waveform -i input.(mp4|mkv|mov|m4v|webm|aac|m4a|wav|mp3) -o output.png
 #+END_SRC
 
++ script help
+
+#+begin_src sh
+waveform -h
+#+end_src
+
 #+BEGIN_EXAMPLE
--i infile.(mp4|mkv|mov|m4v|webm|aac|m4a|wav|mp3)
--o outfile.png : optional agument # default is infile-name-waveform-date-time
+# create a waveform from an audio or video file and save as a png
+
+waveform -i input.(mp4|mkv|mov|m4v|webm|aac|m4a|wav|mp3) -o output.png
+-i output.(mp4|mkv|mov|m4v|aac|m4a|wav|mp3)
+-o output.png : optional argument # if option not provided defaults to input-name-waveform-date-time
 #+END_EXAMPLE
 
 *** waveform batch process
@@ -1142,16 +1360,24 @@ create a animated webp image from a video with ffmpeg
 webp -i input -c 0-6 -q 0-100 -f 15 -w 600 -p none -o output.webp
 #+END_SRC
 
++ script help
+
+#+begin_src sh
+webp -h
+#+end_src
+
 #+BEGIN_EXAMPLE
--i input.webp
+# webp animated image
+
+webp -i input -c 0-6 -q 0-100 -f 15 -w 600 -p none -o output.webp
+-i input
 -c compression level: 0 - 6 : default 4
 -q quality: 0 - 100 : default 80
 -f framerate: default 15
 -w width: default 600px
 -p preset: none|default|picture|photo|drawing|icon|text : default none
--o output.webp :optional agument
-# if option not provided defaults infile-name.webp
-
+-o output.webp : optional agument
+# if option not provided defaults input-name.webp
 #+END_EXAMPLE
 
 *** webp batch process
@@ -1176,21 +1402,25 @@ apply a transition between two clips with the xfade filters
 + script usage
 
 #+begin_src sh
-xfade -a clip1.(mp4|mkv|mov|m4v) -b clip2.(mp4|mkv|mov|m4v) -d duration -t transition -f offset -o outfile.mp4
+xfade -a clip1.(mp4|mkv|mov|m4v) -b clip2.(mp4|mkv|mov|m4v) -d duration -t transition -f offset -o output.mp4
 #+end_src
 
-+ help
++ script help
+
+#+begin_src sh
+xfade -h
+#+end_src
 
 #+begin_example
 # ffmpeg xfade transitions
 
-xfade -a clip1.(mp4|mkv|mov|m4v) -b clip2.(mp4|mkv|mov|m4v) -d duration -t transition -f offset -o outfile.mp4
+xfade -a clip1.(mp4|mkv|mov|m4v) -b clip2.(mp4|mkv|mov|m4v) -d duration -t transition -f offset -o output.mp4
 -a clip1.(mp4|mkv|mov|m4v) : first clip
 -b clip2.(mp4|mkv|mov|m4v) : second clip
 -d duration                : transition duration
 -t transition              : transition
 -f offset                  : offset
--o outfile.mp4             : optional agument # if option not provided defaults to infile-name-xfade-date-time
+-o output.mp4              : optional argument # if option not provided defaults to input-name-xfade-date-time
 
 + transitions
 
@@ -1208,30 +1438,36 @@ wipebl, wipebr, wipedown, wipeleft, wiperight, wipetl, wipetr, wipeup
 
 convert a image to video and apply the ken burns effect to the clip
 
-
 + script usage
 
 #+BEGIN_SRC sh
-zoompan -i infile.(png|jpg|jpeg) -d (000) -z (in|out) -p (tl|c|tc|tr|bl|br) -o outfile.mp4
+zoompan -i input.(png|jpg|jpeg) -d (000) -z (in|out) -p (tl|c|tc|tr|bl|br) -o output.mp4
 #+END_SRC
 
-#+BEGIN_EXAMPLE
--i infile.(png|jpg|jpeg)
--d duration    : from 1-999
--z zoom        : in or out
--p position    : zoom to location listed below
--o outfile.mp4 : optional agument # default is infile-name-zoompan-date-time
-#+END_EXAMPLE
++ script help
 
-#+BEGIN_SRC sh
+#+begin_src sh
+zoompan -h
+#+end_src
+
+#+BEGIN_EXAMPLE
+# zoompan, ken burns effect
+
+zoompan -i input.(png|jpg|jpeg) -d (000) -z (in|out) -p (tl|c|tc|tr|bl|br) -o output.mp4
+-i = input.(png|jpg|jpeg)
+-d = duration    : from 1-999
+-z = zoom        : in or out
+-p = position    : zoom to location listed below
+-o = outfile.mp4 : optional argument # default is input-name-zoompan-date-time
+
 +------------------------------+
 +tl            tc            tr+
-+                              +        
++                              +
 +              c               +
 +                              +
 +bl                          br+
 +------------------------------+
-#+END_SRC
+#+END_EXAMPLE
 
 *** zoompan batch process
 
