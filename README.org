@@ -4,8 +4,8 @@
 
 A collection of ffmpeg shell scripts for basic editing tasks
 
-+ [[https://github.com/NapoleonWils0n/ffmpeg-scripts][ffmpeg scripts English version]]
-+ [[https://github.com/NapoleonWils0n/ffmpeg-Skripte][ffmpeg-Skripte Deutsche Ausgabe]]
+[[https://github.com/NapoleonWils0n/ffmpeg-scripts][ffmpeg scripts English version]]
+[[https://github.com/NapoleonWils0n/ffmpeg-Skripte][ffmpeg-Skripte Deutsche Ausgabe]]
 
 + [[#audio-silence][audio-silence]]
 + [[#combine-clips][combine-clips]]
