@@ -75,7 +75,7 @@ output_default="${input_name}-chapters.txt"
 extract () {
 ffprobe -v panic -hide_banner \
 -show_chapters -sexagesimal -of csv \
--i input.mp4 \
+-i "${input}" \
 | awk -F "," '{
           time = $5
           chapter = $NF
