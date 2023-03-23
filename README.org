@@ -287,7 +287,7 @@ chapter-add -h
 
 + csv file example
 
-The last record is the duration of the video and is used as the end time for the previous chapter,
+The last record is the duration of the video and is used as the end time for the previous chapter, 
 and End isnt used as a chapter
 
 #+begin_example
