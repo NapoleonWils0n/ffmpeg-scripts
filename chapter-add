@@ -1,0 +1,93 @@
+#!/bin/sh
+
+#===============================================================================
+# chapter-add
+# add chapters to a video or audio file with ffmpeg
+#===============================================================================
+
+# dependencies:
+# ffmpeg
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage () {
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+add chapters to a video or audio file with ffmpeg
+$(basename "$0") -i input -c metadata.txt -o output"
+exit 2
+}
+
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+
+
+#===============================================================================
+# check the number of arguments passed to the script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check the options passed to the script
+#===============================================================================
+
+while getopts ':i:c:o:h' opt
+do
+  case ${opt} in
+     i) input="${OPTARG}";;
+     c) metadata="${OPTARG}";;
+     h) usage;;
+     o) output="${OPTARG}";;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+#===============================================================================
+# variables
+#===============================================================================
+
+# get the input file name
+input_nopath="${input##*/}"
+input_name="${input_nopath%.*}"
+
+# input file extension
+input_ext="${input##*.}"
+
+# output file name
+output_default="${input_name}-metadata.${input_ext}"
+
+
+#===============================================================================
+# sexagesimal function
+#===============================================================================
+
+meta () {
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -i "${input}" \
+    -i "${metadata}" -map_metadata 1 -c copy \
+    "${output:=${output_default}}"
+}
+
+
+#===============================================================================
+# run function
+#===============================================================================
+
+meta

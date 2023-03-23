@@ -10,6 +10,9 @@ A collection of ffmpeg shell scripts for basic editing tasks
 
 + [[#audio-silence][audio-silence]]
 + [[#combine-clips][combine-clips]]
++ [[#chapter-add][chapter-add]]
++ [[#chapter-csv][chapter-csv]]
++ [[#clip-extract][clip-extract]]
 + [[#clip-time][clip-time]]
 + [[#correct-clip][correct-clip]]
 + [[#crossfade-clips][crossfade-clips]]
@@ -242,6 +245,83 @@ find . -type f -name "*.mp4" -exec sh -c \
 'audio-silence -i "${0}" -c stereo -r 48000'     
 "{}" \;
 #+END_SRC
+
+** chapter-add
+:PROPERTIES:
+:CUSTOM_ID: chapter-add
+:END:
+
+add chapters to a video or audio file with ffmpeg using a metadata file,
+use the chapter-csv script to create the metadata file from a csv files
+
++ script usage
+
+#+BEGIN_SRC sh
+chapter-add -i input -c metadata.txt -o output
+#+END_SRC
+
++ script help
+
+#+begin_src sh
+chapter-add -h
+#+end_src
+
+** chapter-csv
+:PROPERTIES:
+:CUSTOM_ID: chapter-csv
+:END:
+
+convert a csv file into a chapter metadata file for ffmpeg
+
++ script usage
+
+#+BEGIN_SRC sh
+chapter-csv -i input -o output
+#+END_SRC
+
++ script help
+
+#+begin_src sh
+chapter-add -h
+#+end_src
+
++ csv file example
+
+The last record is the duration of the video and is used as the end time for the previous chapter,
+and End isnt used as a chapter
+
+#+begin_example
+00:00:00,Intro
+00:02:30,Scene 1
+00:05:00,Scene 2
+00:07:00,Scene 3
+00:10:00,End
+#+end_example
+
+** chapter-extract
+:PROPERTIES:
+:CUSTOM_ID: chapter-extract
+:END:
+
+extract chapters from a video or audo file and save as a csv file
+
++ script usage
+
+#+BEGIN_SRC sh
+chapter-extract -i input -o output
+#+END_SRC
+
++ script help
+
+#+begin_src sh
+chapter-extract -h
+#+end_src
+
++ convert the csv file to youtube timestamps
+
+#+begin_src sh
+tr ',' ' ' < input.txt > output.txt
+#+end_src
 
 ** clip-time
 :PROPERTIES:
