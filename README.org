@@ -31,6 +31,7 @@ A collection of ffmpeg shell scripts for basic editing tasks
 + [[#scene-detect][scene-detect]]
 + [[#scene-images][scene-images]]
 + [[#scene-time][scene-time]]
++ [[#sexagesimal-time][sexagesimal-time]]
 + [[#sub2transcript][subs2transcript]]
 + [[#subtitle-add][subtitle-add]]
 + [[#scopes][scopes]]
@@ -1131,6 +1132,33 @@ scene-time -i input -o output
 -i input
 -o output
 #+END_EXAMPLE
+
+** sexagesimal-time
+:PROPERTIES:
+:CUSTOM_ID: sexagesimal-time
+:END:
+
+calculate sexagesimal duration by subtracting the end time from start time for trimming files with ffmpeg
+
++ script help
+
+#+begin_src sh
+sexagesimal-time -h
+#+end_src
+
+example
+
+#+begin_src sh
+sexagesimal-time -s 00:05:30 -e 00:18:47
+#+end_src
+
+ouput
+
+#+begin_example
+00:13:17
+#+end_example
+
+also works with milliseconds
 
 ** subtitle-add
 :PROPERTIES:
