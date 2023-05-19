@@ -20,11 +20,11 @@ echo "\
 # trim video or audio clips with millisecond accuracy
 https://trac.ffmpeg.org/wiki/Seeking
 
-$(basename "$0") -s 00:00:00.000 -i input.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3) -t 00:00:00.000 -o output.(mp4|aac|mp3|wav)
+$(basename "$0") -s 00:00:00.000 -i input -t 00:00:00.000 -o output)
 -s 00:00:00.000 : start time
--i input.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3)
+-i input.(mp4|mov|mkv|m4v|webm|aac|m4a|wav|mp3|ogg)
 -t 00:00:00.000 : number of seconds after start time
--o output.(mp4|aac|mp3|wav) : optional argument 
+-o output.(mp4|webm|aac|mp3|wav|ogg) : optional argument 
 # if option not provided defaults input-name-trimmed-date-time.(mp4|wav)"
 exit 2
 }
@@ -84,11 +84,13 @@ filetype="$(file --mime-type -b "${infile}")"
 mov_mime='video/quicktime'
 mkv_mime='video/x-matroska'
 mp4_mime='video/mp4'
+webm_mime='video/webm'
 m4v_mime='video/x-m4v'
 wav_mime='audio/x-wav'
 audio_mime='audio/mpeg'
 aac_mime='audio/x-hx-aac-adts'
 m4a_mime='audio/mp4'
+ogg_mime='audio/ogg'
 
 # the file command wrongly identifies .m4a audio as a video file
 # so we check if the file extension is .m4a and set the mime type to audio/mp4
@@ -98,10 +100,12 @@ fi
 
 # defaults for variables if not defined
 videofile_default="${infile_name}-trimmed-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
+webm_default="${infile_name}-trimmed-$(date +"%Y-%m-%d-%H-%M-%S").webm"
 aac_default="${infile_name}-trimmed-$(date +"%Y-%m-%d-%H-%M-%S").aac"
 mp3_default="${infile_name}-trimmed-$(date +"%Y-%m-%d-%H-%M-%S").mp3"
 wav_default="${infile_name}-trimmed-$(date +"%Y-%m-%d-%H-%M-%S").wav"
 m4a_default="${infile_name}-trimmed-$(date +"%Y-%m-%d-%H-%M-%S").m4a"
+ogg_default="${infile_name}-trimmed-$(date +"%Y-%m-%d-%H-%M-%S").ogg"
 
 
 #===============================================================================
@@ -137,6 +141,21 @@ trim_video () {
     -pix_fmt yuv420p -movflags +faststart \
     -f mp4 \
     "${outfile:=${videofile_default}}"
+}
+
+
+# trim webm video clip
+trim_webm () {
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -ss "${start}" \
+    -i "${infile}" \
+    -t "${end}" \
+    -c:a libopus \
+    -c:v vp9 \
+    -f webm \
+    "${outfile:=${webm_default}}"
 }
 
 # trim aac audio clip
@@ -192,15 +211,30 @@ trim_wav () {
 }
 
 
+# trim ogg audio clip
+trim_ogg () {
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -ss "${start}" \
+    -i "${infile}" \
+    -t "${end}" \
+    -c:a libopus \
+    -f ogg \
+    "${outfile:=${ogg_default}}"
+}
+
 #===============================================================================
 # check the files mime type
 #===============================================================================
 
 case "${filetype}" in
     "${mov_mime}"|"${mkv_mime}"|"${mp4_mime}"|"${m4v_mime}") trim_video "${infile}";;
+    "${webm_mime}") trim_webm "${infile}";;
     "${aac_mime}") trim_aac "${infile}";;
     "${m4a_mime}") trim_m4a "${infile}";;
     "${audio_mime}") trim_mp3 "${infile}";;
     "${wav_mime}") trim_wav "${infile}";;
+    "${ogg_mime}") trim_ogg "${infile}";;
     *) usage "${infile} ${NOT_MEDIA_FILE_ERR}";;
 esac
