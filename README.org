@@ -1274,7 +1274,7 @@ For instance, 02:30.5 would be 2 minutes, 30 seconds, and a half a second, which
 + script usage
 
 #+BEGIN_SRC sh
-tile-thumbnails -i input.(mp4|mkv|mov|m4v|webm) -s 00:00:00.000 -w 000 -t 0x0 -p 00 -m 00 -c color -o output.png
+tile-thumbnails -i input -s 00:00:00.000 -w 000 -t 0x0 -p 00 -m 00 -c color -f fontcolor -b boxcolor -x on -o output.png
 #+END_SRC
 
 + script help
@@ -1286,7 +1286,8 @@ tile-thumbnails -h
 #+BEGIN_EXAMPLE
 # create an image with thumbnails from a video
 
-tile-thumbnails -i input.(mp4|mkv|mov|m4v|webm) -s 00:00:00.000 -w 000 -t 0x0 -p 00 -m 00 -c color -o output.png
+tile-thumbnails -i input -s 00:00:00.000 -w 000 -t 0x0 -p 00 -m 00 -c color -f fontcolor -b boxcolor -x on -o output.png
+
 -i input.(mp4|mkv|mov|m4v|webm)
 -s seek into the video file                : default 00:00:05
 -w thumbnail width                         : 160
@@ -1294,8 +1295,11 @@ tile-thumbnails -i input.(mp4|mkv|mov|m4v|webm) -s 00:00:00.000 -w 000 -t 0x0 -p
 -p padding between images                  : default 7
 -m margin                                  : default 2
 -c color = https://ffmpeg.org/ffmpeg-utils.html#color-syntax : default black
--o output.png : optional argument
-# if option not provided defaults to input-name-tile-date-time.png
+-f fontcolor                               : default white
+-b boxcolor                                : default black
+-x on                                      : default off, display timestamps
+-o output.png                              : optional argument 
+# if option not provided defaults to input-name-tile-date-time.png"
 #+END_EXAMPLE
 
 If the tiled image only creates one thumbnail from the video and the rest of the image is black,

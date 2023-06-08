@@ -17,7 +17,8 @@ usage()
 echo "\
 # create an image with thumbnails from a video
 
-$(basename "$0") -i input.(mp4|mkv|mov|m4v|webm) -s 00:00:00.000 -w 000 -t 0x0 -p 00 -m 00 -c color -o output.png
+$(basename "$0") -i input -s 00:00:00.000 -w 000 -t 0x0 -p 00 -m 00 -c color -f fontcolor -b boxcolor -x on -o output.png
+
 -i input.(mp4|mkv|mov|m4v|webm)
 -s seek into the video file                : default 00:00:05
 -w thumbnail width                         : 160
@@ -25,7 +26,10 @@ $(basename "$0") -i input.(mp4|mkv|mov|m4v|webm) -s 00:00:00.000 -w 000 -t 0x0 -
 -p padding between images                  : default 7
 -m margin                                  : default 2
 -c color = https://ffmpeg.org/ffmpeg-utils.html#color-syntax : default black
--o output.png : optional argument 
+-f fontcolor                               : default white
+-b boxcolor                                : default black
+-x on                                      : default off, display timestamps
+-o output.png                              : optional argument 
 # if option not provided defaults to input-name-tile-date-time.png"
 exit 2
 }
@@ -51,7 +55,7 @@ WRONG_ARGS_ERR='wrong number of arguments passed to script'
 # getopts check the options passed to the script
 #===============================================================================
 
-while getopts ':i:s:w:t:p:m:c:o:h' opt
+while getopts ':i:s:w:t:p:m:c:b:f:x:o:h' opt
 do
   case ${opt} in
      i) infile="${OPTARG}";;
@@ -61,6 +65,9 @@ do
      p) padding="${OPTARG}";;
      m) margin="${OPTARG}";;
      c) color="${OPTARG}";;
+     f) fontcolor="${OPTARG}";;
+     b) boxcolor="${OPTARG}";;
+     x) timestamp="${OPTARG}";;
      o) outfile="${OPTARG}";;
      h) usage;;
      \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
@@ -112,6 +119,19 @@ tile_default='12'
 padding_default='7'
 margin_default='2'
 color_default='black'
+fontcolor_default='white'
+boxcolor_default='black'
+timestamp_default='off'
+pts_default='5'
+pts=$(printf "%s %s\n" "${seek}" | awk '{
+          start = $1
+          if (start ~ /:/) {
+            split(start, t, ":")
+            seconds = (t[1] * 3600) + (t[2] * 60) + t[3] 
+          }
+          printf("%s\n"), seconds
+}')
+
 outfile_default="${infile_name}-tile-$(date +"%Y-%m-%d-%H-%M-%S").png"
 
 # duration * fps / number of tiles
@@ -122,7 +142,7 @@ frames=$(echo "${duration} * ${fps} / ${tile_sum:=${tile_default}}" | bc)
 # functions
 #===============================================================================
 
-# tile function
+# contact sheet - no timestamps
 tilevideo () {
 ffmpeg \
 -hide_banner \
@@ -133,5 +153,31 @@ ffmpeg \
 "${outfile:=${outfile_default}}"
 }
 
-# run the tilevideo function
-tilevideo "${infile}"
+
+# contact sheet - timestamps
+timestamp () {
+ffmpeg \
+-hide_banner \
+-stats -v panic \
+-ss "${seek:=${seek_default}}" \
+-i "${infile}" \
+-frames 1 -vf "drawtext=text='%{pts\:hms\:${pts:=${pts_default}}}':x='(main_w-text_w)/2':y='(main_h-text_h)':fontcolor=${fontcolor:=${fontcolor_default}}:fontsize='(main_h/8)':boxcolor=${boxcolor:=${boxcolor_default}}:box=1,select=not(mod(n\,${frames})),scale=${scale:=${scale_default}}:-1,tile=${tile:=${tile_layout_default}}:padding=${padding:=${padding_default}}:margin=${margin:=${margin_default}}:color=${color:=${color_default}}" \
+"${outfile:=${outfile_default}}"
+}
+
+
+#===============================================================================
+# check option passed to script
+#===============================================================================
+
+if [ "${timestamp}" == on ]; then
+    timestamp "${infile}" # -x on
+elif [ ! -z "${fontcolor}" ]; then
+    timestamp "${infile}" # -f 
+elif [ ! -z "${boxcolor}" ]; then
+    timestamp "${infile}" # -b
+elif [ -z "${timestamp}" ]; then
+    tilevideo "${infile}" # no timestamp
+else
+    tilevideo "${infile}" # no timestamp
+fi
