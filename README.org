@@ -1323,7 +1323,7 @@ batch process videos and create thumbnails from the videos and tile into an imag
 
 #+BEGIN_SRC sh
 find . -type f -name "*.mp4" -exec sh -c \
-'tile-thumbails -i "${0}" -s 00:00:10 -w 200 -t 4x4 -p 7 -m 2 -c white' \
+'tile-thumbnails -i "${0}" -s 00:00:10 -w 200 -t 4x4 -p 7 -m 2 -c white' \
 "{}" \;
 #+END_SRC
 
