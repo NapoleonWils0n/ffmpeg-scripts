@@ -1172,7 +1172,7 @@ add subtitles to a video file
 + script usage
 
 #+BEGIN_SRC sh
-subtitle-add -i input.(mp4|mkv|mov|m4v) -s subtitle.srt -o output.mp4
+subtitle-add -i input.(mp4|mkv|mov|m4v) -s subtitle.(srt|vtt) -o output.mp4
 #+END_SRC
 
 + script help
@@ -1186,7 +1186,7 @@ subtitle-add -h
 
 subtitle-add -i input.(mp4|mkv|mov|m4v) -s subtitle.srt -o output.mp4
 -i input.(mp4|mkv|mov|m4v)
--s subtitle.srt
+-s subtitle.(srt|vtt)
 -o output.mp4 : optional argument # if option not provided defaults to input-name-subs-date-time
 #+END_EXAMPLE
 
