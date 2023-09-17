@@ -1363,7 +1363,7 @@ trim-clip -s 00:00:00.000 -i input.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3) -t 00:00:00
 -i input.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3)
 -t 00:00:00.000 : number of seconds after start time
 -o output.(mp4|aac|mp3|wav) : optional argument
-# if option not provided defaults input-name-trimmed-date-time.(mp4|wav)
+# if option not provided defaults input-name-[start end].(mp4|wav)
 #+END_EXAMPLE
 
 *** trim-clip batch process

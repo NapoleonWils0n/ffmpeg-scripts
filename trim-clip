@@ -25,7 +25,7 @@ $(basename "$0") -s 00:00:00.000 -i input -t 00:00:00.000 -o output)
 -i input.(mp4|mov|mkv|m4v|webm|aac|m4a|wav|mp3|ogg)
 -t 00:00:00.000 : number of seconds after start time
 -o output.(mp4|webm|aac|mp3|wav|ogg) : optional argument 
-# if option not provided defaults input-name-trimmed-date-time.(mp4|wav)"
+# if option not provided defaults input-name-[start end].(mp4|wav)"
 exit 2
 }
 
@@ -98,14 +98,36 @@ if [ "${infile_ext}" = 'm4a' ]; then
     filetype="${m4a_mime}"
 fi
 
+# awk convert start and end time from sexagesimal time to seconds
+# add the start and end time to get the endpoint and convert from seconds back to sexagesimal time
+endtime=$(printf "%s %s\n" "${start}" "${end}" \
+| awk '
+        {
+          start = $1
+          end = $2
+          if (start ~ /:/) {
+            split(start, t, ":")
+            sseconds = (t[1] * 3600) + (t[2] * 60) + t[3] 
+          }
+          if (end ~ /:/) {
+            split(end, t, ":")
+            eseconds = (t[1] * 3600) + (t[2] * 60) + t[3] 
+          }
+          duration = eseconds + sseconds
+          printf("%s\n"), duration
+     }' \
+| awk -F. 'NF==1 { printf("%02d:%02d:%02d\n"), ($1 / 3600), ($1 % 3600 / 60), ($1 % 60) }\
+NF==2 { printf("%02d:%02d:%02d.%s\n"), ($1 / 3600), ($1 % 3600 / 60), ($1 % 60), ($2) }'
+)
+
 # defaults for variables if not defined
-videofile_default="${infile_name}-trimmed-$(date +"%Y-%m-%d-%H-%M-%S").mp4"
-webm_default="${infile_name}-trimmed-$(date +"%Y-%m-%d-%H-%M-%S").webm"
-aac_default="${infile_name}-trimmed-$(date +"%Y-%m-%d-%H-%M-%S").aac"
-mp3_default="${infile_name}-trimmed-$(date +"%Y-%m-%d-%H-%M-%S").mp3"
-wav_default="${infile_name}-trimmed-$(date +"%Y-%m-%d-%H-%M-%S").wav"
-m4a_default="${infile_name}-trimmed-$(date +"%Y-%m-%d-%H-%M-%S").m4a"
-ogg_default="${infile_name}-trimmed-$(date +"%Y-%m-%d-%H-%M-%S").ogg"
+videofile_default="${infile_name}-[${start}-${endtime}].mp4"
+webm_default="${infile_name}-[${start}-${endtime}].webm"
+aac_default="${infile_name}-[${start}-${endtime}].aac"
+mp3_default="${infile_name}-[${start}-${endtime}].mp3"
+wav_default="${infile_name}-[${start}-${endtime}].wav"
+m4a_default="${infile_name}-[${start}-${endtime}].m4a"
+ogg_default="${infile_name}-[${start}-${endtime}].ogg"
 
 
 #===============================================================================
