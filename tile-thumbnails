@@ -94,7 +94,7 @@ videostats=$(ffprobe \
 "${infile}")
 
 # fps
-fps=$(echo "${videostats}" | awk -F'[=//]' '/r_frame_rate/{print $2}')
+fps=$(echo "${videostats}" | awk -F'[=//]' '/r_frame_rate/{print $2/$3}')
 
 # duration
 duration=$(echo "${videostats}" | awk -F'[=/.]' '/duration/{print $2}')
