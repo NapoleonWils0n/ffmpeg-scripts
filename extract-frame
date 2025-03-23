@@ -21,13 +21,13 @@ echo "\
 # extract a frame from a video as a png or jpg
 https://trac.ffmpeg.org/wiki/Seeking
 
-$(basename "$0") -i input.(mp4|mov|mkv|m4v|webm) -s 00:00:00.000 -t (png|jpg) -x width -y height -o output.png
+$(basename "$0") -i input.(mp4|mov|mkv|m4v|webm) -s 00:00:00.000 -t (png|jpg) -x width -y height -o output.(png|jpg)
 -i input.(mp4|mov|mkv|m4v)
--s 00:00:00.000    : optional argument # if option not provided defaults to 00:00:00
--t (png|jpg)       : optional argument # if option not provided defaults to png
--x width           : optional argument # 
--y height          : optional argument # 
--o outfile.png     : optional argument # if option not provided defaults to input-name-timecode"
+-s 00:00:00.000     : optional argument # if option not provided defaults to 00:00:00
+-t (png|jpg)        : optional argument # if option not provided defaults to png
+-x width            : optional argument # 
+-y height           : optional argument # 
+-o output.(png|jpg) : optional argument # if option not provided defaults to input-name-timecode"
 exit 2
 }
 

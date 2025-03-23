@@ -577,7 +577,7 @@ For instance, 02:30.5 would be 2 minutes, 30 seconds, and a half a second, which
 + script usage
 
 #+BEGIN_SRC sh
-extract-frame -i input.(mp4|mov|mkv|m4v|webm) -s 00:00:00.000 -o output.png
+extract-frame -i input.(mp4|mov|mkv|m4v|webm) -s 00:00:00.000 -t (png|jpg) -x width -y height -o output.(png|jpg)
 #+END_SRC
 
 + script help
