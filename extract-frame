@@ -2,7 +2,7 @@
 
 #===============================================================================
 # extract-frame
-# extract a frame from a video as a png file
+# extract a frame from a video as a png or jpg
 #===============================================================================
 
 # dependencies:
@@ -18,12 +18,15 @@ usage()
 [ -z "${1}" ] || echo "! ${1}"
 # display help
 echo "\
-# extract a frame from a video as a png file
+# extract a frame from a video as a png or jpg
 https://trac.ffmpeg.org/wiki/Seeking
 
-$(basename "$0") -i input.(mp4|mov|mkv|m4v|webm) -s 00:00:00.000 -o output.png
+$(basename "$0") -i input.(mp4|mov|mkv|m4v|webm) -s 00:00:00.000 -t (png|jpg) -x width -y height -o output.png
 -i input.(mp4|mov|mkv|m4v)
 -s 00:00:00.000    : optional argument # if option not provided defaults to 00:00:00
+-t (png|jpg)       : optional argument # if option not provided defaults to png
+-x width           : optional argument # 
+-y height          : optional argument # 
 -o outfile.png     : optional argument # if option not provided defaults to input-name-timecode"
 exit 2
 }
@@ -49,11 +52,14 @@ WRONG_ARGS_ERR='wrong number of arguments passed to script'
 # getopts check the options passed to the script
 #===============================================================================
 
-while getopts ':i:s:o:h' opt
+while getopts ':i:s:t:x:y:o:h' opt
 do
   case ${opt} in
      i) infile="${OPTARG}";;
      s) seconds="${OPTARG}";;
+     t) image="${OPTARG}";;
+     x) width="${OPTARG}";;
+     y) height="${OPTARG}";;
      o) outfile="${OPTARG}";;
      h) usage;;
      \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
@@ -71,9 +77,14 @@ shift $((OPTIND-1))
 infile_nopath="${infile##*/}"
 infile_name="${infile_nopath%.*}"
 
-# output file recording destination
+# seconds default
 seconds_default='00:00:00'
-outfile_default="${infile_name}-[${seconds:=${seconds_default}}].png"
+
+# image default
+image_default="png"
+
+# output file recording destination
+outfile_default="${infile_name}-[${seconds:=${seconds_default}}].${image:=${image_default}}"
 
 
 #===============================================================================
@@ -92,5 +103,26 @@ extract () {
   "${outfile:=${outfile_default}}"
 }
 
-# run the extract function
-extract "${infile}"
+# image to video with scale function
+extract_scale () {
+  ffmpeg \
+  -hide_banner \
+  -stats -v panic \
+  -ss "${seconds:=${seconds_default}}" \
+  -i "${infile}" \
+  -q:v 2 -f image2 \
+  -vframes 1 \
+  -vf scale="${width:=-1}:${height:=-1}" \
+  "${outfile:=${outfile_default}}"
+}
+
+
+#===============================================================================
+# run function
+#===============================================================================
+
+if [ -n "${width}" ] || [ -n "${height}" ]; then
+  extract_scale "${infile}"
+else
+  extract "${infile}"
+fi
