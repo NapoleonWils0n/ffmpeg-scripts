@@ -1076,7 +1076,7 @@ and then creates an image for each cut point
 + script usage
 
 #+BEGIN_SRC sh
-scene-images -i input -c cutfile
+scene-images -i input -c cutfile -t (png|jpg) -x width -y height
 #+END_SRC
 
 + script help
@@ -1086,10 +1086,13 @@ scene-images -h
 #+end_src
 
 #+BEGIN_EXAMPLE
-scene-images -i input -c cutfile
+scene-images -i input -c cutfile -t (png|jpg) -x width -y height
 
 -i input.(mp4|mov|mkv|m4v)
 -c cutfile
+-t (png|jpg)       : optional argument # if option not provided defaults to png
+-x width           : optional argument #
+-y height          : optional argument #
 #+END_EXAMPLE
 
 ** scene-time
