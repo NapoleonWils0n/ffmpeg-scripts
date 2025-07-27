@@ -1,0 +1,240 @@
+#!/bin/sh
+
+#===============================================================================
+# trim-clip-to
+# trim video or audio clips with millisecond accuracy
+#===============================================================================
+
+# dependencies:
+# ffmpeg file
+
+#===============================================================================
+# script usage
+#===============================================================================
+
+usage () {
+# if argument passed to function echo it
+[ -z "${1}" ] || echo "! ${1}"
+# display help
+echo "\
+# trim video or audio clips with millisecond accuracy
+https://trac.ffmpeg.org/wiki/Seeking
+
+$(basename "$0") -s 00:00:00.000 -i input -t 00:00:00.000 -o output)
+-s 00:00:00.000 : start time
+-i input.(mp4|mov|mkv|m4v|webm|aac|m4a|wav|mp3|ogg)
+-t 00:00:00.000 : end time
+-o output.(mp4|webm|aac|mp3|wav|ogg) : optional argument 
+# if option not provided defaults input-name-[start end].(mp4|webm|aac|mp3|wav|ogg)"
+exit 2
+}
+
+
+#===============================================================================
+# error messages
+#===============================================================================
+
+INVALID_OPT_ERR='Invalid option:'
+REQ_ARG_ERR='requires an argument'
+WRONG_ARGS_ERR='wrong number of arguments passed to script'
+NOT_MEDIA_FILE_ERR='is not a media file'
+
+
+#===============================================================================
+# check the number of arguments passed to the script
+#===============================================================================
+
+[ $# -gt 0 ] || usage "${WRONG_ARGS_ERR}"
+
+
+#===============================================================================
+# getopts check the options passed to the script
+#===============================================================================
+
+while getopts ':s:i:t:o:h' opt
+do
+  case ${opt} in
+     s) start="${OPTARG}";;
+     i) infile="${OPTARG}";;
+     t) end="${OPTARG}";;
+     h) usage;;
+     o) outfile="${OPTARG}";;
+     \?) usage "${INVALID_OPT_ERR} ${OPTARG}" 1>&2;;
+     :) usage "${INVALID_OPT_ERR} ${OPTARG} ${REQ_ARG_ERR}" 1>&2;;
+  esac
+done
+shift $((OPTIND-1))
+
+
+#===============================================================================
+# variables
+#===============================================================================
+
+# input name
+infile_nopath="${infile##*/}"
+infile_name="${infile_nopath%.*}"
+
+# input file extension
+infile_ext="${infile##*.}"
+
+# file command check input file mime type
+filetype="$(file --mime-type -b "${infile}")"
+
+# video mimetypes
+mov_mime='video/quicktime'
+mkv_mime='video/x-matroska'
+mp4_mime='video/mp4'
+webm_mime='video/webm'
+m4v_mime='video/x-m4v'
+wav_mime='audio/x-wav'
+audio_mime='audio/mpeg'
+aac_mime='audio/x-hx-aac-adts'
+m4a_mime='audio/mp4'
+ogg_mime='audio/ogg'
+
+# the file command wrongly identifies .m4a audio as a video file
+# so we check if the file extension is .m4a and set the mime type to audio/mp4
+if [ "${infile_ext}" = 'm4a' ]; then
+    filetype="${m4a_mime}"
+fi
+
+# defaults for variables if not defined
+videofile_default="${infile_name}-[${start}-${end}].mp4"
+webm_default="${infile_name}-[${start}-${end}].webm"
+aac_default="${infile_name}-[${start}-${end}].aac"
+mp3_default="${infile_name}-[${start}-${end}].mp3"
+wav_default="${infile_name}-[${start}-${end}].wav"
+m4a_default="${infile_name}-[${start}-${end}].m4a"
+ogg_default="${infile_name}-[${start}-${end}].ogg"
+
+
+#===============================================================================
+# check if the libfdk_aac codec is installed, if not fall back to the aac codec
+#===============================================================================
+
+aac_codec="$(ffmpeg -hide_banner -stats -v panic -h encoder=libfdk_aac)"
+aac_error="Codec 'libfdk_aac' is not recognized by FFmpeg."
+aac_check="$(echo "${aac_codec}" | grep "${aac_error}")"
+
+# check ffmpeg aac codecs
+if [ -z "${aac_check}" ]; then
+   aac='libfdk_aac' # libfdk_aac codec is installed
+else
+   aac='aac' # libfdk_aac codec isnt installed, fall back to aac codec
+fi
+
+
+#===============================================================================
+# audio and video functions
+#===============================================================================
+
+# trim video clip
+trim_video () {
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -ss "${start}" \
+    -to "${end}" \
+    -i "${infile}" \
+    -c:a "${aac}" \
+    -c:v libx264 -profile:v high \
+    -pix_fmt yuv420p -movflags +faststart \
+    -f mp4 \
+    "${outfile:=${videofile_default}}"
+}
+
+
+# trim webm video clip
+trim_webm () {
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -ss "${start}" \
+    -to "${end}" \
+    -i "${infile}" \
+    -c:a libopus \
+    -c:v vp9 \
+    -f webm \
+    "${outfile:=${webm_default}}"
+}
+
+# trim aac audio clip
+trim_aac () {
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -ss "${start}" \
+    -to "${end}" \
+    -i "${infile}" \
+    -c:a "${aac}" \
+    -f adts \
+    "${outfile:=${aac_default}}"
+}
+
+# trim m4a audio clip
+trim_m4a () {
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -ss "${start}" \
+    -to "${end}" \
+    -i "${infile}" \
+    -c:a "${aac}" \
+    -f mp4 \
+    "${outfile:=${m4a_default}}"
+}
+
+# trim mp3 audio clip
+trim_mp3 () {
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -ss "${start}" \
+    -to "${end}" \
+    -i "${infile}" \
+    -c:a libmp3lame \
+    -f mp3 \
+    "${outfile:=${mp3_default}}"
+}
+
+# trim wav audio clip
+trim_wav () {
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -ss "${start}" \
+    -to "${end}" \
+    -i "${infile}" \
+    -c:a pcm_s16le \
+    -f wav \
+    "${outfile:=${wav_default}}"
+}
+
+
+# trim ogg audio clip
+trim_ogg () {
+    ffmpeg \
+    -hide_banner \
+    -stats -v panic \
+    -ss "${start}" \
+    -to "${end}" \
+    -i "${infile}" \
+    -c:a libopus \
+    -f ogg \
+    "${outfile:=${ogg_default}}"
+}
+
+#===============================================================================
+# check the files mime type
+#===============================================================================
+
+case "${filetype}" in
+    "${mov_mime}"|"${mkv_mime}"|"${mp4_mime}"|"${m4v_mime}") trim_video "${infile}";;
+    "${webm_mime}") trim_webm "${infile}";;
+    "${aac_mime}") trim_aac "${infile}";;
+    "${m4a_mime}") trim_m4a "${infile}";;
+    "${audio_mime}") trim_mp3 "${infile}";;
+    "${wav_mime}") trim_wav "${infile}";;
+    "${ogg_mime}") trim_ogg "${infile}";;
+    *) usage "${infile} ${NOT_MEDIA_FILE_ERR}";;
+esac

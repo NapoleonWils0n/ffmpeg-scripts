@@ -1388,6 +1388,61 @@ find . -type f -name "*.mp4" -exec sh -c \
 "{}" \;
 #+END_SRC
 
+** trim-clip-to
+:PROPERTIES:
+:CUSTOM_ID: trim-clip-to
+:END:
+
+trim video clip
+
+[[https://trac.ffmpeg.org/wiki/Seeking][ffmpeg wiki seeking]]
+
+Note that you can use two different time unit formats: sexagesimal (HOURS:MM:SS.MILLISECONDS, as in 01:23:45.678), or in seconds.
+If a fraction is used, such as 02:30.05, this is interpreted as "5 100ths of a second", not as frame 5. 
+For instance, 02:30.5 would be 2 minutes, 30 seconds, and a half a second, which would be the same as using 150.5 in seconds. 
+
+the trim-clip-to use's a start time with the -s option,
+and an end time with the -t option
+
++ script usage
+
+#+BEGIN_SRC sh
+trim-clip-to -s 00:00:00.000 -i input.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3) -t 00:00:00.000 -o output.(mp4|aac|mp3|wav)
+#+END_SRC
+
++ script help
+
+#+begin_src sh
+trim-clip-to -h
+#+end_src
+
+#+BEGIN_EXAMPLE
+# trim video or audio clips with millisecond accuracy
+https://trac.ffmpeg.org/wiki/Seeking
+
+trim-clip-to -s 00:00:00.000 -i input.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3) -t 00:00:00.000 -o output.(mp4|aac|mp3|wav)
+-s 00:00:00.000 : start time
+-i input.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3)
+-t 00:00:00.000 : end time
+-o output.(mp4|aac|mp3|wav) : optional argument
+# if option not provided defaults input-name-[start end].(mp4|webm|aac|mp3|wav|ogg)
+#+END_EXAMPLE
+
+*** trim-clip batch process
+
+Batch process files in the current working directory
+  
+Note we omit the -o option to use the default outfile name
+
+Batch trim all the mp4 files in the current directory,
+from 00:00:00 to 00:00:30
+
+#+BEGIN_SRC sh
+find . -type f -name "*.mp4" -exec sh -c \
+'trim-clip-to -s 00:00:00 -i "${0}" -t 00:00:30' \
+"{}" \;
+#+END_SRC
+
 ** vid2gif
 :PROPERTIES:
 :CUSTOM_ID: vid2gif
