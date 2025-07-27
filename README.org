@@ -37,6 +37,7 @@ A collection of ffmpeg shell scripts for basic editing tasks
 + [[#scopes][scopes]]
 + [[#tile-thumbnails][tile-thumbnails]]
 + [[#trim-clip][trim-clip]]
++ [[#trim-clip-to][trim-clip-to]]
 + [[#vid2gif][vid2gif]]
 + [[#waveform][waveform]]
 + [[#webp][webp]]
