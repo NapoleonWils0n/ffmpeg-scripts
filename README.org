@@ -1429,7 +1429,7 @@ trim-clip-to -s 00:00:00.000 -i input.(mp4|mov|mkv|m4v|aac|m4a|wav|mp3) -t 00:00
 # if option not provided defaults input-name-[start end].(mp4|webm|aac|mp3|wav|ogg)
 #+END_EXAMPLE
 
-*** trim-clip batch process
+*** trim-clip-to batch process
 
 Batch process files in the current working directory
   
