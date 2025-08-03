@@ -20,7 +20,7 @@ echo "\
 # trim video or audio clips with millisecond accuracy
 https://trac.ffmpeg.org/wiki/Seeking
 
-$(basename "$0") -s 00:00:00.000 -i input -t 00:00:00.000 -o output)
+$(basename "$0") -s 00:00:00.000 -i input -t 00:00:00.000 -o output
 -s 00:00:00.000 : start time
 -i input.(mp4|mov|mkv|m4v|webm|aac|m4a|wav|mp3|ogg)
 -t 00:00:00.000 : end time
