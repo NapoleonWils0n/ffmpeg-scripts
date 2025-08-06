@@ -1034,7 +1034,6 @@ and another 30 second clip that starts at 60
 :END:
 
 scene-cut-to takes a cut file and video and cuts the video into clips
-
 using a start time and a end position
 
 + script usage
@@ -1057,11 +1056,9 @@ scene-cut-to -i input -c cutfile
 #+END_EXAMPLE
 
 cut file - hours, minutes, seconds
-
 in this example we create 2 - 30 seconds clips
 
 a 30 second clip that starts at 00:00:00 to 00:00:30
-
 and another 30 second clip that starts at 00:01:00 to 00:01:30
 
 #+begin_example
