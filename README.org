@@ -1,5 +1,5 @@
 #+STARTUP: content
-#+OPTIONS: num:nil author:nil
+#+OPTIONS: num:nil author:nil \n:t
 * ffmpeg scripts
 
 A collection of ffmpeg shell scripts for basic editing tasks
@@ -1033,7 +1033,7 @@ and another 30 second clip that starts at 60
 :CUSTOM_ID: scene-cut-to
 :END:
 
-scene-cut-to takes a cut file and video and cuts the video into clips  
+scene-cut-to takes a cut file and video and cuts the video into clips
 using a start time and a end position
 
 + script usage
@@ -1055,7 +1055,7 @@ scene-cut-to -i input -c cutfile
 -c cutfile
 #+END_EXAMPLE
 
-cut file - hours, minutes, seconds  
+cut file - hours, minutes, seconds
 in this example we create 2 - 30 seconds clips
 
 a 30 second clip that starts at 00:00:00 to 00:00:30
