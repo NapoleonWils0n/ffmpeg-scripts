@@ -28,6 +28,7 @@ A collection of ffmpeg shell scripts for basic editing tasks
 + [[#overlay-pip][overlay-pip]]
 + [[#pan-scan][pan-scan]]
 + [[#scene-cut][scene-cut]]
++ [[#scene-cut-to][scene-cut-to]]
 + [[#scene-detect][scene-detect]]
 + [[#scene-images][scene-images]]
 + [[#scene-time][scene-time]]
@@ -1025,6 +1026,44 @@ and another 30 second clip that starts at 60
 #+begin_example
 0,30
 60,30
+#+end_example
+
+** scene-cut-to
+:PROPERTIES:
+:CUSTOM_ID: scene-cut-to
+:END:
+
+scene-cut-to takes a cut file and video and cuts the video into clips 
+using a start time and a end position
+
++ script usage
+
+#+BEGIN_SRC sh
+scene-cut-to -i input -c cutfile
+#+END_SRC
+
++ script help
+
+#+begin_src sh
+scene-cut-to -h
+#+end_src
+
+#+BEGIN_EXAMPLE
+scene-cut-to -i input -c cutfile
+
+-i input.(mp4|mov|mkv|m4v)
+-c cutfile
+#+END_EXAMPLE
+
+cut file - hours, minutes, seconds
+in this example we create 2 - 30 seconds clips
+
+a 30 second clip that starts at 00:00:00 to 00:00:30
+and another 30 second clip that starts at 00:01:00 to 00:01:30
+
+#+begin_example
+00:00:00,00:00:30
+00:01:00,00:01:30
 #+end_example
 
 ** scene-detect
