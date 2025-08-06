@@ -1,6 +1,5 @@
 #+STARTUP: content
 #+OPTIONS: num:nil author:nil
-#+options: \n:t
 * ffmpeg scripts
 
 A collection of ffmpeg shell scripts for basic editing tasks
