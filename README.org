@@ -45,6 +45,21 @@ A collection of ffmpeg shell scripts for basic editing tasks
 + [[#xfade][xfade]]
 + [[#zoompan][zoompan]]
 
+** ⚠️ Archived / Moved to Rust
+
+This project has been superseded by [[https://github.com/NapoleonWils0n/ffmpeg-rust-scripts][FFmpeg Rust Scripts]].
+
+I have completely refactored these shell scripts into a high-performance Rust suite. While this repository remains available for reference, all future development and improvements will happen in the new Rust version.
+
+🚀 Why switch to the Rust version?
+
+- /Zero Dependencies/: Get statically compiled, standalone binaries for =Linux=, =NixOS=, and =Windows=. No more worrying about shell environment variables or script interpreters.
+- /Performance & Safety/: Rust provides much faster execution for complex logic and prevents many of the common "silent failures" found in shell scripts.
+- /Cross-Platform/: Native support for Windows (cmd/PowerShell) alongside Linux, macOS, and FreeBSD.
+- /Cleaner CLI/: Improved argument parsing, better error messages, and consistent help menus across all tools.
+
+[[https://github.com/NapoleonWils0n/ffmpeg-rust-scripts][Check out the new FFmpeg Rust Scripts here →]]
+
 ** scripts install
 
 [[https://youtu.be/UHshlQvdwcQ][ffmpeg scripts install youtube]]
